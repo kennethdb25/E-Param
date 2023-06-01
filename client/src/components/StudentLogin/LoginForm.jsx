@@ -1,5 +1,5 @@
 import React from "react";
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import { Form, Input, Row, Col } from "antd";
 import { Typography, Box, Button, Link } from "@mui/material";
@@ -9,9 +9,13 @@ import "antd/dist/antd.min.css";
 
 const LoginForm = (props) => {
   const classes = useStyles();
-  // const history = useNavigate();
+  const history = useNavigate();
   const { showSignUpForm } = props;
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    history("/dashboard")
+  }
   const onFinish = async (values) => {
     console.log(values);
   };
@@ -134,6 +138,7 @@ const LoginForm = (props) => {
             <Form.Item>
               <Typography
                 component={Link}
+                style={{ textDecoration: "none"}}
                 href="/forgot-password"
                 sx={{ "&:hover": { cursor: "pointer" } }}
               >
@@ -143,7 +148,7 @@ const LoginForm = (props) => {
           </Col>
         </Row>
         <Form.Item>
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" onClick={handleLogin}>
             LOGIN
           </Button>
         </Form.Item>

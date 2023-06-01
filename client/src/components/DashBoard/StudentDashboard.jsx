@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./style.css";
 import "antd/dist/antd.min.css";
 import {
@@ -13,7 +14,13 @@ import BorrowedBooks from "./DashboardPage/BorrowedBooks";
 import Shelf from "./DashboardPage/Shelf";
 
 const StudentDashboard = () => {
+  const history = useNavigate();
   const [currentActive, setCurrentActive] = useState(1);
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    history("/")
+  }
 
   return (
     <>
@@ -30,7 +37,6 @@ const StudentDashboard = () => {
             <li>
               <a
                 key={1}
-                href="/#"
                 className={currentActive === 1 ? "active" : "none"}
                 onClick={() => setCurrentActive(1)}
               >
@@ -43,7 +49,6 @@ const StudentDashboard = () => {
             <li>
               <a
                 key={2}
-                href="/#"
                 className={currentActive === 2 ? "active" : "none"}
                 onClick={() => setCurrentActive(2)}
               >
@@ -56,7 +61,6 @@ const StudentDashboard = () => {
             <li>
               <a
                 key={3}
-                href="/#"
                 className={currentActive === 3 ? "active" : "none"}
                 onClick={() => setCurrentActive(3)}
               >
@@ -69,7 +73,6 @@ const StudentDashboard = () => {
             <li>
               <a
                 key={4}
-                href="/#"
                 className={currentActive === 4 ? "active" : "none"}
                 onClick={() => setCurrentActive(4)}
               >
@@ -77,6 +80,17 @@ const StudentDashboard = () => {
                   <DatabaseOutlined />
                 </span>
                 <span>Shelf</span>
+              </a>
+            </li>
+            <li>
+              <a
+                key={5}
+                onClick={handleLogout}
+              >
+                <span className="las la-clipboard-list">
+                  <DatabaseOutlined />
+                </span>
+                <span>Logout</span>
               </a>
             </li>
           </ul>

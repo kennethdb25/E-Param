@@ -37,6 +37,10 @@ const LibrarianSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  imgpath: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     unique: true,

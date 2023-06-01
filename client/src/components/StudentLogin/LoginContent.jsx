@@ -22,10 +22,10 @@ const LoginContent = () => {
       <LoginForm showSignUpForm={showSignUpForm} />
       <Drawer
         title="Sign Up"
-        placement="left"
+        placement="top"
         onClose={onClose}
         open={visible}
-        height={600}
+        height="100%"
         width={900}
         style={{ display: "flex", justifyContent: "center" }}
         extra={<Space></Space>}
