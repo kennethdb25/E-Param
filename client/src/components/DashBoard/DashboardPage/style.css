@@ -445,7 +445,7 @@ header{
 }
 .ant-tabs-card>.ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab-active {
     /* color: #1890ff; */
-    background: #76b5c5;
+    background: #f7c275;
 }
 
  /* table header css */
@@ -454,8 +454,8 @@ header{
     color: rgb(255 255 255);
     font-weight: 500;
     text-align: left;
-    background: #76b5c5;
-    border-bottom: 1px solid #89cfe0;
+    background: #f7c275;
+    border-bottom: 1px solid  #dfa145;
     transition: background .3s ease;
 }
 /* button add to shelf */
@@ -481,5 +481,23 @@ header{
     border-radius: 11px;
     color: rgb(255 255 255);
     border: 1px solid #d9d9d9;
-    background: #76b5c5;
+    background:  #f7c275;
+}
+
+/* sidebar styling */
+:root {
+    --main-color: #f7c275;
+    --color-dark: #1D2231;
+    --text-grey: #8390A2;
+}
+
+/* pagination styling */
+.ant-pagination-item-active a {
+    color: #ffffff;
+	background:  #f7c275;
+}
+.ant-pagination-item-active {
+    font-weight: 500;
+    background: #fff;
+    border-color: #8b5200;
 }
