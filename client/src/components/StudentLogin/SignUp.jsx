@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import {
   Button,
-  DatePicker,
   Form,
   Input,
   Radio,
-  Select,
   Row,
   Col,
   message,
   Upload,
+  Select
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "antd/dist/antd.min.css";
+import { GradeData, SectionData } from "../../Data/Data";
 
 const SignUp = (props) => {
   const [form] = Form.useForm();
@@ -168,8 +168,8 @@ const SignUp = (props) => {
               </Col>
               <Col xs={{ span: 24 }} md={{ span: 8 }}>
                 <Form.Item
-                  label="Grade & Section"
-                  name="gradeSection"
+                  label="Grade"
+                  name="grade"
                   labelCol={{
                     span: 24,
                   }}
@@ -180,11 +180,44 @@ const SignUp = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your grade and section!",
+                      message: "Please input your grade!",
                     },
                   ]}
                 >
-                  <Input placeholder="Enter your grade and section" />
+                  <Select placeholder="Select your Grade">
+                    {GradeData.map((value, index) => (
+                      <Select.Option key={index} value={value.value}>
+                        {value.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Section"
+                  name="section"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your section!",
+                    },
+                  ]}
+                >
+                  <Select placeholder="Select your Section">
+                    {SectionData.map((value, index) => (
+                      <Select.Option key={index} value={value.value}>
+                        {value.name}
+                      </Select.Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </Col>
             </Row>

@@ -3,7 +3,7 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
-  loginContainer: {
+  forgotPassContainer: {
     backgroundImage: "url(/images/Cirdas.png)",
     backgroundPosition: "center",
     backgroundSize: "cover",
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
       justifyContent: "center",
     },
   },
-  loginCard: {
+  forgotPassCard: {
     display: "flex",
     alignContent: "center",
     justifyContent: "center",
@@ -32,13 +32,13 @@ const useStyles = makeStyles(() => ({
     borderRadius: "10px",
 
     [theme.breakpoints.up("md")]: {
-      width: "400px",
+      width: "500px",
     },
     [theme.breakpoints.down("md")]: {
       width: "80%",
     },
   },
-  loginDetails: {
+  forgotPassDetails: {
     display: "flex",
     alignContent: "center",
     justifyContent: "center",

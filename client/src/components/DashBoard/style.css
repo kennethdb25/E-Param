@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 :root{
-	--main-color: #76b5c5;
+	--main-color: #c5bb76;
 	--color-dark: #1D2231;
 	--text-grey:  #8390A2;
 }
@@ -50,6 +50,11 @@
 	color: #fff;
 	font-size: 1.1rem;
 }
+
+.sidebar-menu a:hover{
+	color: rgb(48, 134, 238);
+}
+
 .sidebar-menu a.active{
 	background:  #fff;
 	padding-top: 1rem;
@@ -126,7 +131,7 @@ header label span{
 	border-radius: 30px;
 	height: 50px;
 	display: flex;
-	align-item: center;
+	align-items: center;
 	overflow-x: hidden;
 }
 .search-wrapper span {

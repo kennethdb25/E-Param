@@ -25,7 +25,11 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  gradeSection: {
+  grade: {
+    type: String,
+    required: true,
+  },
+  section: {
     type: String,
     required: true,
   },

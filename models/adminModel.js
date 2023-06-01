@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const cipher = require('bcryptjs');
 const keys = require('../config/keys');
 
-const LibrarianSchema = new mongoose.Schema({
+const AdminSchema = new mongoose.Schema({
   employeeId: {
     type: String,
     required: true,
@@ -57,7 +57,7 @@ const LibrarianSchema = new mongoose.Schema({
   ],
 });
 
-LibrarianSchema.pre("save", async function (next) {
+AdminSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await cipher.hash(this.password, 12);
     this.confirmPassword = await cipher.hash(this.confirmPassword, 12);
@@ -65,7 +65,7 @@ LibrarianSchema.pre("save", async function (next) {
   next();
 });
 
-LibrarianSchema.methods.generateAuthToken = async function () {
+AdminSchema.methods.generateAuthToken = async function () {
   try {
     let token24 = jwt.sign({ _id: this._id }, keys.cookieKey, { expiresIn: "7d" });
 
@@ -76,6 +76,6 @@ LibrarianSchema.methods.generateAuthToken = async function () {
   }
 };
 
-const LibrarianModel = new mongoose.model("LibrarianInfo", LibrarianSchema);
+const AdminModel = new mongoose.model("AdminInfo", AdminSchema);
 
-module.exports = LibrarianModel;
+module.exports = AdminModel;

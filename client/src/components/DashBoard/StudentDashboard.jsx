@@ -7,6 +7,7 @@ import {
   BookOutlined,
   FileProtectOutlined,
   DatabaseOutlined,
+  LogoutOutlined
 } from "@ant-design/icons";
 import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
@@ -39,7 +40,7 @@ const StudentDashboard = () => {
                 key={1}
                 className={currentActive === 1 ? "active" : "none"}
                 onClick={() => setCurrentActive(1)}
-                
+
               >
                 <span className="las la-igloo">
                   <HomeOutlined />
@@ -89,7 +90,7 @@ const StudentDashboard = () => {
                 onClick={handleLogout}
               >
                 <span className="las la-clipboard-list">
-                  <DatabaseOutlined />
+                <LogoutOutlined />
                 </span>
                 <span>Logout</span>
               </a>
