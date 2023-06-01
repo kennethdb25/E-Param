@@ -39,6 +39,7 @@ const StudentDashboard = () => {
                 key={1}
                 className={currentActive === 1 ? "active" : "none"}
                 onClick={() => setCurrentActive(1)}
+                
               >
                 <span className="las la-igloo">
                   <HomeOutlined />

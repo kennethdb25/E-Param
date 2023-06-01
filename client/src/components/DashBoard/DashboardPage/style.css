@@ -426,3 +426,60 @@ header{
 		grid-template-columns: 100%;
 	}
 }
+/* ccs for tabs */
+.ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab, .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab {
+    border-radius: 10px 10px 0 0;
+}
+/* ccs for card in dashboard */
+.card-single {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 30px;
+}
+/* active tabs color */
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #fff;
+    text-shadow: 0 0 .25px currentcolor;
+}
+.ant-tabs-card>.ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab-active {
+    /* color: #1890ff; */
+    background: #76b5c5;
+}
+
+ /* table header css */
+ .ant-table-thead>tr>th {
+    position: relative;
+    color: rgb(255 255 255);
+    font-weight: 500;
+    text-align: left;
+    background: #76b5c5;
+    border-bottom: 1px solid #89cfe0;
+    transition: background .3s ease;
+}
+/* button add to shelf */
+.ant-btn {
+    line-height: 1.5715;
+    position: relative;
+    display: inline-block;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    background-image: none;
+    box-shadow: 0 2px 0 rgba(0,0,0,.015);
+    cursor: pointer;
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    height: 32px;
+    padding: 4px 15px;
+    font-size: 14px;
+    border-radius: 11px;
+    color: rgb(255 255 255);
+    border: 1px solid #d9d9d9;
+    background: #76b5c5;
+}
