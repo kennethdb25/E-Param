@@ -6,8 +6,11 @@ import {
   HomeOutlined,
   BookOutlined,
   FileProtectOutlined,
-  DatabaseOutlined,
-  LogoutOutlined
+  ReadOutlined,
+  BarChartOutlined,
+  FileDoneOutlined,
+  SettingOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
@@ -152,14 +155,65 @@ const HomeDashboard = () => {
                 onClick={() => setCurrentActive(4)}
               >
                 <span className="las la-clipboard-list">
-                  <DatabaseOutlined />
+                  <ReadOutlined />
                 </span>
                 <span>Shelf</span>
               </a>
             </li>
+            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
+            (
+              <>
+                <li>
+                  <a
+                    key={5}
+                    className={currentActive === 4 ? "active" : "none"}
+                    onClick={() => setCurrentActive(5)}
+                  >
+                    <span className="las la-clipboard-list">
+                      <FileDoneOutlined />
+                    </span>
+                    <span>Inventory</span>
+                  </a>
+                </li>
+              </>
+            ) : null }
+            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
+            (
+              <>
+                <li>
+                  <a
+                    key={6}
+                    className={currentActive === 4 ? "active" : "none"}
+                    onClick={() => setCurrentActive(6)}
+                  >
+                    <span className="las la-clipboard-list">
+                      <BarChartOutlined />
+                    </span>
+                    <span>Reports</span>
+                  </a>
+               </li>
+              </>
+            ) : null }
+            { loginData?.validUser?.userType === 'Super Admin' ?
+            (
+              <>
+                <li>
+                  <a
+                    key={7}
+                    className={currentActive === 4 ? "active" : "none"}
+                    onClick={() => setCurrentActive(7)}
+                  >
+                    <span className="las la-clipboard-list">
+                      <SettingOutlined />
+                    </span>
+                    <span>Settings</span>
+                  </a>
+                </li>
+              </>
+            ) : null }
             <li>
               <a
-                key={5}
+                key={8}
                 onClick={() => {handleLogout()}}
               >
                 <span className="las la-clipboard-list">

@@ -39,12 +39,13 @@ const SignUp = (props) => {
       method: "POST",
       body: newdata
     });
+    console.log(res);
     if (res.status === 201) {
       toast.success("Registered Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
       onClose();
       form.resetFields();
     }else {
-      toast.error(res.message, { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
+      toast.error("ID already exists!", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
     }
   };
 

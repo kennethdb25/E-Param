@@ -23,7 +23,7 @@ const LoginContent = (props) => {
       <LoginForm showSignUpForm={showSignUpForm} LoginValid={LoginValid}/>
       <Drawer
         title="Sign Up"
-        placement="top"
+        placement="left"
         onClose={onClose}
         open={visible}
         height="100%"
