@@ -172,14 +172,14 @@ main{
 	margin-top: 1rem;
 }
 
-.card-single{
+/* ccs for card in dashboard */
+.card-single {
 	display: flex;
 	justify-content: space-between;
 	background: #fff;
 	padding: 2rem;
-	border-radius: 2px;
+	border-radius: 20px !important;
 }
-
 
 .card-single div:last-child span{
 	font-size: 3rem;
@@ -427,17 +427,11 @@ header{
 	}
 }
 /* ccs for tabs */
-.ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab, .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab {
-    border-radius: 10px 10px 0 0;
+.ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab, .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab  {
+	border-radius: 15px 15px 0 0 !important;
 }
-/* ccs for card in dashboard */
-.card-single {
-    display: flex;
-    justify-content: space-between;
-    background: #fff;
-    padding: 2rem;
-    border-radius: 30px;
-}
+
+
 /* active tabs color */
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
     color: #fff;
@@ -482,13 +476,6 @@ header{
     color: rgb(255 255 255);
     border: 1px solid #d9d9d9;
     background:  #f7c275;
-}
-
-/* sidebar styling */
-:root {
-    --main-color: #f7c275;
-    --color-dark: #1D2231;
-    --text-grey: #8390A2;
 }
 
 /* pagination styling */
