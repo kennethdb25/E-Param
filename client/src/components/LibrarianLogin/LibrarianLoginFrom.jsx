@@ -7,7 +7,7 @@ import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
 
-const AdminLoginForm = () => {
+const LibrarianLoginForm = () => {
   const classes = useStyles();
   const history = useNavigate();
 
@@ -26,7 +26,7 @@ const AdminLoginForm = () => {
     <Box className={classes.loginCard}>
       <ToastContainer />
       <Box alignItems="center">
-        <Typography fontSize="32px">ADMIN LOGIN</Typography>
+        <Typography fontSize="32px">LIBRARIAN LOGIN</Typography>
       </Box>
       <Form
         name="basic"
@@ -50,6 +50,7 @@ const AdminLoginForm = () => {
             { type: "email", message: "Please enter a valid email" },
           ]}
           hasFeedback
+          margi
         >
           <Input placeholder="Email" />
         </Form.Item>
@@ -91,4 +92,4 @@ const AdminLoginForm = () => {
   );
 };
 
-export default AdminLoginForm;
+export default LibrarianLoginForm;

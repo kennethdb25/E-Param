@@ -10,10 +10,14 @@ const port = 5000; // server port
 //ROUTES IMPORT
 const SignInRouter = require('./routes/loginRoute/loginRoute');
 const StudentRegRouter = require('./routes/signUpRoute/studentRegRoute');
+const LibrarianRegRouter = require('./routes/signUpRoute/librarianRegRoute');
+const AdminRegRouter = require('./routes/signUpRoute/adminRegRoute');
 
 // ROUTES
-app.use(StudentRegRouter);
 app.use(SignInRouter);
+app.use(StudentRegRouter);
+app.use(LibrarianRegRouter);
+app.use(AdminRegRouter);
 
 app.use("/uploads", express.static("./uploads"));
 

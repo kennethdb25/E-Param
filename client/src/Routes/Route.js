@@ -1,11 +1,12 @@
 const ROUTE = {
+  DASHBOARD: "/dashboard",
+
   HOMEPAGE: "/",
-  STUDENTDASHBOARD: "/dashboard",
   FORGOTPASSWORD: "/forgot-password",
 
-  LIBRARIANLOGINPAGE: "/librarian/login",
+  LIBRARIANLOGINPAGE: "/librarian-login",
 
-  ADMINLOGINPAGE: "/admin/login"
+  ADMINLOGINPAGE: "/admin-login"
 }
 
 export default ROUTE;

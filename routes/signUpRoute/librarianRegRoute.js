@@ -1,14 +1,14 @@
 const express = require("express");
 const multer = require("multer");
-const StudentRegRouter = new express.Router();
-const StudentModel = require("../../models/studentModel");
+const LibrarianRegRouter = new express.Router();
+const LibrarianModel = require("../../models/librarianModel");
 
 const imgconfig = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, "./uploads");
   },
   filename: (req, file, callback) => {
-    callback(null, `${Date.now()}. ${file.originalname}`);
+    callback(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
@@ -25,41 +25,33 @@ const upload = multer({
   fileFilter: isImage,
 });
 
-// register student
-StudentRegRouter.post("/student/register", upload.single("photo"), async (req, res) => {
+// register admin
+LibrarianRegRouter.post("/librarian/register", upload.single("photo"), async (req, res) => {
   const { filename } = req.file;
   const {
-    studentId,
+    employeeId,
     firstName,
     middleName,
     lastName,
-    address,
-    grade,
-    section,
-    gender,
     email,
     password,
     confirmPassword,
   } = req.body;
 
-  // validate if student id exist
-  const validate = await StudentModel.findOne({ studentId: studentId });
+  // validate if employee id exist
+  const validate = await LibrarianModel.findOne({ employeeId: employeeId });
   if (validate) {
     return res.status(422).json({ error: "ID is already exists" });
   }
 
   try {
-    const finalUser = new StudentModel({
-      studentId,
+    const finalUser = new LibrarianModel({
+      employeeId,
       firstName,
       middleName,
       lastName,
-      address,
-      grade,
-      section,
       imgpath: filename,
-      userType: "Student",
-      gender,
+      userType: "Librarian",
       email,
       password,
       confirmPassword,
@@ -75,4 +67,4 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
   }
 });
 
-module.exports = StudentRegRouter;
+module.exports = LibrarianRegRouter;

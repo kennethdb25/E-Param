@@ -14,7 +14,7 @@ import AvailableBooks from "./DashboardPage/AvailableBooks";
 import BorrowedBooks from "./DashboardPage/BorrowedBooks";
 import Shelf from "./DashboardPage/Shelf";
 
-const StudentDashboard = () => {
+const HomeDashboard = () => {
   const history = useNavigate();
   const [currentActive, setCurrentActive] = useState(1);
 
@@ -121,4 +121,4 @@ const StudentDashboard = () => {
   );
 };
 
-export default StudentDashboard;
+export default HomeDashboard;
