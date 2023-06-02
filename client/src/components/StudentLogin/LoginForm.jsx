@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { Form, Input, Row, Col } from "antd";
-import { Typography, Box, Button, Link } from "@mui/material";
+import { Form, Input, Row, Col, Button } from "antd";
+import { Typography, Box, Link } from "@mui/material";
 import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
@@ -10,10 +10,9 @@ import "antd/dist/antd.min.css";
 const LoginForm = (props) => {
   const classes = useStyles();
   const history = useNavigate();
-  const { showSignUpForm } = props;
+  const { showSignUpForm, LoginValid } = props;
 
   const onFinish = async (values) => {
-		console.log(values)
     const data = await fetch("/student/login", {
       method: "POST",
       headers: {
@@ -22,17 +21,22 @@ const LoginForm = (props) => {
       body: JSON.stringify(values),
     });
     const res = await data.json();
+    console.log(res);
     if (res.status === 201) {
+      LoginValid();
       toast.success("Logged In", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1000,
       });
       setTimeout(() => {
-        localStorage.setItem("studentToken", res.result.token);
+        let arry = res.result.userEmail.tokens;
+        console.log(arry)
+        let lastElement = arry[arry.length - 1];
+        localStorage.setItem("studentToken", lastElement.token);
         history("/dashboard");
       }, 3000);
     } else {
-      toast.error(res.error, {
+      toast.error(res.message, {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 1000,
       });
@@ -86,7 +90,6 @@ const LoginForm = (props) => {
         >
           <Input.Password placeholder="Password" />
         </Form.Item>
-      </Form>
       <Box className={classes.loginDetails}>
         <Row gutter={8}>
           {width >= 450 ? (
@@ -167,11 +170,12 @@ const LoginForm = (props) => {
           </Col>
         </Row>
         <Form.Item>
-          <Button type="submit" variant="contained">
-            LOGINs
+        <Button htmlType="submit" type="primary">
+            LOGIN
           </Button>
         </Form.Item>
       </Box>
+    </Form>
     </Box>
   );
 };

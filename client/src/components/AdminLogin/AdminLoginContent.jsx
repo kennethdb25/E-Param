@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import useStyles from "./style";
 import AdminLoginForm from "./AdminLoginFrom";
 
-const AdminLoginContent = () => {
+const AdminLoginContent = (props) => {
   const classes = useStyles();
+  const { LoginValid } = props;
 
   return (
     <Box className={classes.loginContainer}>
-      <AdminLoginForm />
+      <AdminLoginForm LoginValid={LoginValid}/>
     </Box>
   );
 };

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import "./style.css";
-import "antd/dist/antd.min.css";
+import { LoginContext } from "../../Context/Context";
+import { ToastContainer, toast } from "react-toastify";
 import {
   HomeOutlined,
   BookOutlined,
@@ -13,19 +13,93 @@ import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
 import BorrowedBooks from "./DashboardPage/BorrowedBooks";
 import Shelf from "./DashboardPage/Shelf";
+import "./style.css";
+import "antd/dist/antd.min.css";
 
 const HomeDashboard = () => {
   const history = useNavigate();
+  const { loginData } = useContext(LoginContext)
   const [currentActive, setCurrentActive] = useState(1);
 
-  const handleLogout = (e) => {
-    e.preventDefault();
-    history("/")
+
+  const handleLogout = async () => {
+    if (loginData?.validUser?.userType === 'Student') {
+      let token = localStorage.getItem('studentToken');
+      const res = await fetch('/student/logout', {
+        method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token,
+				Accept: "application/json",
+			},
+			credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.status === 201) {
+        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        setTimeout(() => {
+          localStorage.removeItem("studentToken");
+          history("/");
+        }, 4000);
+      } else {
+        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+      }
+    } else if (loginData?.validUser?.userType === 'Librarian') {
+      let token = localStorage.getItem('librarianToken');
+      const res = await fetch('/librarian/logout', {
+        method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token,
+				Accept: "application/json",
+			},
+			credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.status === 201) {
+        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        setTimeout(() => {
+          localStorage.removeItem("librarianToken");
+          history("/librarian-login");
+        }, 4000);
+      } else {
+        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+      }
+    } else if (loginData?.validUser?.userType === 'Super Admin') {
+      let token = localStorage.getItem('adminToken');
+      const res = await fetch('/admin/logout', {
+        method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token,
+				Accept: "application/json",
+			},
+			credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (data.status === 201) {
+        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        setTimeout(() => {
+          localStorage.removeItem("adminToken");
+          history("/admin-login");
+        }, 4000);
+      } else {
+        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+      }
+    }
   }
 
   return (
     <>
       <input type="checkbox" id="nav-toggle" />
+      <ToastContainer />
+
       <div className="sidebar">
         <div className="sidebar-brand">
           <h2>
@@ -40,7 +114,6 @@ const HomeDashboard = () => {
                 key={1}
                 className={currentActive === 1 ? "active" : "none"}
                 onClick={() => setCurrentActive(1)}
-
               >
                 <span className="las la-igloo">
                   <HomeOutlined />
@@ -87,7 +160,7 @@ const HomeDashboard = () => {
             <li>
               <a
                 key={5}
-                onClick={handleLogout}
+                onClick={() => {handleLogout()}}
               >
                 <span className="las la-clipboard-list">
                 <LogoutOutlined />

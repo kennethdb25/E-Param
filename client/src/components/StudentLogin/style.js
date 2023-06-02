@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
 
     [theme.breakpoints.up("md")]: {
-      paddingLeft: "100px",
+      paddingLeft: "0px",
       justifyContent: "center",
     },
     [theme.breakpoints.down("md")]: {
@@ -73,6 +73,7 @@ const useStyles = makeStyles(() => ({
   },
   Form: {
     width: "100%",
+    paddingTop: "20px",
   },
 }));
 

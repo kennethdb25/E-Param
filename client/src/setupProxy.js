@@ -5,6 +5,7 @@ module.exports = function (app) {
       "/student/login",
       "/student/valid",
       "/student/logout",
+      "/student/register",
       "/admin",
       "/librarian",
       "/uploads",

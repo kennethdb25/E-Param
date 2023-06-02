@@ -1,8 +1,28 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { LoginContext } from "../../../Context/Context";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
 const Dashboard = () => {
+  const { loginData } = useContext(LoginContext)
+
+
+	const [img, setImg] = useState();
+
+  useEffect(() => {
+      fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
     <header>
@@ -11,20 +31,16 @@ const Dashboard = () => {
               <span className="las la-bars">Dashboard</span>
             </label>
           </h1>
-          {/* <div className="search-wrapper">
-            <span className="las la-search"></span>
-            <input type="search" placeholder="Search here" />
-          </div> */}
           <div className="user-wrapper">
             <img
-              src={require("../../../Assets/profile.png")}
+              src={img}
               width="40px"
               height="40px"
               alt=""
             />
             <div>
-              <h4>Russel Kenneth Pogi</h4>
-              <small>Student</small>
+            <h4>{`${loginData?.validUser?.firstName} ${loginData?.validUser?.lastName}`}</h4>
+            <small>{`${loginData?.validUser?.userType}`}</small>
             </div>
           </div>
         </header>

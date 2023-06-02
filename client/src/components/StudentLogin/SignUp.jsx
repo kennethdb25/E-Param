@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Button,
   Form,
@@ -11,8 +11,8 @@ import {
   Select
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Typography } from "@mui/material";
 import { toast } from "react-toastify";
+import './style.css';
 import "antd/dist/antd.min.css";
 import { GradeData, SectionData } from "../../Data/Data";
 
@@ -20,7 +20,33 @@ const SignUp = (props) => {
   const [form] = Form.useForm();
   const { onClose } = props;
 
-  const onFinish = (values) => {};
+  const onFinish = async (values) => {
+    const newdata = new FormData();
+		newdata.append("photo", values.photo.file.originFileObj);
+		newdata.append("address", values.address);
+		newdata.append("confirmPassword", values.confirmPassword);
+		newdata.append("email", values.email);
+		newdata.append("firstName", values.firstName);
+		newdata.append("gender", values.gender);
+		newdata.append("lastName", values.lastName);
+		newdata.append("grade", values.grade);
+		newdata.append("middleName", values.middleName);
+		newdata.append("password", values.password);
+		newdata.append("section", values.section);
+		newdata.append("studentId", values.studentId);
+
+    const res = await fetch("/student/register", {
+      method: "POST",
+      body: newdata
+    });
+    if (res.status === 201) {
+      toast.success("Registered Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
+      onClose();
+      form.resetFields();
+    }else {
+      toast.error(res.message, { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
+    }
+  };
 
   const onFinishFailed = (error) => {};
 
@@ -362,7 +388,7 @@ const SignUp = (props) => {
               <Col xs={{ span: 24 }} md={{ span: 8 }}>
                 <Form.Item
                   label="Confirm Password"
-                  name="confirmpassword"
+                  name="confirmPassword"
                   labelCol={{
                     span: 24,
                     //offset: 2
@@ -376,6 +402,7 @@ const SignUp = (props) => {
                   rules={[
                     {
                       required: true,
+                      message: "Confirm Password is required!"
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {

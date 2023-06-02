@@ -5,9 +5,10 @@ import useStyles from "./style";
 import LoginForm from "./LoginForm";
 import SignUp from "./SignUp";
 
-const LoginContent = () => {
+const LoginContent = (props) => {
   const [visible, setVisible] = useState(false);
   const classes = useStyles();
+  const { LoginValid } = props;
 
   const showSignUpForm = () => {
     setVisible(true);
@@ -19,7 +20,7 @@ const LoginContent = () => {
 
   return (
     <Box className={classes.loginContainer}>
-      <LoginForm showSignUpForm={showSignUpForm} />
+      <LoginForm showSignUpForm={showSignUpForm} LoginValid={LoginValid}/>
       <Drawer
         title="Sign Up"
         placement="top"

@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { LoginContext } from "./Context/Context";
 import './App.css';
@@ -34,23 +34,61 @@ function App() {
         setLoginData(data);
         history("/dashboard");
       }
+    } else if (localStorage.getItem("librarianToken")) {
+      let validToken = localStorage.getItem("librarianToken");
+      const res = await fetch("/librarian/valid", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: validToken,
+        }
+      });
+
+      const data = await res.json();
+
+      if (data.status === 401 || !data) {
+        console.log(data.error);
+      } else {
+        console.log("Verified User");
+        setLoginData(data);
+        history("/dashboard");
+      }
+    } else if (localStorage.getItem("adminToken")) {
+      let validToken = localStorage.getItem("adminToken");
+      const res = await fetch("/admin/valid", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: validToken,
+        }
+      });
+
+      const data = await res.json();
+
+      if (data.status === 401 || !data) {
+        console.log(data.error);
+      } else {
+        console.log("Verified User");
+        setLoginData(data);
+        history("/dashboard");
+      }
     }
   }
 
   useEffect(() => {
     setTimeout(() => {
       LoginValid();
-    }, 2000);
+    }, 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div>
       <Routes>
-        <Route path={ROUTE.HOMEPAGE} element={<LoginContent />} />
+        <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
         <Route path={ROUTE.DASHBOARD} element={<HomeDashboard />} />
         <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
-        <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent />} />
-        <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent />} />
+        <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
+        <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
       </Routes>
     </div>
   );

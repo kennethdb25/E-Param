@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { LoginContext } from "../../../Context/Context";
 import { Button, Table, Tabs } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
 const AvailableBooks = () => {
+  const { loginData } = useContext(LoginContext)
+	const [img, setImg] = useState();
+
   const books = [
     "Novel",
     "Fiction",
@@ -78,6 +82,19 @@ const AvailableBooks = () => {
     }
   ];
 
+  useEffect(() => {
+    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      )
+  })
+
   return (
     <>
       <header>
@@ -88,14 +105,14 @@ const AvailableBooks = () => {
         </h1>
         <div className="user-wrapper">
           <img
-            src={require("../../../Assets/profile.png")}
+            src={img}
             width="40px"
             height="40px"
             alt=""
           />
           <div>
-            <h4>Russel Kenneth Pogi</h4>
-            <small>Student</small>
+            <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
+            <small>{`${loginData?.validUser.userType}`}</small>
           </div>
         </div>
       </header>
