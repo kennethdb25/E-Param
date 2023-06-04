@@ -434,57 +434,57 @@ header{
 
 /* active tabs color */
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #fff;
-    text-shadow: 0 0 .25px currentcolor;
+    color:#FFC000!important;
+    text-shadow: 0 0 .25px currentcolor !important;
 }
 .ant-tabs-card>.ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab-active {
     /* color: #1890ff; */
-    background: #f7c275;
+    background: #FFC000  !important;
 }
 
  /* table header css */
  .ant-table-thead>tr>th {
-    position: relative;
-    color: rgb(255 255 255);
-    font-weight: 500;
-    text-align: left;
-    background: #f7c275;
-    border-bottom: 1px solid  #dfa145;
-    transition: background .3s ease;
+    position: relative !important;
+    color: rgb(255 255 255) !important;
+    font-weight: 500  !important;
+    text-align: left  !important;
+    background: #FFC000  !important;
+    border-bottom: 1px solid  #dfa145  !important;
+    transition: background .3s ease  !important;
 }
 /* button add to shelf */
 .ant-btn {
-    line-height: 1.5715;
+    line-height: 1.5715  !important;
     position: relative;
-    display: inline-block;
-    font-weight: 400;
-    white-space: nowrap;
-    text-align: center;
-    background-image: none;
-    box-shadow: 0 2px 0 rgba(0,0,0,.015);
-    cursor: pointer;
-    transition: all .3s cubic-bezier(.645,.045,.355,1);
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
-    height: 32px;
-    padding: 4px 15px;
-    font-size: 14px;
-    border-radius: 11px;
-    color: rgb(255 255 255);
-    border: 1px solid #d9d9d9;
-    background:  #f7c275;
+    display: inline-block  !important;
+    font-weight: 400  !important;
+    white-space: nowrap  !important;
+    text-align: center  !important;
+    background-image: none  !important;
+    box-shadow: 0 2px 0 rgba(0,0,0,.015)  !important;
+    cursor: pointer  !important;
+    transition: all .3s cubic-bezier(.645,.045,.355,1)  !important;
+    -webkit-user-select: none  !important;
+    -moz-user-select: none  !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    touch-action: manipulation !important;
+    height: 32px !important;
+    padding: 4px 15px !important;
+    font-size: 14px !important;
+    border-radius: 11px !important;
+    color: rgb(255 255 255) !important;
+    border: 1px solid #d9d9d9 !important;
+    background:#FFC000 !important;
 }
 
 /* pagination styling */
 .ant-pagination-item-active a {
-    color: #ffffff;
-	background:  #f7c275;
+    color: #ffffff !important;
+	background: #FFC000 !important;
 }
 .ant-pagination-item-active {
-    font-weight: 500;
-    background: #fff;
-    border-color: #8b5200;
+    font-weight: 500 !important;
+    background: #fff !important;
+    border-color:#efb300 !important;
 }
