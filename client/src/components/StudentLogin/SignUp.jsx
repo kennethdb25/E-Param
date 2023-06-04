@@ -39,7 +39,6 @@ const SignUp = (props) => {
       method: "POST",
       body: newdata
     });
-    console.log(res);
     if (res.status === 201) {
       toast.success("Registered Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
       onClose();

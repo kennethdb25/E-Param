@@ -29,14 +29,14 @@ const AvailableBooks = () => {
       key: '1',
       bookName: 'Mike',
       author: 'John Doe',
-      isbn: 2008,
+      isbn: 123123134323,
       status: 'Available',
     },
     {
       key: '2',
       bookName: 'Mike',
       author: 'John Doe',
-      isbn: 2008,
+      isbn: 203453453408,
       status: 'Available',
     },
   ];

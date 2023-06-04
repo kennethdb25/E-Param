@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { LoginContext } from "../../Context/Context";
@@ -16,6 +17,9 @@ import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
 import BorrowedBooks from "./DashboardPage/BorrowedBooks";
 import Shelf from "./DashboardPage/Shelf";
+import Inventory from "./DashboardPage/Inventory";
+import Reports from "./DashboardPage/Reports";
+import Settings from "./DashboardPage/Settings";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
@@ -23,7 +27,6 @@ const HomeDashboard = () => {
   const history = useNavigate();
   const { loginData } = useContext(LoginContext)
   const [currentActive, setCurrentActive] = useState(1);
-
 
   const handleLogout = async () => {
     if (loginData?.validUser?.userType === 'Student') {
@@ -166,7 +169,7 @@ const HomeDashboard = () => {
                 <li>
                   <a
                     key={5}
-                    className={currentActive === 4 ? "active" : "none"}
+                    className={currentActive === 5 ? "active" : "none"}
                     onClick={() => setCurrentActive(5)}
                   >
                     <span className="las la-clipboard-list">
@@ -183,7 +186,7 @@ const HomeDashboard = () => {
                 <li>
                   <a
                     key={6}
-                    className={currentActive === 4 ? "active" : "none"}
+                    className={currentActive === 6 ? "active" : "none"}
                     onClick={() => setCurrentActive(6)}
                   >
                     <span className="las la-clipboard-list">
@@ -200,7 +203,7 @@ const HomeDashboard = () => {
                 <li>
                   <a
                     key={7}
-                    className={currentActive === 4 ? "active" : "none"}
+                    className={currentActive === 7 ? "active" : "none"}
                     onClick={() => setCurrentActive(7)}
                   >
                     <span className="las la-clipboard-list">
@@ -238,11 +241,23 @@ const HomeDashboard = () => {
           <>
             <BorrowedBooks />
           </>
-        ) : (
+        ) : currentActive === 4 ? (
           <>
             <Shelf />
           </>
-        )}
+        ) : currentActive === 5 ? (
+          <>
+            <Inventory />
+          </>
+        ) : currentActive === 6 ? (
+          <>
+            <Reports />
+          </>
+        ) : currentActive === 7 ? (
+          <>
+            <Settings />
+          </>
+        ) : null}
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Form, Input, Row, Col, Button } from "antd";
 import { Typography, Box, Link } from "@mui/material";
 import useStyles from "./style";
@@ -21,7 +21,6 @@ const AdminLoginForm = (props) => {
       body: JSON.stringify(values),
     });
     const res = await data.json();
-    console.log(res);
     if (res.status === 201) {
       LoginValid();
       toast.success("Logged In", {
@@ -30,10 +29,12 @@ const AdminLoginForm = (props) => {
       });
       setTimeout(() => {
         let arry = res.result.userEmail.tokens;
-        console.log(arry)
         let lastElement = arry[arry.length - 1];
         localStorage.setItem("adminToken", lastElement.token);
-        history("/dashboard");
+        window.location.reload();
+        setTimeout(() => {
+          history("/dashboard");
+        }, 1000);
       }, 3000);
     } else {
       toast.error(res.message, {
@@ -48,7 +49,6 @@ const AdminLoginForm = (props) => {
 
   return (
     <Box className={classes.loginCard}>
-      <ToastContainer />
       <Box alignItems="center">
         <Typography fontSize="32px">ADMIN LOGIN</Typography>
       </Box>
@@ -96,7 +96,7 @@ const AdminLoginForm = (props) => {
               <Typography
                 component={Link}
                 style={{ textDecoration: "none"}}
-                href="/forgot-password"
+                href="/admin-forgot-password"
                 sx={{ "&:hover": { cursor: "pointer" } }}
               >
                 Forgot Password?

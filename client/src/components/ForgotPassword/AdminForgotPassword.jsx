@@ -8,7 +8,7 @@ import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
 
-const ForgotPassword = () => {
+const AdminForgotPassword = () => {
   const [form] = Form.useForm();
   const [email, setEmail] = useState("");
   const [OTP, setOTP] = useState("");
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
   const history = useNavigate();
 
   const onStepOne = async (values) => {
-    const data = await fetch(`/student/forgot-password/${values.email}`, {
+    const data = await fetch(`/admin/forgot-password/${values.email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const ForgotPassword = () => {
 
   const onStepThird = async (values) => {
     console.log(values);
-    const data = await fetch(`/student/forgot-password/${values.email}`, {
+    const data = await fetch(`/admin/forgot-password/${values.email}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const ForgotPassword = () => {
   const backToLogin = () => {
     setFourthStep(false);
     setFirstStep(true);
-    history("/");
+    history("/admin-login");
   };
 
   return (
@@ -320,6 +320,6 @@ const ForgotPassword = () => {
       </Box>
     </Box>
   );
-};
+}
 
-export default ForgotPassword;
+export default AdminForgotPassword

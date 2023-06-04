@@ -5,8 +5,6 @@ import "antd/dist/antd.min.css";
 
 const Dashboard = () => {
   const { loginData } = useContext(LoginContext)
-
-
 	const [img, setImg] = useState();
 
   useEffect(() => {

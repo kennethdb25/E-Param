@@ -1,56 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
-import { Table } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
-const BorrowedBooks = () => {
+const Settings = () => {
   const { loginData } = useContext(LoginContext)
 	const [img, setImg] = useState();
-
-  const dataSource = [
-    {
-      key: '1',
-      bookName: 'Mike',
-      author: 'John Doe',
-      isbn: 123123134323,
-      status: 'Returned',
-    },
-    {
-      key: '2',
-      bookName: 'Mike',
-      author: 'John Doe',
-      isbn: 203453453408,
-      status: 'Returned',
-    },
-  ];
-
-  const columns = [
-    {
-      title: 'Book Name',
-      dataIndex: 'bookName',
-      key: 'bookName',
-      width: '30%'
-    },
-    {
-      title: 'Author',
-      dataIndex: 'author',
-      key: 'author',
-      width: '20%'
-    },
-    {
-      title: 'ISBN',
-      dataIndex: 'isbn',
-      key: 'isbn',
-      width: '20%'
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      width: '10%'
-    },
-  ];
 
   useEffect(() => {
     fetch(`/uploads/${loginData?.validUser?.imgpath}`)
@@ -69,7 +24,7 @@ const BorrowedBooks = () => {
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Borrowed Books</span>
+            <span className="las la-bars">Settings</span>
           </label>
         </h1>
         <div className="user-wrapper">
@@ -86,10 +41,10 @@ const BorrowedBooks = () => {
         </div>
       </header>
       <main>
-        <Table columns={columns} dataSource={dataSource}/>
+        <h1>Settings</h1>
       </main>
     </>
-  );
-};
+  )
+}
 
-export default BorrowedBooks;
+export default Settings

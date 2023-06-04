@@ -1,7 +1,10 @@
 
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { LoginContext } from "./Context/Context";
+import { ToastContainer } from "react-toastify";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import './App.css';
 import ROUTE from './Routes/Route';
 import HomeDashboard from './components/DashBoard/Dashboard';
@@ -9,8 +12,12 @@ import LoginContent from './components/StudentLogin/LoginContent';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import AdminLoginContent from './components/AdminLogin/AdminLoginContent';
 import LibrarianLoginContent from './components/LibrarianLogin/LibrarianLoginContent';
+import LibrarianForgotPassword from "./components/ForgotPassword/LibrarianForgotPassword";
+import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword";
 
 function App() {
+  const [data, setData] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const { loginData, setLoginData } = useContext(LoginContext);
   const history = useNavigate();
 
@@ -72,24 +79,43 @@ function App() {
         setLoginData(data);
         history("/dashboard");
       }
+    } else {
+      setData(true)
     }
   }
 
   useEffect(() => {
     setTimeout(() => {
       LoginValid();
-    }, 100);
+    }, 3000);
+    setTimeout(() => {
+      setData(true)
+    }, 3000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div>
-      <Routes>
-        <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
-        <Route path={ROUTE.DASHBOARD} element={<HomeDashboard />} />
-        <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
-        <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
-        <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
-      </Routes>
+      <ToastContainer />
+      {data ? (
+        <>
+          <Routes>
+            <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
+            <Route path={ROUTE.DASHBOARD} element={<HomeDashboard />} />
+            <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
+            <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
+            <Route path={ROUTE.LIBRARIANFORGOTPASS} element={<LibrarianForgotPassword />} />
+            <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
+            <Route path={ROUTE.ADMINFORGOTPASS} element={<AdminForgotPassword />} />
+          </Routes>
+        </>
+      ) : (
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+          Loading Portal &nbsp;
+          <CircularProgress />
+        </Box>
+      )}
+
     </div>
   );
 }
