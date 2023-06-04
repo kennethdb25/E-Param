@@ -434,7 +434,7 @@ header{
 
 /* active tabs color */
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color:#FFC000!important;
+    color:white!important;
     text-shadow: 0 0 .25px currentcolor !important;
 }
 .ant-tabs-card>.ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card>div>.ant-tabs-nav .ant-tabs-tab-active {

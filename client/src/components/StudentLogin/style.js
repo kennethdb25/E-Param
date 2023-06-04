@@ -3,8 +3,9 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
+  
   loginContainer: {
-    backgroundImage: "url(/images/Cirdas.png)",
+    backgroundImage: "url(/login.png)",
     backgroundPosition: "center",
     backgroundSize: "cover",
     minHeight: "100vh",
@@ -12,8 +13,8 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
 
     [theme.breakpoints.up("md")]: {
-      paddingLeft: "0px",
-      justifyContent: "center",
+      paddingRight: "100px",
+      justifyContent: "end",
     },
     [theme.breakpoints.down("md")]: {
       paddingLeft: "0px",
@@ -26,7 +27,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    padding: "20px",
+    padding: "20px", 
     background: "white",
     border: "1px lightgray solid",
     borderRadius: "10px",
