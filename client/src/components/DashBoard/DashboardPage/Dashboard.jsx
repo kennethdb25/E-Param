@@ -1,11 +1,66 @@
 import React, { useContext, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
+import { Button, Modal, Table } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const { loginData } = useContext(LoginContext)
 	const [img, setImg] = useState();
+  const [isOpen, setIsOpen ] = useState(false)
+  const {setCurrentActive } = props;
+
+  const handleSeeAll = () => {
+    setCurrentActive(3);
+  };
+
+  const handleOpenModal = () => {
+    setIsOpen(true);
+  }
+
+  const dataSource = [
+    {
+      key: '1',
+      bookName: 'Mike',
+      author: 'John Doe',
+      isbn: 123123134323,
+      status: 'Returned',
+    },
+    {
+      key: '2',
+      bookName: 'Mike',
+      author: 'John Doe',
+      isbn: 203453453408,
+      status: 'Returned',
+    },
+  ];
+
+  const columns = [
+    {
+      title: 'Book Name',
+      dataIndex: 'bookName',
+      key: 'bookName',
+      width: '30%'
+    },
+    {
+      title: 'Author',
+      dataIndex: 'author',
+      key: 'author',
+      width: '20%'
+    },
+    {
+      title: 'ISBN',
+      dataIndex: 'isbn',
+      key: 'isbn',
+      width: '20%'
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      width: '10%'
+    },
+  ];
 
   useEffect(() => {
       fetch(`/uploads/${loginData?.validUser?.imgpath}`)
@@ -86,7 +141,7 @@ const Dashboard = () => {
               <div className="card">
                 <div className="card-header">
                   <h3>Recently Borrowed</h3>
-                  <button>
+                  <button style={{ cursor: 'pointer'}} onClick={()=>handleSeeAll()}>
                     See all<span className="las la-arrow-right"></span>
                   </button>
                 </div>
@@ -137,7 +192,7 @@ const Dashboard = () => {
               <div className="card">
                 <div className="card-header">
                   <h3>New Books</h3>
-                  <button>
+                  <button style={{ cursor: 'pointer'}} onClick={() => handleOpenModal()}>
                     See all<span className="las la-arrow-right"></span>
                   </button>
                 </div>
@@ -281,6 +336,21 @@ const Dashboard = () => {
             </div>
           </div>
         </main>
+        <div className="modals">
+          <Modal
+            title="New Books"
+            width={1000}
+            open={isOpen}
+            onCancel={() => setIsOpen(false)}
+            footer={[
+              <Button key="cancel" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+            ]}
+          >
+            <Table dataSource={dataSource} columns={columns}/>
+          </Modal>
+        </div>
     </>
   )
 }

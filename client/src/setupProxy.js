@@ -9,6 +9,7 @@ module.exports = function (app) {
       "/student/forgot-password",
       "/librarian/forgot-password",
       "/admin/forgot-password",
+      "/librarian/scannerQrCode",
       "/admin",
       "/librarian",
       "/uploads",

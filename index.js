@@ -13,6 +13,7 @@ const StudentRegRouter = require('./routes/signUpRoute/studentRegRoute');
 const ForgotPassRouter = require('./routes/forgot-password/forgotPassword');
 const LibrarianRegRouter = require('./routes/signUpRoute/librarianRegRoute');
 const AdminRegRouter = require('./routes/signUpRoute/adminRegRoute');
+const QrCodeRouter = require('./routes/qrCodeRoute/qrCodeRoute');
 
 // ROUTES
 app.use(SignInRouter);
@@ -20,6 +21,7 @@ app.use(ForgotPassRouter);
 app.use(StudentRegRouter);
 app.use(LibrarianRegRouter);
 app.use(AdminRegRouter);
+app.use(QrCodeRouter);
 
 app.use("/uploads", express.static("./uploads"));
 

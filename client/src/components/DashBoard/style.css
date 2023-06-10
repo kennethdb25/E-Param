@@ -208,8 +208,14 @@ main{
 	display: grid;
 	grid-gap: 2rem;
 	grid-template-columns: 60% auto;
-
 }
+
+.inventory-grid{
+	display: grid;
+	grid-gap: 2rem;
+	grid-template-columns: 70% auto;
+}
+
 .card{
 	background: #fff;
 	border-radius: 5px;
@@ -352,6 +358,9 @@ tr td:last-child{
 	.recent-grid{
 		grid-template-columns: 60% 40%;
 	}
+	.inventory-grid{
+		grid-template-columns: 60% 40%;
+	}
 }
 
 @media only screen and (max-width: 768px){
@@ -359,6 +368,9 @@ tr td:last-child{
 		grid-template-columns: repeat(2, 1fr);
 	}
 	.recent-grid{
+		grid-template-columns: 100%;
+	}
+	.inventory-grid{
 		grid-template-columns: 100%;
 	}
 	.search-wrapper{

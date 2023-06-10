@@ -231,7 +231,7 @@ const HomeDashboard = () => {
       <div className="main-content">
         {currentActive === 1 ? (
           <>
-            <Dashboard />
+            <Dashboard setCurrentActive={setCurrentActive}/>
           </>
         ) : currentActive === 2 ? (
           <>
