@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Box, SwipeableDrawer } from "@mui/material";
 import { Space, Drawer } from "antd";
 import useStyles from "./style";
 import LoginForm from "./LoginForm";
@@ -19,7 +19,9 @@ const LoginContent = (props) => {
   };
 
   return (
+    
     <Box className={classes.loginContainer}>
+    
       <LoginForm showSignUpForm={showSignUpForm} LoginValid={LoginValid}/>
       <Drawer
         title="Sign Up"
@@ -33,6 +35,22 @@ const LoginContent = (props) => {
       >
         <SignUp onClose={onClose}/>
       </Drawer>
+      
+      <Box className={classes.loginbox}>
+       <Box className={classes.line}>
+       <Box className={classes.loginLabel}>
+        PAMPANGA HIGH SCHOOL               
+       
+        <Box className={classes.loginLabel1}>
+        CITY OF SAN FERNANDO
+        
+       </Box>
+       </Box>
+        <Box className={classes.line1}>
+        <Box className={classes.loginlogo}></Box>
+        </Box>
+        </Box>
+        </Box>
     </Box>
   );
 };
