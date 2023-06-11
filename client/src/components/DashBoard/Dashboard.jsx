@@ -12,6 +12,7 @@ import {
   FileDoneOutlined,
   SettingOutlined,
   LogoutOutlined,
+  UserOutlined
 } from "@ant-design/icons";
 import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
@@ -19,14 +20,30 @@ import BorrowedBooks from "./DashboardPage/BorrowedBooks";
 import Shelf from "./DashboardPage/Shelf";
 import Inventory from "./DashboardPage/Inventory";
 import Reports from "./DashboardPage/Reports";
+import StudentAccounts from "./DashboardPage/StudentAccounts";
 import Settings from "./DashboardPage/Settings";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
-const HomeDashboard = () => {
+const HomeDashboard = (props) => {
   const history = useNavigate();
   const { loginData } = useContext(LoginContext)
   const [currentActive, setCurrentActive] = useState(1);
+	const [studentAccount, setStudentAccount] = useState();
+
+  const { newBooks } = props;
+
+  const getStudentAccounts = async () => {
+    const res = await fetch('/student/pending', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const newData = await res.json();
+    setStudentAccount(newData);
+    setCurrentActive(7);
+  }
 
   const handleLogout = async () => {
     if (loginData?.validUser?.userType === 'Student') {
@@ -197,14 +214,31 @@ const HomeDashboard = () => {
                </li>
               </>
             ) : null }
-            { loginData?.validUser?.userType === 'Super Admin' ?
+            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
             (
               <>
                 <li>
                   <a
                     key={7}
                     className={currentActive === 7 ? "active" : "none"}
-                    onClick={() => setCurrentActive(7)}
+                    onClick={() => getStudentAccounts()}
+                  >
+                    <span className="las la-clipboard-list">
+                      <UserOutlined />
+                    </span>
+                    <span>Student Accounts</span>
+                  </a>
+               </li>
+              </>
+            ) : null }
+            { loginData?.validUser?.userType === 'Super Admin' ?
+            (
+              <>
+                <li>
+                  <a
+                    key={8}
+                    className={currentActive === 8 ? "active" : "none"}
+                    onClick={() => setCurrentActive(8)}
                   >
                     <span className="las la-clipboard-list">
                       <SettingOutlined />
@@ -231,7 +265,7 @@ const HomeDashboard = () => {
       <div className="main-content">
         {currentActive === 1 ? (
           <>
-            <Dashboard setCurrentActive={setCurrentActive}/>
+            <Dashboard setCurrentActive={setCurrentActive} newBooks={newBooks}/>
           </>
         ) : currentActive === 2 ? (
           <>
@@ -254,6 +288,10 @@ const HomeDashboard = () => {
             <Reports />
           </>
         ) : currentActive === 7 ? (
+          <>
+            <StudentAccounts studentAccount={studentAccount}/>
+          </>
+        ): currentActive === 8 ? (
           <>
             <Settings />
           </>

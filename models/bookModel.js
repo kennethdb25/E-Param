@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const BookSchema = new mongoose.Schema({
-  bookName: {
+  title: {
     type: String,
     required: true,
   },
@@ -13,6 +13,34 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  location: {
+    type: String,
+    required: true,
+  },
+  publication: {
+    type: String,
+    required: true,
+  },
+  abstract: {
+    type: String,
+    required: true,
+  },
+  desc: {
+    type: String,
+    required: true,
+  },
+  assession: {
+    type: String,
+    required: true,
+  },
+  genre: {
+    type: String,
+    required: true,
+  },
+  notes: {
+    type: String,
+    required: true,
+  },
   imgpath: {
     type: String,
     required: false,
@@ -21,8 +49,16 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  created: {
+    type: Date,
+    required: true,
+  },
   QRCode: {
     type: String,
     required: true,
   },
 })
+
+const BookModel = new mongoose.model("BookInfo", BookSchema);
+
+module.exports = BookModel;

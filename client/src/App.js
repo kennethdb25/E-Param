@@ -17,6 +17,7 @@ import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword
 
 function App() {
   const [data, setData] = useState("");
+  const [newBooks, setNewBooks] = useState();
   // eslint-disable-next-line no-unused-vars
   const { loginData, setLoginData } = useContext(LoginContext);
   const history = useNavigate();
@@ -84,6 +85,17 @@ function App() {
     }
   }
 
+  const getNewBooks = async () => {
+    const res = await fetch('/book/get-new', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    const newData = await res.json();
+    setNewBooks(newData);
+  }
+
   useEffect(() => {
     setTimeout(() => {
       LoginValid();
@@ -91,6 +103,7 @@ function App() {
     setTimeout(() => {
       setData(true)
     }, 3000);
+    getNewBooks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,7 +114,7 @@ function App() {
         <>
           <Routes>
             <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.DASHBOARD} element={<HomeDashboard />} />
+            <Route path={ROUTE.DASHBOARD} element={<HomeDashboard newBooks={newBooks} />} />
             <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
             <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
             <Route path={ROUTE.LIBRARIANFORGOTPASS} element={<LibrarianForgotPassword />} />

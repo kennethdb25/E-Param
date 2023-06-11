@@ -33,6 +33,14 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  acctStatus: {
+    type: String,
+    required: true,
+  },
+  QRCode: {
+    type: String,
+    required: true,
+  },
   gender: {
     type: String,
     required: true,

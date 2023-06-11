@@ -2,13 +2,14 @@ const express = require("express");
 const multer = require("multer");
 const StudentRegRouter = new express.Router();
 const StudentModel = require("../../models/studentModel");
+const QRCode = require("qrcode");
 
 const imgconfig = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, "./uploads");
   },
   filename: (req, file, callback) => {
-    callback(null, `${Date.now()}. ${file.originalname}`);
+    callback(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
@@ -49,6 +50,9 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
   }
 
   try {
+
+    const qrCode = await QRCode.toDataURL(studentId);
+
     const finalUser = new StudentModel({
       studentId,
       firstName,
@@ -59,6 +63,8 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
       section,
       imgpath: filename,
       userType: "Student",
+      acctStatus: "Pending",
+      QRCode: qrCode,
       gender,
       email,
       password,
@@ -69,6 +75,16 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
 
 
     return res.status(201).json(storeData)
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+StudentRegRouter.get("/student/pending", async (req, res) => {
+  try {
+    const pendingAccounts = await StudentModel.find({ acctStatus: "Pending" });
+    return res.status(200).json({ status: 200, body: pendingAccounts });
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);

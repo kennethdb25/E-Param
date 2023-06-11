@@ -14,6 +14,8 @@ const ForgotPassRouter = require('./routes/forgot-password/forgotPassword');
 const LibrarianRegRouter = require('./routes/signUpRoute/librarianRegRoute');
 const AdminRegRouter = require('./routes/signUpRoute/adminRegRoute');
 const QrCodeRouter = require('./routes/qrCodeRoute/qrCodeRoute');
+const AddBookRouter = require('./routes/bookRoute/addBookRoute');
+const GetBookRouter = require('./routes/bookRoute/getBookRoute');
 
 // ROUTES
 app.use(SignInRouter);
@@ -22,6 +24,8 @@ app.use(StudentRegRouter);
 app.use(LibrarianRegRouter);
 app.use(AdminRegRouter);
 app.use(QrCodeRouter);
+app.use(AddBookRouter);
+app.use(GetBookRouter);
 
 app.use("/uploads", express.static("./uploads"));
 
