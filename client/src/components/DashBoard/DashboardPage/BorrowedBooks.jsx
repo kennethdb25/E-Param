@@ -86,7 +86,7 @@ const BorrowedBooks = () => {
         </div>
       </header>
       <main>
-        <Table columns={columns} dataSource={dataSource}/>
+        <Table key="BorrowedBook" columns={columns} dataSource={dataSource}/>
       </main>
     </>
   );

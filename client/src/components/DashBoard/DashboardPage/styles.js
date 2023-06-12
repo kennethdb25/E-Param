@@ -13,8 +13,16 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center'
   },
   btn: {
-    marginTop: 10,
+    marginTop: 40,
+    marginBottom: 40,
     backgroundColor: '#fff',
+  },
+  customModal: {
+    backgroundImage: "url(/modal.png)",
+    backgroundPosition: "center",
+    // backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "700px 700px",
   }
 }))
 

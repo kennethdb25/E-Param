@@ -18,6 +18,7 @@ SignInRouter.post('/student/login', async (req, res) => {
       const isMatch = await cipher.compare(password, userEmail.password)
       if (!isMatch) {
         return res.status(401).json({ message: "Invalid Email or Password" });
+        // validation for pending or disabled accounts
       } else {
         const token = await userEmail.generateAuthToken();
 

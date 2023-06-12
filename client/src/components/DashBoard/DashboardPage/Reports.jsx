@@ -86,7 +86,7 @@ const Reports = () => {
         </div>
       </header>
       <main>
-        <Table columns={columns} dataSource={dataSource}/>
+        <Table key="ReportsBook" columns={columns} dataSource={dataSource}/>
       </main>
     </>
   )

@@ -428,7 +428,9 @@ header{
 	padding-left: 1rem;
 }
 
-
+.ant-upload-list-picture-card .ant-upload-list-item-error, .ant-upload-list-picture .ant-upload-list-item-error {
+  border-color: #53ff4d;
+}
 
 #nav-toggle:checked +.sidebar .sidebar-brand h2 span:last-child,
 #nav-toggle:checked +.sidebar li a span:last-child{

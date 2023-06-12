@@ -16,6 +16,7 @@ const AdminRegRouter = require('./routes/signUpRoute/adminRegRoute');
 const QrCodeRouter = require('./routes/qrCodeRoute/qrCodeRoute');
 const AddBookRouter = require('./routes/bookRoute/addBookRoute');
 const GetBookRouter = require('./routes/bookRoute/getBookRoute');
+const BorrowBookRouter = require('./routes/bookRoute/borrowBookRoute');
 
 // ROUTES
 app.use(SignInRouter);
@@ -26,6 +27,7 @@ app.use(AdminRegRouter);
 app.use(QrCodeRouter);
 app.use(AddBookRouter);
 app.use(GetBookRouter);
+app.use(BorrowBookRouter);
 
 app.use("/uploads", express.static("./uploads"));
 
@@ -37,6 +39,8 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running at port: ${port}`);
 });
+
+server.timeout = 120000;

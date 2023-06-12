@@ -8,6 +8,7 @@ const Dashboard = (props) => {
   const { setCurrentActive, newBooks } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
+  // eslint-disable-next-line no-unused-vars
   const [imgNewBooks, setImgNewBooks] = useState();
   // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState(newBooks.body);
@@ -20,23 +21,6 @@ const Dashboard = (props) => {
   const handleOpenModal = () => {
     setIsOpen(true);
   };
-
-  const dataSource = [
-    {
-      key: "1",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 123123134323,
-      status: "Returned",
-    },
-    {
-      key: "2",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 203453453408,
-      status: "Returned",
-    },
-  ];
 
   const columns = [
     {
@@ -76,7 +60,7 @@ const Dashboard = (props) => {
           console.log(error);
         }
       );
-      fetch(`/uploads/${data?.imgpath}`)
+    fetch(`/uploads/${data?.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -253,7 +237,7 @@ const Dashboard = (props) => {
             </Button>,
           ]}
         >
-          <Table dataSource={data} columns={columns} />
+          <Table key="DashboardBook" dataSource={data} columns={columns} />
         </Modal>
       </div>
     </>

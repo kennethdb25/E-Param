@@ -1,6 +1,38 @@
 const mongoose = require('mongoose');
 
-const BookSchema = new mongoose.Schema({
+const ReserveBookSchema = new mongoose.Schema({
+  studentId: {
+    type: String,
+    required: true,
+  },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  middleName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
+  grade: {
+    type: String,
+    required: true,
+  },
+  section: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  bookId: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -33,10 +65,6 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  ratings: {
-    type: Number,
-    required: false,
-  },
   genre: {
     type: String,
     required: true,
@@ -53,7 +81,7 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  created: {
+  dateReserved: {
     type: Date,
     required: true,
   },
@@ -63,6 +91,6 @@ const BookSchema = new mongoose.Schema({
   },
 })
 
-const BookModel = new mongoose.model("BookInfo", BookSchema);
+const ReserveBookModel = new mongoose.model("ReserveBookInfo", ReserveBookSchema);
 
-module.exports = BookModel;
+module.exports = ReserveBookModel;

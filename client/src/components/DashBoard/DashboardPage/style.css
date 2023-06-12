@@ -488,3 +488,30 @@ header{
     background: #fff !important;
     border-color:#efb300 !important;
 }
+
+.custom-modal {
+	background-image: url('../../../../public/modal.png');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 700px 700px;
+}
+
+.custom-form {
+	background-image: url('../../../../public/modal.png');
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 900px 900px;
+}
+
+@media print {
+	.no-print {
+		display: none;
+	}
+	.custom-modal {
+		display: flex;
+		background-image: url('../../../../public/modal.png');
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: 700px 700px;
+	}
+}

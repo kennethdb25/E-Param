@@ -110,15 +110,15 @@ AddBookRouter.post(
         status: "Available",
         imgpath: filename,
         QRCode: qrCode,
-        created: new Date().toLocaleDateString(),
+        created: new Date().toISOString(),
       });
 
       const storeRecord = await finalRecord.save();
 
-      return res.status(201).json(storeRecord);
+      return res.status(201).json({ status: 201, body: storeRecord });
     } catch (error) {
       console.log(error);
-      return res.status(422).json(error);
+      return res.status(422).json({ status: 422, error: error });
     }
   }
 );
@@ -127,6 +127,7 @@ AddBookRouter.post(
   "/book/batch-add",
   uploadFile.single("file"),
   async (req, res) => {
+    console.log(req.file);
     const { filename } = req.file;
     const details = await parseFile(filename);
 
@@ -165,7 +166,7 @@ AddBookRouter.post(
               desc: Description,
               status: "Review",
               QRCode: qrCode,
-              created: new Date(),
+              created: new Date().toISOString(),
             });
             await finalRecord.save();
           } catch (error) {
@@ -174,7 +175,7 @@ AddBookRouter.post(
           }
         }
       );
-    return res.status(201).json({ message: "Batch Adding Completed" });
+    return res.status(201).json({ status: 201, message: "Batch Adding Completed" });
   }
 );
 

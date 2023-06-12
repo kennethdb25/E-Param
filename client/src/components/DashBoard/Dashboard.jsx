@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useContext, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../Context/Context";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -12,7 +12,7 @@ import {
   FileDoneOutlined,
   SettingOutlined,
   LogoutOutlined,
-  UserOutlined
+  UserOutlined,
 } from "@ant-design/icons";
 import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
@@ -27,35 +27,146 @@ import "antd/dist/antd.min.css";
 
 const HomeDashboard = (props) => {
   const history = useNavigate();
-  const { loginData } = useContext(LoginContext)
+  const { loginData } = useContext(LoginContext);
   const [currentActive, setCurrentActive] = useState(1);
-	const [studentAccount, setStudentAccount] = useState();
+  const [studentAccount, setStudentAccount] = useState();
+  const [genre, setGenre] = useState();
+  // Table Data
+  // get all available table config
+  const [getAvailable, setGetAvailable] = useState();
+  let availableCount = 0;
+  for (var key in getAvailable) {
+    if (getAvailable.hasOwnProperty(key)) {
+      availableCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationAvailable, setPaginationAvailable] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: availableCount,
+  });
+
+  // get reserved books per student table config
+  const [getAddToShelf, setGetAddToShelf] = useState();
+  let studentShelfCount = 0;
+  for (var key1 in getAddToShelf) {
+    if (getAddToShelf.hasOwnProperty(key1)) {
+      studentShelfCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationStudentShelf, setPaginationStudentShelf] = useState({
+    defaultCurrent: 1,
+    pageSize: 10,
+    total: studentShelfCount,
+  });
+
+  // ger all reserved books table config
+  const [getAllShelf, setGetAllShelf] = useState();
+  let allShelfCount = 0;
+  for (var keyRes in getAddToShelf) {
+    if (getAddToShelf.hasOwnProperty(keyRes)) {
+      allShelfCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationAllShelf, setPaginationAllShelf] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: allShelfCount,
+  });
 
   const { newBooks } = props;
 
-  const getStudentAccounts = async () => {
-    const res = await fetch('/student/pending', {
+  // Genre Tab
+  const getGenre = async () => {
+    const data = await fetch("/book/get-genre", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      setGenre(res.body);
+    }
+    setCurrentActive(2);
+  };
+
+  // Get reserved book per student
+  const getAddShelfPerStudent = async () => {
+    if (loginData) {
+      const data = await fetch(
+        `/book/student-shelf?email=${loginData.validUser.email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const res = await data.json();
+      if (res.status === 200) {
+        setGetAddToShelf(res.body);
       }
+      setCurrentActive(4);
+    }
+  };
+
+  // Get Inventory Data
+  const getInventoryData = async () => {
+    const data = await fetch("/book/get-available", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      setGetAvailable(res.body);
+    }
+
+    const allReservedData = await fetch("/book/get-reserved", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const allReservedRes = await allReservedData.json();
+    if (res.status === 200) {
+      setGetAllShelf(allReservedRes.body);
+    }
+  };
+
+  useEffect(() => {
+    getInventoryData();
+  }, []);
+
+  // Get Student Account
+  const getStudentAccounts = async () => {
+    const res = await fetch("/student/pending", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     const newData = await res.json();
     setStudentAccount(newData);
     setCurrentActive(7);
-  }
+  };
 
   const handleLogout = async () => {
-    if (loginData?.validUser?.userType === 'Student') {
-      let token = localStorage.getItem('studentToken');
-      const res = await fetch('/student/logout', {
+    if (loginData?.validUser?.userType === "Student") {
+      let token = localStorage.getItem("studentToken");
+      const res = await fetch("/student/logout", {
         method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: token,
-				Accept: "application/json",
-			},
-			credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+          Accept: "application/json",
+        },
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -69,16 +180,16 @@ const HomeDashboard = (props) => {
       } else {
         toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
       }
-    } else if (loginData?.validUser?.userType === 'Librarian') {
-      let token = localStorage.getItem('librarianToken');
-      const res = await fetch('/librarian/logout', {
+    } else if (loginData?.validUser?.userType === "Librarian") {
+      let token = localStorage.getItem("librarianToken");
+      const res = await fetch("/librarian/logout", {
         method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: token,
-				Accept: "application/json",
-			},
-			credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+          Accept: "application/json",
+        },
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -92,16 +203,16 @@ const HomeDashboard = (props) => {
       } else {
         toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
       }
-    } else if (loginData?.validUser?.userType === 'Super Admin') {
-      let token = localStorage.getItem('adminToken');
-      const res = await fetch('/admin/logout', {
+    } else if (loginData?.validUser?.userType === "Super Admin") {
+      let token = localStorage.getItem("adminToken");
+      const res = await fetch("/admin/logout", {
         method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: token,
-				Accept: "application/json",
-			},
-			credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+          Accept: "application/json",
+        },
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -116,7 +227,7 @@ const HomeDashboard = (props) => {
         toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
       }
     }
-  }
+  };
 
   return (
     <>
@@ -132,7 +243,7 @@ const HomeDashboard = (props) => {
         </div>
         <div className="sidebar-menu">
           <ul>
-            <li>
+            <li key="li1">
               <a
                 key={1}
                 className={currentActive === 1 ? "active" : "none"}
@@ -144,11 +255,11 @@ const HomeDashboard = (props) => {
                 <span>Dashboard</span>
               </a>
             </li>
-            <li>
+            <li key="li2">
               <a
                 key={2}
                 className={currentActive === 2 ? "active" : "none"}
-                onClick={() => setCurrentActive(2)}
+                onClick={() => getGenre()}
               >
                 <span className="las la-users">
                   <FileProtectOutlined />
@@ -156,7 +267,7 @@ const HomeDashboard = (props) => {
                 <span>Available Books</span>
               </a>
             </li>
-            <li>
+            <li key="li3">
               <a
                 key={3}
                 className={currentActive === 3 ? "active" : "none"}
@@ -168,11 +279,15 @@ const HomeDashboard = (props) => {
                 <span>Borrowed Books</span>
               </a>
             </li>
-            <li>
+            <li key="li4">
               <a
                 key={4}
                 className={currentActive === 4 ? "active" : "none"}
-                onClick={() => setCurrentActive(4)}
+                onClick={() =>
+                  loginData.validUser.userType === "Student"
+                    ? getAddShelfPerStudent()
+                    : setCurrentActive(4)
+                }
               >
                 <span className="las la-clipboard-list">
                   <ReadOutlined />
@@ -180,10 +295,10 @@ const HomeDashboard = (props) => {
                 <span>Shelf</span>
               </a>
             </li>
-            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
-            (
+            {loginData?.validUser?.userType === "Librarian" ||
+            loginData?.validUser?.userType === "Super Admin" ? (
               <>
-                <li>
+                <li key="li5">
                   <a
                     key={5}
                     className={currentActive === 5 ? "active" : "none"}
@@ -196,11 +311,11 @@ const HomeDashboard = (props) => {
                   </a>
                 </li>
               </>
-            ) : null }
-            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
-            (
+            ) : null}
+            {loginData?.validUser?.userType === "Librarian" ||
+            loginData?.validUser?.userType === "Super Admin" ? (
               <>
-                <li>
+                <li key="li6">
                   <a
                     key={6}
                     className={currentActive === 6 ? "active" : "none"}
@@ -211,13 +326,13 @@ const HomeDashboard = (props) => {
                     </span>
                     <span>Reports</span>
                   </a>
-               </li>
+                </li>
               </>
-            ) : null }
-            { loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ?
-            (
+            ) : null}
+            {loginData?.validUser?.userType === "Librarian" ||
+            loginData?.validUser?.userType === "Super Admin" ? (
               <>
-                <li>
+                <li key="li7">
                   <a
                     key={7}
                     className={currentActive === 7 ? "active" : "none"}
@@ -228,13 +343,12 @@ const HomeDashboard = (props) => {
                     </span>
                     <span>Student Accounts</span>
                   </a>
-               </li>
+                </li>
               </>
-            ) : null }
-            { loginData?.validUser?.userType === 'Super Admin' ?
-            (
+            ) : null}
+            {loginData?.validUser?.userType === "Super Admin" ? (
               <>
-                <li>
+                <li key="li8">
                   <a
                     key={8}
                     className={currentActive === 8 ? "active" : "none"}
@@ -247,14 +361,16 @@ const HomeDashboard = (props) => {
                   </a>
                 </li>
               </>
-            ) : null }
-            <li>
+            ) : null}
+            <li key="li9">
               <a
                 key={8}
-                onClick={() => {handleLogout()}}
+                onClick={() => {
+                  handleLogout();
+                }}
               >
                 <span className="las la-clipboard-list">
-                <LogoutOutlined />
+                  <LogoutOutlined />
                 </span>
                 <span>Logout</span>
               </a>
@@ -265,11 +381,18 @@ const HomeDashboard = (props) => {
       <div className="main-content">
         {currentActive === 1 ? (
           <>
-            <Dashboard setCurrentActive={setCurrentActive} newBooks={newBooks}/>
+            <Dashboard
+              setCurrentActive={setCurrentActive}
+              newBooks={newBooks}
+            />
           </>
         ) : currentActive === 2 ? (
           <>
-            <AvailableBooks />
+            <AvailableBooks
+              genre={genre}
+              setCurrentActive={setCurrentActive}
+              getAddShelfPerStudent={getAddShelfPerStudent}
+            />
           </>
         ) : currentActive === 3 ? (
           <>
@@ -277,11 +400,26 @@ const HomeDashboard = (props) => {
           </>
         ) : currentActive === 4 ? (
           <>
-            <Shelf />
+            <Shelf
+              getAddToShelf={
+                loginData.validUser.userType === "Student"
+                  ? getAddToShelf
+                  : getAllShelf
+              }
+              paginationStudentShelf={
+                loginData.validUser.userType === "Student"
+                  ? paginationStudentShelf
+                  : paginationAllShelf
+               }
+            />
           </>
         ) : currentActive === 5 ? (
           <>
-            <Inventory />
+            <Inventory
+              getAvailable={getAvailable}
+              paginationAvailable={paginationAvailable}
+              getAllShelf={getAllShelf}
+            />
           </>
         ) : currentActive === 6 ? (
           <>
@@ -289,9 +427,12 @@ const HomeDashboard = (props) => {
           </>
         ) : currentActive === 7 ? (
           <>
-            <StudentAccounts studentAccount={studentAccount}/>
+            <StudentAccounts
+              studentAccount={studentAccount}
+              getStudentAccounts={getStudentAccounts}
+            />
           </>
-        ): currentActive === 8 ? (
+        ) : currentActive === 8 ? (
           <>
             <Settings />
           </>

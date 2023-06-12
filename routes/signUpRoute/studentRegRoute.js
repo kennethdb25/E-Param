@@ -81,13 +81,36 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
   }
 });
 
+// GET PENDING STUDENT ACCOUNT
 StudentRegRouter.get("/student/pending", async (req, res) => {
   try {
-    const pendingAccounts = await StudentModel.find({ acctStatus: "Pending" });
+    const pendingAccounts = await StudentModel.find();
     return res.status(200).json({ status: 200, body: pendingAccounts });
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);
+  }
+});
+
+// APPROVE PENDING ACCOUNT
+StudentRegRouter.patch("/student/approve/:_id", async (req, res) => {
+  try {
+    const id = req.params._id;
+
+    const getPendingAccount = await StudentModel.findOne({ _id: id });
+
+    if (!getPendingAccount) {
+      return res.status(422).json({ error: `No account match` });
+    } else {
+      getPendingAccount.acctStatus = "Active";
+
+      const approveAccount = await getPendingAccount.save();
+
+      return res.status(200).json({ status: 200, approveAccount });
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json(error);
   }
 });
 

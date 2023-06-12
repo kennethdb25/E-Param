@@ -1,51 +1,53 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Table, Tabs, Button, Popconfirm, message } from "antd";
 import { LoginContext } from "../../../Context/Context";
-import { Button, Table, Tabs } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
-const AvailableBooks = () => {
+const AvailableBooks = (props) => {
+  const { genre, setCurrentActive, getAddShelfPerStudent } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
+  const [tabData, setTabData] = useState({});
+  const [activeTab, setActiveTab] = useState(genre[0]);
 
-  const books = [
-    "Novel",
-    "Fiction",
-    "Poem",
-    "Short Story",
-    "Narrative",
-    "Science Fiction",
-    "Novel",
-    "Fiction",
-    "Poem",
-  ];
-  const onChange = (key) => {
-    console.log(key);
-    console.log(books[key - 1]);
+  const addToShelfText = "Are you sure to reserve this Book?";
+
+  const onConfirmReserve = async (e, record) => {
+    e.defaultPrevented = true;
+    record.studentId = loginData.validUser.studentId;
+    record.firstName = loginData.validUser.firstName;
+    record.middleName = loginData.validUser.middleName;
+    record.lastName = loginData.validUser.lastName;
+    record.grade = loginData.validUser.grade;
+    record.section = loginData.validUser.section;
+    record.email = loginData.validUser.email;
+
+    const data = await fetch("/book/add-shelf", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(record)
+    });
+
+    const res = await data.json();
+    if (res.status === 201) {
+      getAddShelfPerStudent();
+      message.success("Reservation Added to Shelf");
+      setCurrentActive(4);
+    }
   };
 
-  const dataSource = [
-    {
-      key: "1",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 123123134323,
-      status: "Available",
-    },
-    {
-      key: "2",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 203453453408,
-      status: "Available",
-    },
-  ];
+  const onChange = (key) => {
+    setActiveTab(genre[key - 1]);
+  };
 
   const columns = [
     {
       title: "Book Name",
-      dataIndex: "bookName",
-      key: "bookName",
+      dataIndex: "title",
+      key: "title",
       width: "30%",
     },
     {
@@ -59,6 +61,12 @@ const AvailableBooks = () => {
       dataIndex: "isbn",
       key: "isbn",
       width: "20%",
+    },
+    {
+      title: "Genre",
+      dataIndex: "genre",
+      key: "genre",
+      width: "10%",
     },
     {
       title: "Status",
@@ -76,7 +84,19 @@ const AvailableBooks = () => {
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button>Add to Shelf</Button>
+            {loginData.validUser.userType === "Student" ? (
+              <>
+                <Popconfirm
+                  placement="top"
+                  title={addToShelfText}
+                  onConfirm={(e) => onConfirmReserve(e, record)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                 <Button>Add to Shelf</Button>
+                </Popconfirm>
+              </>
+            ) : null}
             <Button>View Details</Button>
           </div>
         </>
@@ -85,7 +105,27 @@ const AvailableBooks = () => {
   ];
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+    const fetchData = async () => {
+      if (activeTab && !tabData[activeTab]) {
+        try {
+          const response = await fetch(
+            `/book/get-all-book-per-genre?genre=${activeTab}`
+          );
+          const data = await response.json();
+          setTabData((prevData) => ({
+            ...prevData,
+            [activeTab]: data,
+          }));
+        } catch (error) {
+          console.error("Error: ", error);
+        }
+      }
+    };
+    fetchData();
+  }, [activeTab, tabData]);
+
+  useEffect(() => {
+    fetch(`/uploads/${loginData?.validUser.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -117,16 +157,16 @@ const AvailableBooks = () => {
         <Tabs
           onChange={onChange}
           type="card"
-          items={books.map((bookName, index) => {
+          items={genre.map((bookName, index) => {
             const id = String(index + 1);
             return {
               label: `${bookName}`,
               key: id,
-              children: <h1>{bookName}</h1>,
+              children: <h1 key={id}>{`${bookName}`}</h1>,
             };
           })}
         />
-        <Table columns={columns} dataSource={dataSource} />
+        <Table key="AvailableBook" columns={columns} dataSource={tabData[activeTab]} />
       </main>
     </>
   );
