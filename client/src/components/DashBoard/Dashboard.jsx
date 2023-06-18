@@ -166,44 +166,47 @@ const HomeDashboard = (props) => {
   }
 
   // Get Inventory Data
-  const getInventoryData = async () => {
-    const data = await fetch("/book/get-available", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const res = await data.json();
-    if (res.status === 200) {
-      setGetAvailable(res.body);
-    }
 
-    const allReservedData = await fetch("/book/get-reserved", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const allReservedRes = await allReservedData.json();
-    if (res.status === 200) {
-      setGetAllShelf(allReservedRes.body);
-    }
-
-    const allBorrowedData = await fetch("/book/get-borrowed", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const allBorrowedRes = await allBorrowedData.json();
-    if (res.status === 200) {
-      setGetAllBorrowed(allBorrowedRes.body);
-    }
-  };
 
   useEffect(() => {
-    getInventoryData();
-  }, [getAllShelf]);
+    if( loginData) {
+      const getInventoryData = async () => {
+        const data = await fetch("/book/get-available", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const res = await data.json();
+        if (res.status === 200) {
+          setGetAvailable(res.body);
+        }
+
+        const allReservedData = await fetch("/book/get-reserved", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const allReservedRes = await allReservedData.json();
+        if (res.status === 200) {
+          setGetAllShelf(allReservedRes.body);
+        }
+
+        const allBorrowedData = await fetch("/book/get-borrowed", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const allBorrowedRes = await allBorrowedData.json();
+        if (res.status === 200) {
+          setGetAllBorrowed(allBorrowedRes.body);
+        }
+      };
+      getInventoryData();
+    }
+  }, [loginData]);
 
   // Get Student Account
   const getStudentAccounts = async () => {
@@ -333,7 +336,11 @@ const HomeDashboard = (props) => {
               <a
                 key={3}
                 className={currentActive === 3 ? "active" : "none"}
-                onClick={() => setCurrentActive(3)}
+                onClick={() =>
+                  loginData.validUser.userType === "Student"
+                    ? getBorrowedPerStudent()
+                    : setCurrentActive(3)
+                }
               >
                 <span className="las la-clipboard-list">
                   <BookOutlined />
@@ -348,7 +355,7 @@ const HomeDashboard = (props) => {
                 onClick={() =>
                   loginData.validUser.userType === "Student"
                     ? getAddShelfPerStudent()
-                    : setCurrentActive(4) && getInventoryData()
+                    : setCurrentActive(4)
                 }
               >
                 <span className="las la-clipboard-list">
@@ -484,7 +491,6 @@ const HomeDashboard = (props) => {
                   ? paginationStudentShelf
                   : paginationAllShelf
                }
-               getInventoryData={getInventoryData}
             />
           </>
         ) : currentActive === 5 ? (
@@ -492,7 +498,6 @@ const HomeDashboard = (props) => {
             <Inventory
               getAvailable={getAvailable}
               paginationAvailable={paginationAvailable}
-              getAllShelf={getAllShelf}
             />
           </>
         ) : currentActive === 6 ? (

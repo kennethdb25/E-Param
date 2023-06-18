@@ -53,6 +53,10 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  created: {
+    type: Date,
+    required: true,
+  },
   email: {
     type: String,
     unique: true,

@@ -12,11 +12,128 @@ const Dashboard = (props) => {
   const [imgNewBooks, setImgNewBooks] = useState();
   // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState(newBooks.body);
+  const [shelfCount, setShelfCount] = useState(0);
+  const [borrowedCount, setBorrowedCount] = useState(0);
+  const [currBorrowedCount, setCurBorrowedCount] = useState(0);
+  const [recentlyBorrowedCount, setRecentlyBorrowedCount] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSeeAll = () => {
     setCurrentActive(3);
   };
+
+  useEffect(() => {
+    const getAddShelfPerStudent = async () => {
+      if (loginData) {
+        if (loginData.validUser.userType === "Student") {
+          const data = await fetch(
+            `/book/student-shelf?email=${loginData.validUser.email}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const res = await data.json();
+          if (res.status === 200) {
+            setShelfCount(res.body.length);
+          }
+          const currentlyBorrowedData = await fetch(
+            `/book/student-currently-borrowed?email=${loginData.validUser.email}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resCurrentlyBorrowed = await currentlyBorrowedData.json();
+          if (resCurrentlyBorrowed.status === 200) {
+            setCurBorrowedCount(resCurrentlyBorrowed.body.length);
+          }
+          const borrowedData = await fetch(
+            `/book/student-borrowed?email=${loginData.validUser.email}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resBorrowed = await borrowedData.json();
+          if (resBorrowed.status === 200) {
+            setBorrowedCount(resBorrowed.body.length);
+          }
+
+          const recentlyBorrowedData = await fetch(
+            `/book/student-recently-borrowed?email=${loginData.validUser.email}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resRecentlyBorrowed = await recentlyBorrowedData.json();
+          if (resRecentlyBorrowed.status === 200) {
+            setRecentlyBorrowedCount(resRecentlyBorrowed.body);
+          }
+        } else {
+          const allReservedData = await fetch("/book/get-reserved", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const allReservedRes = await allReservedData.json();
+          if (allReservedRes.status === 200) {
+            setShelfCount(allReservedRes.body.length);
+          }
+
+          const allBorrowedData = await fetch("/book/get-borrowed", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const allBorrowedRes = await allBorrowedData.json();
+          if (allBorrowedRes.status === 200) {
+            setBorrowedCount(allBorrowedRes.body.length);
+          }
+
+          const currentlyBorrowedData = await fetch(
+            "/book/all-currently-borrowed",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resCurrentlyBorrowed = await currentlyBorrowedData.json();
+          if (resCurrentlyBorrowed.status === 200) {
+            setCurBorrowedCount(resCurrentlyBorrowed.body.length);
+          }
+
+          const recentlyBorrowedData = await fetch(
+            "/book/all-recently-borrowed",
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resRecentlyBorrowed = await recentlyBorrowedData.json();
+          if (resRecentlyBorrowed.status === 200) {
+            setRecentlyBorrowedCount(resRecentlyBorrowed.body);
+          }
+        }
+      }
+    };
+    getAddShelfPerStudent();
+  }, [loginData]);
 
   const handleOpenModal = () => {
     setIsOpen(true);
@@ -93,7 +210,7 @@ const Dashboard = (props) => {
         <div className="cards">
           <div className="card-single">
             <div>
-              <h1>54</h1>
+              <h1>{borrowedCount}</h1>
               <span>Total Books Borrowed</span>
             </div>
             <div>
@@ -102,7 +219,7 @@ const Dashboard = (props) => {
           </div>
           <div className="card-single">
             <div>
-              <h1>9</h1>
+              <h1>{shelfCount}</h1>
               <span>Number in Shelf</span>
             </div>
             <div>
@@ -111,7 +228,7 @@ const Dashboard = (props) => {
           </div>
           <div className="card-single">
             <div>
-              <h1>2</h1>
+              <h1>{currBorrowedCount}</h1>
               <span>Currently Borrowed</span>
             </div>
             <div>
@@ -151,30 +268,34 @@ const Dashboard = (props) => {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>BOOK1</td>
-                        <td>May 20, 2023</td>
-                        <td>
-                          <span className="status purple"></span>
-                          Returned
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>BOOK3</td>
-                        <td>May 25, 2023</td>
-                        <td>
-                          <span className="status purple"></span>
-                          Returned
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>BOOK3</td>
-                        <td>May 26, 2023</td>
-                        <td>
-                          <span className="status purple"></span>
-                          Returned
-                        </td>
-                      </tr>
+                      {recentlyBorrowedCount ? (
+                        recentlyBorrowedCount.map((data) => {
+                          return (
+                            <>
+                              <tr>
+                                <td>{data.title}</td>
+                                <td>
+                                  {new Date(data.dateBorrowed).toDateString()}
+                                </td>
+                                <td>
+                                  <span
+                                    className={
+                                      data.status === "Borrowed"
+                                        ? "status blue"
+                                        : data.status === "Returned"
+                                        ? "status green"
+                                        : "status orange"
+                                    }
+                                  ></span>
+                                  {data.status}
+                                </td>
+                              </tr>
+                            </>
+                          );
+                        })
+                      ) : (
+                        <></>
+                      )}
                     </tbody>
                   </table>
                 </div>

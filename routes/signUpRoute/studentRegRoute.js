@@ -67,6 +67,7 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
       userType: "Student",
       acctStatus: "Pending",
       QRCode: qrCode,
+      created: new Date().toISOString(),
       gender,
       email,
       password,

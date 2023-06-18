@@ -60,6 +60,41 @@ GetBookRouter.get("/book/student-borrowed", async (req, res) => {
   }
 });
 
+// get all borrowed books per student
+GetBookRouter.get("/book/student-borrowed", async (req, res) => {
+  const all = req.query.email || "";
+  try {
+    const borrowedBooks = await BorrowBookModel.find({ email: all });
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+// get all currently borrowed books per student
+GetBookRouter.get("/book/student-currently-borrowed", async (req, res) => {
+  const all = req.query.email || "";
+  try {
+    const borrowedBooks = await BorrowBookModel.find({ email: all, status: "Borrowed" });
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+// get all currently borrowed books for student
+GetBookRouter.get("/book/all-currently-borrowed", async (req, res) => {
+  try {
+    const currentlyBorrowedBooks = await BorrowBookModel.find({ status: "Borrowed" });
+    return res.status(200).json({ status: 200, body: currentlyBorrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 // get reserved books per student
 GetBookRouter.get("/book/student-shelf", async (req, res) => {
   const all = req.query.email || "";

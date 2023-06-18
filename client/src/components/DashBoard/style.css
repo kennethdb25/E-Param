@@ -267,12 +267,12 @@ tr td:last-child{
 	display: flex;
 	align-items: center;
 }
-.status.purple {
-	background:rebeccapurple;
+.status.blue {
+	background: blue;
 }
 
-.status.pink{
-	background: deeppink;
+.status.green{
+	background: greenyellow;
 }
 
 .status.orange{

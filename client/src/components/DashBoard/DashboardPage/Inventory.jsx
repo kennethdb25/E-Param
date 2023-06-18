@@ -30,7 +30,7 @@ const { Dragger } = Upload;
 const { TextArea } = Input;
 
 const Inventory = (props) => {
-  const { getAvailable, paginationAvailable, getAllShelf } = props;
+  const { getAvailable, paginationAvailable } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -497,18 +497,6 @@ const Inventory = (props) => {
           key="ForReview"
           columns={columnsAvailable}
           dataSource={dataSource}
-        />
-        <h3>Borrowed Books</h3>
-        <Table
-          key="BorrowedInventoryBook"
-          columns={columnsAvailable}
-          dataSource={dataSource}
-        />
-        <h3>Reserved Books</h3>
-        <Table
-          key="ReservedInventoryBook"
-          columns={columnsShelf}
-          dataSource={getAllShelf}
         />
         <h3>Lost Books</h3>
         <Table

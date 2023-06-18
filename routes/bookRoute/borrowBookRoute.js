@@ -132,6 +132,30 @@ BorrowBookRouter.post("/book/add-borrowed", async (req, res) => {
   } else {
     return res.status(500).json({ error: "Book is already processed" });
   }
-})
+});
+
+// get all recently borrowed books per student
+BorrowBookRouter.get("/book/student-recently-borrowed", async (req, res) => {
+  const all = req.query.email || "";
+  try {
+    const borrowedBooks = await BorrowBookModel.find({ email: all }).sort({ dateBorrowed: -1 }).limit(10);
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+
+// get all recently borrowed books for librarian and admin
+BorrowBookRouter.get("/book/all-recently-borrowed", async (req, res) => {
+  try {
+    const borrowedBooks = await BorrowBookModel.find().sort({ dateBorrowed: -1 }).limit(10);
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
 
 module.exports = BorrowBookRouter;

@@ -19,7 +19,7 @@ const { TextArea } = Input;
 const { Title } = Typography;
 
 const Shelf = (props) => {
-  const { getAddToShelf, paginationStudentShelf, getInventoryData } = props;
+  const { getAddToShelf, paginationStudentShelf } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   const [processModal, setProcessModal] = useState(false);
@@ -158,7 +158,6 @@ const Shelf = (props) => {
     });
     const res = await processData.json();
     if (res.status === 201) {
-      getInventoryData();
       message.success("Process Succeeded");
       setProcessModal(false);
       setStudentInfo("");

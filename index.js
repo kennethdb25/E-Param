@@ -17,6 +17,7 @@ const QrCodeRouter = require('./routes/qrCodeRoute/qrCodeRoute');
 const AddBookRouter = require('./routes/bookRoute/addBookRoute');
 const GetBookRouter = require('./routes/bookRoute/getBookRoute');
 const BorrowBookRouter = require('./routes/bookRoute/borrowBookRoute');
+const AddReportRouter = require('./routes/reportRoute/reportRoute');
 
 // ROUTES
 app.use(SignInRouter);
@@ -28,8 +29,10 @@ app.use(QrCodeRouter);
 app.use(AddBookRouter);
 app.use(GetBookRouter);
 app.use(BorrowBookRouter);
+app.use(AddReportRouter);
 
 app.use("/uploads", express.static("./uploads"));
+app.use("/file-uploads", express.static("./file-uploads"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "client/build")));

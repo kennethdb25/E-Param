@@ -52,3 +52,30 @@ export const SectionData = [
     value: "F"
   },
 ]
+
+export const ReportData = [
+  {
+    name: "Number of Student Account",
+    value: "studentAccounts"
+  },
+  {
+    name: "Number of Borrowed Books",
+    value: "borrowedBooks"
+  },
+  {
+    name: "Number of Returned Books",
+    value: "returnedBooks"
+  },
+  {
+    name: "Number of Lost Books",
+    value: "lostBooks"
+  },
+  {
+    name: "Number of Reserve Books",
+    value: "reservedBooks"
+  },
+  {
+    name: "Number of Neww Books",
+    value: "newBooks"
+  },
+]
