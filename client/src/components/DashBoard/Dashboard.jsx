@@ -77,6 +77,37 @@ const HomeDashboard = (props) => {
     total: allShelfCount,
   });
 
+
+  // get borrowed books per student table config
+  const [getBorrowedStudent, setGetBorrowedStudent] = useState();
+  let studentBorrowedCount = 0;
+  for (var key1 in getBorrowedStudent) {
+    if (getBorrowedStudent.hasOwnProperty(key1)) {
+      studentBorrowedCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationStudentBorrowed, setPaginationStudentBorrowed] = useState({
+    defaultCurrent: 1,
+    pageSize: 10,
+    total: studentBorrowedCount,
+  });
+
+  // ger all reserved books table config
+  const [getAllBorrowed, setGetAllBorrowed] = useState();
+  let allBorrowedCount = 0;
+  for (var keyRes in getAddToShelf) {
+    if (getAddToShelf.hasOwnProperty(keyRes)) {
+      allBorrowedCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationAllBorrowed, setPaginationAllBorrowed] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: allBorrowedCount,
+  });
+
   const { newBooks } = props;
 
   // Genre Tab
@@ -114,6 +145,26 @@ const HomeDashboard = (props) => {
     }
   };
 
+  // Ger borrowed book per student
+  const getBorrowedPerStudent = async () => {
+    if (loginData) {
+      const data = await fetch(
+        `/book/student-borrowed?email=${loginData.validUser.email}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const res = await data.json();
+      if (res.status === 200) {
+        setGetBorrowedStudent(res.body);
+      }
+      setCurrentActive(3);
+    }
+  }
+
   // Get Inventory Data
   const getInventoryData = async () => {
     const data = await fetch("/book/get-available", {
@@ -137,11 +188,22 @@ const HomeDashboard = (props) => {
     if (res.status === 200) {
       setGetAllShelf(allReservedRes.body);
     }
+
+    const allBorrowedData = await fetch("/book/get-borrowed", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const allBorrowedRes = await allBorrowedData.json();
+    if (res.status === 200) {
+      setGetAllBorrowed(allBorrowedRes.body);
+    }
   };
 
   useEffect(() => {
     getInventoryData();
-  }, []);
+  }, [getAllShelf]);
 
   // Get Student Account
   const getStudentAccounts = async () => {
@@ -286,7 +348,7 @@ const HomeDashboard = (props) => {
                 onClick={() =>
                   loginData.validUser.userType === "Student"
                     ? getAddShelfPerStudent()
-                    : setCurrentActive(4)
+                    : setCurrentActive(4) && getInventoryData()
                 }
               >
                 <span className="las la-clipboard-list">
@@ -396,7 +458,18 @@ const HomeDashboard = (props) => {
           </>
         ) : currentActive === 3 ? (
           <>
-            <BorrowedBooks />
+            <BorrowedBooks
+              getBorrowedStudent={
+                loginData.validUser.userType === "Student"
+                  ? getBorrowedStudent
+                  : getAllBorrowed
+              }
+              paginationStudentBorrowed={
+                loginData.validUser.userType === "Student"
+                  ? paginationStudentBorrowed
+                  : paginationAllBorrowed
+              }
+            />
           </>
         ) : currentActive === 4 ? (
           <>
@@ -411,6 +484,7 @@ const HomeDashboard = (props) => {
                   ? paginationStudentShelf
                   : paginationAllShelf
                }
+               getInventoryData={getInventoryData}
             />
           </>
         ) : currentActive === 5 ? (

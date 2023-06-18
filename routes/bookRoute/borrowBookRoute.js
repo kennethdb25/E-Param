@@ -2,6 +2,7 @@ const express = require("express");
 const BorrowBookRouter = new express.Router();
 const BookModel = require("../../models/bookModel");
 const ReserveBookModel = require("../../models/reserveBookModel.js");
+const BorrowBookModel = require("../../models/borrowBookModel");
 
 // ADD BOOK AS BORROWED
 BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
@@ -32,7 +33,7 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
   const availableBook = await BookModel.findOne({ _id: _id, status: "Available" });
 
   if (availableBook) {
-    const validate = await ReserveBookModel.findOne({ bookId: _id });
+    const validate = await ReserveBookModel.findOne({ bookId: _id, status: "Reserved" });
     if (validate) {
       return res.status(404).json({ error: "Book is already reserved" });
     }
@@ -67,6 +68,69 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
     return res.status(201).json({ status: 201, body: storeRecord });
   } else {
     return res.status(404).json({ error: "Book is already reserved" });
+  }
+});
+
+BorrowBookRouter.post("/book/add-borrowed", async (req, res) => {
+  const {
+    QRCode,
+    abstract,
+    assession,
+    author,
+    desc,
+    email,
+    firstName,
+    genre,
+    grade,
+    imgpath,
+    isbn,
+    lastName,
+    location,
+    middleName,
+    notes,
+    publication,
+    section,
+    studentId,
+    title,
+    _id,
+  } = req.body;
+
+  // validate book if already processed
+
+  const validate = await ReserveBookModel.findOne({ _id, status: "Reserved" });
+  if (validate) {
+    const finalRecord = new BorrowBookModel({
+      QRCode,
+      abstract,
+      assession,
+      author,
+      desc,
+      email,
+      firstName,
+      genre,
+      grade,
+      imgpath,
+      isbn,
+      lastName,
+      location,
+      middleName,
+      notes,
+      publication,
+      section,
+      studentId,
+      title,
+      status: "Borrowed",
+      reservationId: _id,
+      dateBorrowed: new Date().toISOString(),
+    });
+
+    validate.status = "Processed";
+    await validate.save();
+
+    const storeRecord = await finalRecord.save();
+    return res.status(201).json({ status: 201, body: storeRecord });
+  } else {
+    return res.status(500).json({ error: "Book is already processed" });
   }
 })
 

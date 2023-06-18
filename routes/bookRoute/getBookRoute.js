@@ -2,6 +2,7 @@ const express = require("express");
 const GetBookRouter = new express.Router();
 const BookModel = require("../../models/bookModel");
 const ReserveBookModel = require("../../models/reserveBookModel.js");
+const BorrowBookModel = require("../../models/borrowBookModel");
 
 // get new books
 GetBookRouter.get("/book/get-new", async (req, res) => {
@@ -28,7 +29,18 @@ GetBookRouter.get("/book/get-available", async (req, res) => {
 // Get all reserve books
 GetBookRouter.get("/book/get-reserved", async (req, res) => {
   try {
-    const borrowedBooks = await ReserveBookModel.find();
+    const borrowedBooks = await ReserveBookModel.find({ status: "Reserved" });
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+// get all borrowed books for admin and librarian
+GetBookRouter.get("/book/get-borrowed", async (req, res) => {
+  try {
+    const borrowedBooks = await BorrowBookModel.find().sort({ dateBorrowed: -1 });
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -37,10 +49,22 @@ GetBookRouter.get("/book/get-reserved", async (req, res) => {
 });
 
 // get borrowed books per student
+GetBookRouter.get("/book/student-borrowed", async (req, res) => {
+  const all = req.query.email || "";
+  try {
+    const borrowedBooks = await BorrowBookModel.find({ email: all });
+    return res.status(200).json({ status: 200, body: borrowedBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+// get reserved books per student
 GetBookRouter.get("/book/student-shelf", async (req, res) => {
   const all = req.query.email || "";
   try {
-    const borrowedBooks = await ReserveBookModel.find({ email: all });
+    const borrowedBooks = await ReserveBookModel.find({ email: all, status: "Reserved" });
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -88,9 +112,18 @@ GetBookRouter.get("/book/get-all-book-per-genre", async (req, res) => {
         cache[search] = data;
         return res.json(data);
       })
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
 
-    // const books = await BookModel.find({ genre: { $regex: search, $options: "i" } });
-    // console.log(books)
+//GET BOOK INFO FOR PROCESSING RESERVED BOOK
+GetBookRouter.get("/book/get-info", async (req, res) => {
+  const info = req.query.isbn || "";
+  try {
+    const getBookInfo = await BookModel.findOne({ isbn: info });
+    return res.status(200).json({ status: 200, body: getBookInfo });
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);

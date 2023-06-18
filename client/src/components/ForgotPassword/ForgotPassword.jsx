@@ -92,7 +92,6 @@ const ForgotPassword = () => {
   };
 
   const onStepThird = async (values) => {
-    console.log(values);
     const data = await fetch(`/student/forgot-password/${values.email}`, {
       method: "PATCH",
       headers: {

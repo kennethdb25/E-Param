@@ -117,8 +117,7 @@ const Inventory = (props) => {
             type="link"
             size="small"
             onClick={() => {
-              clearFilters &&
-              handleReset(clearFilters)
+              clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
               setSearchedColumn(dataIndex);
               confirm({
@@ -168,7 +167,6 @@ const Inventory = (props) => {
       axios
         .post("/librarian/scannerQrCode", { detail: qrDetail })
         .then((response) => {
-          console.log(response);
           setQrImage(response.data);
         });
     } else {
@@ -183,23 +181,22 @@ const Inventory = (props) => {
 
   // FORM FUNCTIONS
   const onFinish = async (values) => {
-    console.log(values);
     const newdata = new FormData();
-		newdata.append("photo", values.photo.file.originFileObj);
-		newdata.append("abstract", values.abstract);
-		newdata.append("assession", values.assession);
-		newdata.append("desc", values.desc);
-		newdata.append("genre", values.genre);
-		newdata.append("isbn", values.isbn);
-		newdata.append("location", values.location);
-		newdata.append("notes", values.notes);
-		newdata.append("publication", values.publication);
-		newdata.append("title", values.title);
-		newdata.append("author", values.author);
+    newdata.append("photo", values.photo.file.originFileObj);
+    newdata.append("abstract", values.abstract);
+    newdata.append("assession", values.assession);
+    newdata.append("desc", values.desc);
+    newdata.append("genre", values.genre);
+    newdata.append("isbn", values.isbn);
+    newdata.append("location", values.location);
+    newdata.append("notes", values.notes);
+    newdata.append("publication", values.publication);
+    newdata.append("title", values.title);
+    newdata.append("author", values.author);
 
     const res = await fetch("/book/single-add", {
       method: "POST",
-      body: newdata
+      body: newdata,
     });
     if (res.status === 201) {
       message.success("Book Added Successfully");
@@ -213,28 +210,26 @@ const Inventory = (props) => {
 
   // METHOD FOR BATCH UPLOAD
   const handleFileUpload = async (file) => {
-    console.log(file)
-    if(file){
+    if (file) {
       const newdata = new FormData();
-      newdata.append('file', file.originFileObj);
+      newdata.append("file", file.originFileObj);
 
       const res = await fetch("/book/batch-add", {
         method: "POST",
-        body: newdata
+        body: newdata,
       });
-      if(res.status === 201){
+      if (res.status === 201) {
         message.success("Batch Adding Completed");
         setBatchOpen(false);
-      }else {
+      } else {
         message.error("Something went wrong. Please try again later");
       }
     }
-  }
+  };
 
   const handleFileRemove = (fileList) => {
     setFileLists(fileList);
-  }
-
+  };
 
   // IMAGE METHOD FOR SINGLE UPLOAD
   const imgprops = {
@@ -408,7 +403,6 @@ const Inventory = (props) => {
     },
   ];
 
-
   useEffect(() => {
     fetch(`/uploads/${loginData?.validUser?.imgpath}`)
       .then((res) => res.blob())
@@ -442,7 +436,12 @@ const Inventory = (props) => {
         <div className="inventory-grid">
           <div className="projects">
             <h3>Available Books</h3>
-            <Table key="AvailableInventoryBook" columns={columnsAvailable} dataSource={getAvailable} pagination={paginationAvailable} />
+            <Table
+              key="AvailableInventoryBook"
+              columns={columnsAvailable}
+              dataSource={getAvailable}
+              pagination={paginationAvailable}
+            />
           </div>
           <div className="customers">
             <h3>Generate and Download QR Code</h3>
@@ -458,6 +457,7 @@ const Inventory = (props) => {
                     xs={12}
                     className={classes.gridContent}
                   >
+                    <h3>Pampanga High School Library</h3>
                     {qrDetail.length > 0 && qrImage ? (
                       <>
                         <a
@@ -466,7 +466,6 @@ const Inventory = (props) => {
                           download
                           onClick={handleDownload}
                         >
-                          <h5>Pampanga High School Library</h5>
                           <img src={qrImage} alt="qrImage" />
                         </a>
                       </>
@@ -494,13 +493,29 @@ const Inventory = (props) => {
           </div>
         </div>
         <h3>For Review</h3>
-        <Table key="ForReview" columns={columnsAvailable} dataSource={dataSource} />
+        <Table
+          key="ForReview"
+          columns={columnsAvailable}
+          dataSource={dataSource}
+        />
         <h3>Borrowed Books</h3>
-        <Table key="BorrowedInventoryBook" columns={columnsAvailable} dataSource={dataSource} />
+        <Table
+          key="BorrowedInventoryBook"
+          columns={columnsAvailable}
+          dataSource={dataSource}
+        />
         <h3>Reserved Books</h3>
-        <Table key="ReservedInventoryBook" columns={columnsShelf} dataSource={getAllShelf} />
+        <Table
+          key="ReservedInventoryBook"
+          columns={columnsShelf}
+          dataSource={getAllShelf}
+        />
         <h3>Lost Books</h3>
-        <Table key="LostInventoryBook" columns={columnsAvailable} dataSource={dataSource} />
+        <Table
+          key="LostInventoryBook"
+          columns={columnsAvailable}
+          dataSource={dataSource}
+        />
       </main>
       <div className="modals">
         <Modal
@@ -859,11 +874,8 @@ const Inventory = (props) => {
             fileList={fileLists}
             beforeUpload={() => false}
             onChange={(info) => {
-              // console.log(info.fileList[0])
-                handleFileUpload(info.fileList[0]);
-                handleFileRemove(fileLists);
-              // if (status === 'done'){
-              // }
+              handleFileUpload(info.fileList[0]);
+              handleFileRemove(fileLists);
             }}
           >
             <p className="ant-upload-drag-icon">
@@ -873,8 +885,8 @@ const Inventory = (props) => {
               Click or drag file to this area to upload
             </p>
             <p className="ant-upload-hint">
-              Support for a single upload. Strictly prohibited from
-              uploading file not supported by the given format.
+              Support for a single upload. Strictly prohibited from uploading
+              file not supported by the given format.
             </p>
           </Dragger>
         </Modal>

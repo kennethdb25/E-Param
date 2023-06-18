@@ -127,7 +127,6 @@ AddBookRouter.post(
   "/book/batch-add",
   uploadFile.single("file"),
   async (req, res) => {
-    console.log(req.file);
     const { filename } = req.file;
     const details = await parseFile(filename);
 
@@ -151,7 +150,7 @@ AddBookRouter.post(
             return;
           }
           try {
-            const qrCode = await QRCode.toDataURL(`${Title} ${Author} ${ISBN}`);
+            const qrCode = await QRCode.toDataURL(ISBN);
 
             const finalRecord = new BookModel({
               title: Title,

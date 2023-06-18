@@ -45,14 +45,16 @@ StudentRegRouter.post("/student/register", upload.single("photo"), async (req, r
 
   // validate if student id exist
   const validate = await StudentModel.findOne({ studentId: studentId });
+  const validateEmail = await StudentModel.findOne({ email: email });
   if (validate) {
     return res.status(422).json({ error: "ID is already exists" });
   }
+  if (validateEmail) {
+    return res.status(422).json({ error: "Email is already exists" });
+  }
 
   try {
-
     const qrCode = await QRCode.toDataURL(studentId);
-
     const finalUser = new StudentModel({
       studentId,
       firstName,
@@ -111,6 +113,18 @@ StudentRegRouter.patch("/student/approve/:_id", async (req, res) => {
   } catch (error) {
     console.log(error)
     return res.status(404).json(error);
+  }
+});
+
+//GET STUDENT INFO FOR PROCESSING RESERVED BOOK
+StudentRegRouter.get("/student/get-info", async (req, res) => {
+  const info = req.query.studentId || "";
+  try {
+    const getStudentInfo = await StudentModel.findOne({ studentId: info });
+    return res.status(200).json({ status: 200, body: getStudentInfo });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
   }
 });
 
