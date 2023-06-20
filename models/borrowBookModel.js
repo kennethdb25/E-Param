@@ -85,6 +85,12 @@ const BorrowookSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  dateReturned: {
+    type: Date,
+  },
+  dateLost: {
+    type: Date,
+  },
   QRCode: {
     type: String,
     required: true,

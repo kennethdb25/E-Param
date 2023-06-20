@@ -165,9 +165,21 @@ const HomeDashboard = (props) => {
     }
   }
 
+  const getBorrowedData = async () => {
+    const allBorrowedData = await fetch("/book/get-borrowed", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const allBorrowedRes = await allBorrowedData.json();
+    if (allBorrowedRes.status === 200) {
+      setGetAllBorrowed(allBorrowedRes.body);
+    }
+    setCurrentActive(3);
+  }
+
   // Get Inventory Data
-
-
   useEffect(() => {
     if( loginData) {
       const getInventoryData = async () => {
@@ -191,17 +203,6 @@ const HomeDashboard = (props) => {
         const allReservedRes = await allReservedData.json();
         if (res.status === 200) {
           setGetAllShelf(allReservedRes.body);
-        }
-
-        const allBorrowedData = await fetch("/book/get-borrowed", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const allBorrowedRes = await allBorrowedData.json();
-        if (res.status === 200) {
-          setGetAllBorrowed(allBorrowedRes.body);
         }
       };
       getInventoryData();
@@ -339,7 +340,7 @@ const HomeDashboard = (props) => {
                 onClick={() =>
                   loginData.validUser.userType === "Student"
                     ? getBorrowedPerStudent()
-                    : setCurrentActive(3)
+                    : getBorrowedData()
                 }
               >
                 <span className="las la-clipboard-list">
@@ -476,6 +477,7 @@ const HomeDashboard = (props) => {
                   ? paginationStudentBorrowed
                   : paginationAllBorrowed
               }
+              getBorrowedData={getBorrowedData}
             />
           </>
         ) : currentActive === 4 ? (

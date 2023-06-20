@@ -4,30 +4,30 @@ import axios from "axios";
 import {
   Table,
   Button,
-  Modal,
   message,
   Upload,
   Space,
-  Drawer,
   Form,
-  Row,
-  Col,
   Input,
+  Image,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Card, CardContent, Container, Grid, TextField } from "@mui/material";
 import {
   PlusCircleOutlined,
-  InboxOutlined,
-  PlusOutlined,
+  ReadOutlined,
+  QrcodeOutlined
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import useStyles from "./styles";
 import "./style.css";
 import "antd/dist/antd.min.css";
-
-const { Dragger } = Upload;
-const { TextArea } = Input;
+import {
+  InventoryAddBookModal,
+  InventoryAvailableBooksModal,
+  InventoryBatchAddModal,
+} from "../AntdComponents/Modal/modal";
+import { InventorySingleAddDrawer } from "../AntdComponents/Drawer/drawer";
 
 const Inventory = (props) => {
   const { getAvailable, paginationAvailable } = props;
@@ -43,6 +43,11 @@ const Inventory = (props) => {
   const [singleOpen, setSingleOpen] = useState(false);
   const [batchOpen, setBatchOpen] = useState(false);
   const [fileLists, setFileLists] = useState(null);
+
+  const [viewDetailsData, setViewDetailsData] = useState(null);
+  const [viewDeatailsImg, setViewDeatailsImg] = useState();
+  const [viewDetailsModal, setViewDetailsModal] = useState(false);
+
   const classes = useStyles();
 
   const handleDownload = () => {
@@ -282,6 +287,23 @@ const Inventory = (props) => {
     },
   ];
 
+  const onViewDetailsAvailable = async (record, e) => {
+    console.log(record);
+    e.defaultPrevented = true;
+    setViewDetailsData(record);
+    fetch(`/uploads/${record?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setViewDeatailsImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    setViewDetailsModal(true);
+  };
+
   // Column Tables
   const columnsAvailable = [
     {
@@ -322,6 +344,10 @@ const Inventory = (props) => {
                 shape="round"
                 icon={<PlusCircleOutlined />}
                 onClick={() => handleOpenModal()}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
               >
                 ADD BOOK
               </Button>
@@ -337,21 +363,23 @@ const Inventory = (props) => {
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button>View Details</Button>
+            <Button
+              type="primary"
+              icon={<ReadOutlined />}
+              onClick={(e) => {
+                onViewDetailsAvailable(record, e);
+              }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              View Details
+            </Button>
           </div>
         </>
       ),
     },
   ];
 
-  const columnsShelf = [
-    {
-      title: "Student ID",
-      dataIndex: "studentId",
-      key: "studentId",
-      width: "15%",
-      ...getColumnSearchProps("studentId"),
-    },
+  const columnsReview = [
     {
       title: "Book Name",
       dataIndex: "title",
@@ -363,21 +391,14 @@ const Inventory = (props) => {
       title: "Author",
       dataIndex: "author",
       key: "author",
-      width: "15%",
-      ...getColumnSearchProps("author"),
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
       width: "20%",
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("author"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
-      width: "15%",
+      width: "20%",
       ...getColumnSearchProps("isbn"),
     },
     {
@@ -396,12 +417,76 @@ const Inventory = (props) => {
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            <Button>View Details</Button>
+            <Button
+              type="primary"
+              icon={<ReadOutlined />}
+              onClick={(e) => {
+                onViewDetailsAvailable(record, e);
+              }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              View Details
+            </Button>
           </div>
         </>
       ),
     },
   ];
+
+  const columnsLost = [
+    {
+      title: "Book Name",
+      dataIndex: "title",
+      key: "title",
+      width: "30%",
+      ...getColumnSearchProps("title"),
+    },
+    {
+      title: "Author",
+      dataIndex: "author",
+      key: "author",
+      width: "20%",
+      ...getColumnSearchProps("author"),
+    },
+    {
+      title: "ISBN",
+      dataIndex: "isbn",
+      key: "isbn",
+      width: "20%",
+      ...getColumnSearchProps("isbn"),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: "10%",
+    },
+    {
+      title: "",
+      dataIndex: "",
+      key: "x",
+      width: "10%",
+      render: (record) => (
+        <>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+          >
+            <Button
+              type="primary"
+              icon={<ReadOutlined />}
+              onClick={(e) => {
+                onViewDetailsAvailable(record, e);
+              }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              View Details
+            </Button>
+          </div>
+        </>
+      ),
+    },
+  ];
+
 
   useEffect(() => {
     fetch(`/uploads/${loginData?.validUser?.imgpath}`)
@@ -479,9 +564,14 @@ const Inventory = (props) => {
                     />
                     <Button
                       className={classes.btn}
+                      icon={<QrcodeOutlined />}
                       shape="round"
                       type="primary"
                       onClick={generateQrCode}
+                      style={{
+                        backgroundColor: "#000080",
+                        border: "1px solid #d9d9d9",
+                      }}
                     >
                       Generate QR Code
                     </Button>
@@ -495,389 +585,54 @@ const Inventory = (props) => {
         <h3>For Review</h3>
         <Table
           key="ForReview"
-          columns={columnsAvailable}
-          dataSource={dataSource}
+          columns={columnsReview}
+          dataSource={getAvailable}
+          pagination={paginationAvailable}
         />
         <h3>Lost Books</h3>
         <Table
           key="LostInventoryBook"
-          columns={columnsAvailable}
-          dataSource={dataSource}
+          columns={columnsLost}
+          dataSource={getAvailable}
+          pagination={paginationAvailable}
         />
       </main>
       <div className="modals">
-        <Modal
-          title="ADD BOOKS"
-          width={400}
-          open={isOpen}
-          onCancel={() => setIsOpen(false)}
-          footer={[
-            <Button key="cancel" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>,
-          ]}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              gap: "20px",
-            }}
-          >
-            <Button onClick={() => handleSingleModal()}>Single Add</Button>
-            <Button onClick={() => handleBatchModal()}>Batch Add</Button>
-          </div>
-        </Modal>
+        {/* MODAL FOR ADD BOOK */}
+        <InventoryAddBookModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          handleSingleModal={handleSingleModal}
+          handleBatchModal={handleBatchModal}
+        />
         {/* DRAWER FOR SINGLE ADD */}
-        <Drawer
-          title="Add Book"
-          placement="right"
+        <InventorySingleAddDrawer
           onClose={onClose}
-          open={singleOpen}
-          height="100%"
-          width="100%"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginLeft: "342px",
-          }}
-          extra={<Space></Space>}
-        >
-          <div className="custom-form">
-            <Form
-              form={form}
-              labelCol={{
-                span: 12,
-              }}
-              layout="horizontal"
-              onFinish={onFinish}
-              onFinishFailed={onFinishFailed}
-              autoComplete="off"
-              style={{
-                width: "100%",
-              }}
-            >
-              <Row>
-                <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-                <Col xs={{ span: 24 }} md={{ span: 16 }}>
-                  <Row gutter={12}>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Book Name"
-                        name="title"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input book name!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter book name" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Author Name"
-                        name="author"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input author name!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter author name" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="ISBN"
-                        name="isbn"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input ISBN!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter ISBN" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={12}>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Assession Number"
-                        name="assession"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input assession number!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter assession number" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Description"
-                        name="desc"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input description!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter description" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Publication"
-                        name="publication"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input publication!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter publication" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={12}>
-                    <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
-                      <Form.Item
-                        label="Abstract"
-                        name="abstract"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input abstract!",
-                          },
-                        ]}
-                      >
-                        <TextArea
-                          rows={10}
-                          maxLength={3000}
-                          showCount
-                          placeholder="Enter abstract"
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={12}>
-                    <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                      <Form.Item
-                        label="Location"
-                        name="location"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input location!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter location" />
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                      <Form.Item
-                        label="Genre"
-                        name="genre"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input genre!",
-                          },
-                        ]}
-                      >
-                        <Input placeholder="Enter book genre" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row gutter={12}>
-                    <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                      <Form.Item
-                        label="Book Image"
-                        name="photo"
-                        labelCol={{
-                          span: 24,
-                          //offset: 2
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please upload an image",
-                          },
-                        ]}
-                      >
-                        <Upload
-                          {...imgprops}
-                          listType="picture-card"
-                          maxCount={1}
-                          onPreview={onPreview}
-                        >
-                          <div>
-                            <PlusOutlined />
-                            <div style={{ marginTop: 8 }}>Upload</div>
-                          </div>
-                        </Upload>
-                      </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                      <Form.Item
-                        label="Notes"
-                        name="notes"
-                        labelCol={{
-                          span: 24,
-                        }}
-                        wrapperCol={{
-                          span: 24,
-                        }}
-                        hasFeedback
-                        rules={[
-                          {
-                            required: true,
-                            message: "Please input notes!",
-                          },
-                        ]}
-                      >
-                        <TextArea
-                          rows={3}
-                          maxLength={500}
-                          showCount
-                          placeholder="Enter Notes"
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                  <Row
-                    gutter={12}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: "40px",
-                    }}
-                  >
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                    <Button type="primary" onClick={onClose}>
-                      Cancel
-                    </Button>
-                  </Row>
-                </Col>
-              </Row>
-            </Form>
-          </div>
-        </Drawer>
+          singleOpen={singleOpen}
+          form={form}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          imgprops={imgprops}
+          onPreview={onPreview}
+        />
         {/* MODAL FOR BATCH ADD */}
-        <Modal
-          title="ADD BATCH BOOK"
-          width={400}
-          open={batchOpen}
-          onCancel={() => setBatchOpen(false)}
-          footer={[
-            <Button key="cancel" onClick={() => setBatchOpen(false)}>
-              Cancel
-            </Button>,
-          ]}
-        >
-          <Dragger
-            name="file"
-            multiple={false}
-            fileList={fileLists}
-            beforeUpload={() => false}
-            onChange={(info) => {
-              handleFileUpload(info.fileList[0]);
-              handleFileRemove(fileLists);
-            }}
-          >
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click or drag file to this area to upload
-            </p>
-            <p className="ant-upload-hint">
-              Support for a single upload. Strictly prohibited from uploading
-              file not supported by the given format.
-            </p>
-          </Dragger>
-        </Modal>
+        <InventoryBatchAddModal
+          batchOpen={batchOpen}
+          setBatchOpen={setBatchOpen}
+          fileLists={fileLists}
+          handleFileUpload={handleFileUpload}
+          handleFileRemove={handleFileRemove}
+        />
+
+        {/* MODAL FOR VIEW DETAILS AVAILABLE */}
+        <InventoryAvailableBooksModal
+          viewDetailsModal={viewDetailsModal}
+          setViewDetailsModal={setViewDetailsModal}
+          setViewDetailsData={setViewDetailsData}
+          setViewDeatailsImg={setViewDeatailsImg}
+          viewDetailsData={viewDetailsData}
+          viewDeatailsImg={viewDeatailsImg}
+        />
       </div>
     </>
   );

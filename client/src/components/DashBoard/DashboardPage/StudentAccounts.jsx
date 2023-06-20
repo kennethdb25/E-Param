@@ -13,7 +13,13 @@ import {
   Space,
   message,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  ReadOutlined,
+  RollbackOutlined,
+  PrinterOutlined,
+  CheckCircleOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
@@ -125,8 +131,7 @@ const StudentAccounts = (props) => {
             type="link"
             size="small"
             onClick={() => {
-              clearFilters &&
-              handleReset(clearFilters)
+              clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
               setSearchedColumn(dataIndex);
               confirm({
@@ -215,7 +220,6 @@ const StudentAccounts = (props) => {
       dataIndex: "acctStatus",
       key: "acctStatus",
       width: "10%",
-      ...getColumnSearchProps("acctStatus"),
     },
     {
       title: "",
@@ -229,9 +233,12 @@ const StudentAccounts = (props) => {
           >
             <Button
               key="view"
+              icon={<ReadOutlined />}
+              type="primary"
               onClick={() => {
                 ViewRecord(record);
               }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
               View Details
             </Button>
@@ -275,7 +282,11 @@ const StudentAccounts = (props) => {
         </div>
       </header>
       <main>
-        <Table key="StudentAccounts" columns={columns} dataSource={studentAccount.body} />
+        <Table
+          key="StudentAccounts"
+          columns={columns}
+          dataSource={studentAccount.body}
+        />
       </main>
       <Modal
         title={printId ? "Library Card" : "Account Details"}
@@ -286,29 +297,39 @@ const StudentAccounts = (props) => {
         }}
         footer={[
           <div className="no-print">
-          <>
             {viewData ? (
               <>
                 {viewData.acctStatus === "Pending" ? (
-                  <Button key="approve" onClick={handpleApprove}>
+                  <Button
+                    icon={<CheckCircleOutlined />}
+                    type="primary"
+                    key="approve"
+                    onClick={handpleApprove}
+                  >
                     Approve Account
                   </Button>
                 ) : null}
               </>
             ) : null}
-          </>,
-          <Button key="print" onClick={handlePrint}>
-            Print Library Card
-          </Button>,
-          <Button
-            key="cancel"
-            onClick={() => {
-              handleCancel();
-            }}
-          >
-            Cancel
-          </Button>,
-          </div>
+            <Button
+              icon={<PrinterOutlined />}
+              type="primary"
+              key="print"
+              onClick={handlePrint}
+            >
+              Print Library Card
+            </Button>
+            <Button
+              key="cancel"
+              type="primary"
+              icon={<RollbackOutlined />}
+              onClick={() => {
+                handleCancel();
+              }}
+            >
+              Cancel
+            </Button>
+          </div>,
         ]}
       >
         {viewData ? (

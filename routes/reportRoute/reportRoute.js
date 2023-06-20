@@ -178,7 +178,6 @@ AddReportRouter.get("/report/get-generated", async (req, res) => {
 AddReportRouter.get("/report/download-csv", async (req, res) => {
   const file = req.query.filename || "";
   const pathFile = path.join(__dirname, `../../file-uploads/${file}`);
-  console.log(file);
 
   res.download(pathFile, (err) => {
     if (err) {

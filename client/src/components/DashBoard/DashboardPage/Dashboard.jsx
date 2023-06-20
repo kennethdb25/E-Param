@@ -167,7 +167,8 @@ const Dashboard = (props) => {
   ];
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+    if(loginData) {
+      fetch(`/uploads/${loginData?.validUser?.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -177,6 +178,10 @@ const Dashboard = (props) => {
           console.log(error);
         }
       );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginData]);
+  useEffect(() => {
     fetch(`/uploads/${data?.imgpath}`)
       .then((res) => res.blob())
       .then(

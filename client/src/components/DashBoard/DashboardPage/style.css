@@ -454,7 +454,7 @@ header{
 }
 /* button add to shelf */
 .ant-btn {
-    line-height: 1.5715  !important;
+    /* line-height: 1.5715  !important;
     position: relative;
     display: inline-block  !important;
     font-weight: 400  !important;
@@ -468,14 +468,26 @@ header{
     -moz-user-select: none  !important;
     -ms-user-select: none !important;
     user-select: none !important;
-    touch-action: manipulation !important;
+    touch-action: manipulation !important; */
     height: 32px !important;
     padding: 4px 15px !important;
     font-size: 14px !important;
     border-radius: 11px !important;
     color: rgb(255 255 255) !important;
-    border: 1px solid #d9d9d9 !important;
-    background:#FFC000 !important;
+    /* border: 1px solid #d9d9d9 !important;
+    background:#FFC000 !important; */
+}
+
+.ant-table-filter-trigger {
+	color: rgb(255 255 255) !important;
+}
+
+.ant-table-filter-dropdown-btns {
+	gap: 10px;
+}
+
+.ant-btn-sm {
+	background:#002aff !important;
 }
 
 /* pagination styling */

@@ -146,7 +146,6 @@ BorrowBookRouter.get("/book/student-recently-borrowed", async (req, res) => {
   }
 });
 
-
 // get all recently borrowed books for librarian and admin
 BorrowBookRouter.get("/book/all-recently-borrowed", async (req, res) => {
   try {
@@ -155,6 +154,57 @@ BorrowBookRouter.get("/book/all-recently-borrowed", async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);
+  }
+});
+
+// process return book
+BorrowBookRouter.patch("/book/process-return/:_id", async (req, res) => {
+  try {
+    const id = req.params._id;
+
+    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({ _id: id, status: "Borrowed" });
+
+    const bookToChangeInAvailable = await BookModel.findOne({ isbn: checkIfBookIsNotProcessed.isbn });
+
+    if (checkIfBookIsNotProcessed) {
+      checkIfBookIsNotProcessed.status = "Returned";
+      checkIfBookIsNotProcessed.dateReturned = new Date().toISOString();
+
+      bookToChangeInAvailable.status = "Available";
+
+      const proccessBook = await checkIfBookIsNotProcessed.save();
+
+      const changeBookToAvailable = await bookToChangeInAvailable.save();
+
+      return res.status(200).json({ status: 200, body: { proccessBook, changeBookToAvailable } });
+    } else {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json(error);
+  }
+});
+
+// process lost book
+BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
+  try {
+    const id = req.params._id;
+
+    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({ _id: id, status: "Borrowed" });
+
+    if (checkIfBookIsNotProcessed) {
+      checkIfBookIsNotProcessed.status = "Lost";
+      checkIfBookIsNotProcessed.dateLost = new Date().toISOString();
+
+      const proccessBook = await checkIfBookIsNotProcessed.save();
+
+      return res.status(200).json({ status: 200, body: proccessBook });
+    } else {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  } catch (error) {
+
   }
 });
 

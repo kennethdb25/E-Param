@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   btn: {
     marginTop: 40,
     marginBottom: 40,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
   },
   customModal: {
     backgroundImage: "url(/modal.png)",

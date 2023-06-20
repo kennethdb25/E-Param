@@ -3,24 +3,21 @@ import { LoginContext } from "../../../Context/Context";
 import {
   Table,
   Button,
-  Modal,
-  Row,
-  Col,
   Space,
-  Typography,
   Input,
-  Image,
+  message,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  ReadOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
-
-const { TextArea } = Input;
-const { Title } = Typography;
+import { BorrowedBooksViewDetailsModal } from "../AntdComponents/Modal/modal";
 
 const BorrowedBooks = (props) => {
-  const { getBorrowedStudent, paginationStudentBorrowed } =
+  const { getBorrowedStudent, paginationStudentBorrowed, getBorrowedData } =
     props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -47,6 +44,38 @@ const BorrowedBooks = (props) => {
         }
       );
     setViewDetailsModal(true);
+  };
+
+  const handleProcessReturn = async () => {
+    const data = await fetch(`/book/process-return/${viewDetailsData._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      message.success("Return Process Completed");
+      setViewDetailsData(null);
+      setViewDetailsModal(false);
+      getBorrowedData();
+    }
+  };
+
+  const handleProcessLost = async () => {
+    const data = await fetch(`/book/process-lost/${viewDetailsData._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      message.success("Lost Process Completed");
+      setViewDetailsData(null);
+      setViewDetailsModal(false);
+      getBorrowedData();
+    }
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -101,8 +130,7 @@ const BorrowedBooks = (props) => {
             type="link"
             size="small"
             onClick={() => {
-              clearFilters &&
-              handleReset(clearFilters)
+              clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
               setSearchedColumn(dataIndex);
               confirm({
@@ -186,6 +214,21 @@ const BorrowedBooks = (props) => {
       dataIndex: "status",
       key: "status",
       width: "10%",
+      filters: [
+        {
+          text: "Borrowed",
+          value: "Borrowed",
+        },
+        {
+          text: "Returned",
+          value: "Returned",
+        },
+        {
+          text: "Lost",
+          value: "Lost",
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
     },
     {
       title: "",
@@ -198,10 +241,15 @@ const BorrowedBooks = (props) => {
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
             <Button
-            onClick={(e) => {
-              onViewDetails(record, e);
-            }}
-            >View Details</Button>
+              icon={<ReadOutlined />}
+              type="primary"
+              onClick={(e) => {
+                onViewDetails(record, e);
+              }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              Details
+            </Button>
           </div>
         </>
       ),
@@ -245,291 +293,17 @@ const BorrowedBooks = (props) => {
         />
       </main>
       {/* ViewDetails Modal */}
-      <div className="modals">
-        <Modal
-          key="BookDetailsAvailable"
-          title="Reservation Details"
-          width={1200}
-          open={viewDetailsModal}
-          onCancel={() => {
-            setViewDetailsModal(false);
-            setViewDetailsData();
-            setViewDeatailsImg();
-          }}
-          footer={[
-            <Button
-              key="cancel"
-              onClick={() => {
-                setViewDetailsModal(false);
-                setViewDeatailsImg();
-                setViewDetailsData();
-              }}
-            >
-              Cancel
-            </Button>,
-          ]}
-        >
-          <Row>
-            <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-            <Col xs={{ span: 24 }} md={{ span: 16 }}>
-              <h1>Student Info</h1>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    First Name
-                  </Title>
-                  <Input value={viewDetailsData?.firstName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Middle Name
-                  </Title>
-                  <Input value={viewDetailsData?.middleName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Last Name
-                  </Title>
-                  <Input value={viewDetailsData?.lastName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Student ID
-                  </Title>
-                  <Input value={viewDetailsData?.studentId} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Grade
-                  </Title>
-                  <Input value={viewDetailsData?.grade} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Section
-                  </Title>
-                  <Input value={viewDetailsData?.section} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Email
-                  </Title>
-                  <Input value={viewDetailsData?.email} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Status
-                  </Title>
-                  <Input value={viewDetailsData?.status} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Date Borrowed
-                  </Title>
-                  <Input value={new Date(viewDetailsData?.dateBorrowed)} readOnly />
-                </Col>
-              </Row>
-              <h1
-                style={{
-                  marginTop: "30px",
-                }}
-              >
-                Book Info
-              </h1>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Name
-                  </Title>
-                  <Input value={viewDetailsData?.title} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Author Name
-                  </Title>
-                  <Input value={viewDetailsData?.author} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    ISBN
-                  </Title>
-                  <Input value={viewDetailsData?.isbn} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Accession Number
-                  </Title>
-                  <Input value={viewDetailsData?.assession} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Description
-                  </Title>
-                  <Input value={viewDetailsData?.desc} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Publication
-                  </Title>
-                  <Input value={viewDetailsData?.publication} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Abstract
-                  </Title>
-                  <TextArea
-                    rows={10}
-                    maxLength={3000}
-                    showCount
-                    placeholder="Enter abstract"
-                    value={viewDetailsData?.abstract}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Location
-                  </Title>
-                  <Input value={viewDetailsData?.location} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Genre
-                  </Title>
-                  <Input value={viewDetailsData?.genre} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Image
-                  </Title>
-                  <Image src={viewDeatailsImg} alt="Book Details" />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Notes
-                  </Title>
-                  <TextArea
-                    rows={3}
-                    maxLength={500}
-                    showCount
-                    placeholder="Enter Notes"
-                    value={viewDetailsData?.notes}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Modal>
-      </div>
+      <BorrowedBooksViewDetailsModal
+        viewDetailsModal={viewDetailsModal}
+        setViewDetailsModal={setViewDetailsModal}
+        setViewDetailsData={setViewDetailsData}
+        setViewDeatailsImg={setViewDeatailsImg}
+        loginData={loginData}
+        viewDetailsData={viewDetailsData}
+        handleProcessReturn={handleProcessReturn}
+        handleProcessLost={handleProcessLost}
+        viewDeatailsImg={viewDeatailsImg}
+      />
     </>
   );
 };

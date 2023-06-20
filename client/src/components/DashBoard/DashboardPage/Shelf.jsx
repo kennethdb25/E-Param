@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useRef, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { LoginContext } from "../../../Context/Context";
 import {
@@ -7,13 +7,22 @@ import {
   Modal,
   Row,
   Col,
+  Space,
   message,
   Typography,
   Input,
   Image,
 } from "antd";
+import {
+  SearchOutlined,
+  ReadOutlined,
+  EditOutlined,
+  RollbackOutlined,
+} from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
+import { ShelfProcessingModal, ShelfViewDetailsModal } from "../AntdComponents/Modal/modal";
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -38,6 +47,9 @@ const Shelf = (props) => {
   const [viewDetailsData, setViewDetailsData] = useState(null);
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
   const [enableBookScanBtn, setEnableBookScanBtn] = useState(true);
+  const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
 
   const handleLibraryScan = () => {
     setScannerOpen(true);
@@ -206,37 +218,136 @@ const Shelf = (props) => {
     setViewDetailsModal(true);
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 100,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+              confirm({
+                closeDropdown: true,
+              });
+            }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : "white",
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
   const columns = [
     {
       title: "Student ID",
       dataIndex: "studentId",
       key: "studentId",
       width: "15%",
-      // ...getColumnSearchProps("firstName"),
+      ...getColumnSearchProps("studentId"),
     },
     {
       title: "Book Name",
       dataIndex: "title",
       key: "title",
       width: "30%",
+      ...getColumnSearchProps("title"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "15%",
+      ...getColumnSearchProps("author"),
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       width: "20%",
+      ...getColumnSearchProps("location"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "10%",
+      ...getColumnSearchProps("isbn"),
     },
     {
       title: "Status",
@@ -256,15 +367,26 @@ const Shelf = (props) => {
           >
             {loginData.validUser.userType !== "Student" ? (
               <>
-                <Button onClick={(e) => handleProcess(e, record)}>
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  style={{
+                    backgroundColor: "#000080",
+                    border: "1px solid #d9d9d9",
+                  }}
+                  onClick={(e) => handleProcess(e, record)}
+                >
                   Process
                 </Button>
               </>
             ) : null}
             <Button
+              type="primary"
+              icon={<ReadOutlined />}
               onClick={(e) => {
                 onViewDetails(record, e);
               }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
               View Details
             </Button>
@@ -313,534 +435,33 @@ const Shelf = (props) => {
       </main>
 
       {/* Process Modal */}
-      <Modal
-        key="ProcessModal"
-        title="Processing"
-        width={1200}
-        open={processModal}
-        onCancel={onCancelProcess}
-        footer={[
-          <Button hidden={processButton} onClick={onProcessProceed}>
-            Process
-          </Button>,
-          <Button onClick={onCancelProcess}>Cancel</Button>,
-        ]}
-      >
-        <h1>Student Info</h1>
-        <Row>
-          <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-          <Col xs={{ span: 24 }} md={{ span: 24 }}>
-            <Row gutter={12} style={{ marginBottom: "20px" }}>
-              <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Button
-                    onClick={() => handleLibraryScan()}
-                    hidden={libraryButton}
-                  >
-                    Scan Library Card
-                  </Button>
-                  <div
-                    id="reader-library"
-                    style={{ height: 400, width: 400 }}
-                  ></div>
-                </div>
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Student ID
-                </Title>
-                <Input value={studentInfo?.studentId} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  First Name
-                </Title>
-                <Input value={studentInfo?.firstName} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Middle Name
-                </Title>
-                <Input value={studentInfo?.middleName} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Last Name
-                </Title>
-                <Input value={studentInfo?.lastName} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Email
-                </Title>
-                <Input value={studentInfo?.email} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Grade
-                </Title>
-                <Input value={studentInfo?.grade} readOnly />
-              </Col>
-              <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-                <Title
-                  level={5}
-                  style={{
-                    marginTop: "20px",
-                  }}
-                >
-                  Section
-                </Title>
-                <Input value={studentInfo?.section} readOnly />
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-        <h1>Book Info</h1>
-        <Row gutter={12}>
-          <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Button onClick={() => handleBookScan()} hidden={bookButton}>
-                Scan Book QR Code
-              </Button>
-              <div id="reader-book" style={{ height: 400, width: 400 }}></div>
-            </div>
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              ISBN
-            </Title>
-            <Input value={bookInfo?.isbn} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Book Name
-            </Title>
-            <Input value={bookInfo?.title} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Author Name
-            </Title>
-            <Input value={bookInfo?.author} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Location
-            </Title>
-            <Input value={bookInfo?.location} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Publication
-            </Title>
-            <Input value={bookInfo?.publication} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Accession Number
-            </Title>
-            <Input value={bookInfo?.assession} readOnly />
-          </Col>
-          <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-            <Title
-              level={5}
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              Genre
-            </Title>
-            <Input value={bookInfo?.genre} readOnly />
-          </Col>
-        </Row>
-        <Row
-          gutter={12}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "40px",
-            marginTop: "40px",
-          }}
-        >
-          {bookResult && studentResult ? (
-            <>
-              <Button
-                type="primary"
-                htmlType="submit"
-                hidden={validateButton}
-                onClick={() =>
-                  fetchBookData(bookResult) &&
-                  fetchStudentData(studentResult) &&
-                  onFinish()
-                }
-              >
-                Validate
-              </Button>
-            </>
-          ) : null}
-        </Row>
-      </Modal>
-
+      <ShelfProcessingModal
+        processModal={processModal}
+        onCancelProcess={onCancelProcess}
+        processButton={processButton}
+        onProcessProceed={onProcessProceed}
+        bookResult={bookResult}
+        studentResult={studentResult}
+        validateButton={validateButton}
+        libraryButton={libraryButton}
+        studentInfo={studentInfo}
+        bookButton={bookButton}
+        bookInfo={bookInfo}
+        handleLibraryScan={handleLibraryScan}
+        handleBookScan={handleBookScan}
+        fetchBookData={fetchBookData}
+        fetchStudentData={fetchStudentData}
+        onFinish={onFinish}
+      />
       {/* ViewDetails Modal */}
-      <div className="modals">
-        <Modal
-          key="BookDetailsAvailable"
-          title="Reservation Details"
-          width={1200}
-          open={viewDetailsModal}
-          onCancel={() => {
-            setViewDetailsModal(false);
-            setViewDetailsData();
-            setViewDeatailsImg();
-          }}
-          footer={[
-            <Button
-              key="cancel"
-              onClick={() => {
-                setViewDetailsModal(false);
-                setViewDeatailsImg();
-                setViewDetailsData();
-              }}
-            >
-              Cancel
-            </Button>,
-          ]}
-        >
-          <Row>
-            <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-            <Col xs={{ span: 24 }} md={{ span: 16 }}>
-              <h1>Student Info</h1>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    First Name
-                  </Title>
-                  <Input value={viewDetailsData?.firstName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Middle Name
-                  </Title>
-                  <Input value={viewDetailsData?.middleName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Last Name
-                  </Title>
-                  <Input value={viewDetailsData?.lastName} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Student ID
-                  </Title>
-                  <Input value={viewDetailsData?.studentId} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Grade
-                  </Title>
-                  <Input value={viewDetailsData?.grade} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Section
-                  </Title>
-                  <Input value={viewDetailsData?.section} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Email
-                  </Title>
-                  <Input value={viewDetailsData?.email} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Status
-                  </Title>
-                  <Input value={viewDetailsData?.status} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Date Reserved
-                  </Title>
-                  <Input value={new Date(viewDetailsData?.dateReserved)} readOnly />
-                </Col>
-              </Row>
-              <h1
-                style={{
-                  marginTop: "30px",
-                }}
-              >
-                Book Info
-              </h1>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Name
-                  </Title>
-                  <Input value={viewDetailsData?.title} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Author Name
-                  </Title>
-                  <Input value={viewDetailsData?.author} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    ISBN
-                  </Title>
-                  <Input value={viewDetailsData?.isbn} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Accession Number
-                  </Title>
-                  <Input value={viewDetailsData?.assession} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Description
-                  </Title>
-                  <Input value={viewDetailsData?.desc} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Publication
-                  </Title>
-                  <Input value={viewDetailsData?.publication} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Abstract
-                  </Title>
-                  <TextArea
-                    rows={10}
-                    maxLength={3000}
-                    showCount
-                    placeholder="Enter abstract"
-                    value={viewDetailsData?.abstract}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Location
-                  </Title>
-                  <Input value={viewDetailsData?.location} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Genre
-                  </Title>
-                  <Input value={viewDetailsData?.genre} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Image
-                  </Title>
-                  <Image src={viewDeatailsImg} alt="Book Details" />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Notes
-                  </Title>
-                  <TextArea
-                    rows={3}
-                    maxLength={500}
-                    showCount
-                    placeholder="Enter Notes"
-                    value={viewDetailsData?.notes}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Modal>
-      </div>
+      <ShelfViewDetailsModal
+      viewDetailsModal={viewDetailsModal}
+      setViewDetailsModal={setViewDetailsModal}
+      setViewDetailsData={setViewDetailsData}
+      setViewDeatailsImg={setViewDeatailsImg}
+      viewDetailsData={viewDetailsData}
+      viewDeatailsImg={viewDeatailsImg}
+      />
     </>
   );
 };

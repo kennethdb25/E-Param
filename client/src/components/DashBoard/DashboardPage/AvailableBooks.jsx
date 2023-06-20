@@ -5,22 +5,20 @@ import {
   Button,
   Popconfirm,
   message,
-  Modal,
-  Row,
-  Col,
   Input,
   Space,
-  Image,
   Typography,
 } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  ReadOutlined,
+  PlusSquareOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { LoginContext } from "../../../Context/Context";
 import "./style.css";
 import "antd/dist/antd.min.css";
-
-const { TextArea } = Input;
-const { Title } = Typography;
+import { AvailableBooksDetailsModal } from "../AntdComponents/Modal/modal";
 
 const AvailableBooks = (props) => {
   const { genre, setCurrentActive, getAddShelfPerStudent } = props;
@@ -31,7 +29,6 @@ const AvailableBooks = (props) => {
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
   const [tabData, setTabData] = useState({});
   const [activeTab, setActiveTab] = useState(genre[0]);
-
 
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
@@ -137,8 +134,7 @@ const AvailableBooks = (props) => {
             type="link"
             size="small"
             onClick={() => {
-              clearFilters &&
-              handleReset(clearFilters)
+              clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
               setSearchedColumn(dataIndex);
               confirm({
@@ -235,16 +231,28 @@ const AvailableBooks = (props) => {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <Button>Add to Shelf</Button>
+                  <Button
+                    icon={<PlusSquareOutlined />}
+                    style={{
+                      backgroundColor: "#000080",
+                      border: "1px solid #d9d9d9",
+                    }}
+                    type="primary"
+                  >
+                    Add to Shelf
+                  </Button>
                 </Popconfirm>
               </>
             ) : null}
             <Button
+              icon={<ReadOutlined />}
+              type="primary"
               onClick={(e) => {
                 onViewDetails(record, e);
               }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
-              View Details
+              Book Details
             </Button>
           </div>
         </>
@@ -321,182 +329,14 @@ const AvailableBooks = (props) => {
         />
       </main>
       {/* ViewDetails Modal */}
-      <div className="modals">
-        <Modal
-          key="BookDetailsAvailable"
-          title="Book Details"
-          width={1200}
-          open={viewDetailsModal}
-          onCancel={() => {
-            setViewDetailsModal(false);
-            setViewDetailsData();
-            setViewDeatailsImg();
-          }}
-          footer={[
-            <Button
-              key="cancel"
-              onClick={() => {
-                setViewDetailsModal(false);
-                setViewDeatailsImg();
-                setViewDetailsData();
-              }}
-            >
-              Cancel
-            </Button>,
-          ]}
-        >
-          <Row>
-            <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-            <Col xs={{ span: 24 }} md={{ span: 16 }}>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Name
-                  </Title>
-                  <Input value={viewDetailsData?.title} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Author Name
-                  </Title>
-                  <Input value={viewDetailsData?.author} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    ISBN
-                  </Title>
-                  <Input value={viewDetailsData?.isbn} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Accession Number
-                  </Title>
-                  <Input value={viewDetailsData?.assession} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Description
-                  </Title>
-                  <Input value={viewDetailsData?.desc} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Publication
-                  </Title>
-                  <Input value={viewDetailsData?.publication} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Abstract
-                  </Title>
-                  <TextArea
-                    rows={10}
-                    maxLength={3000}
-                    showCount
-                    placeholder="Enter abstract"
-                    value={viewDetailsData?.abstract}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Location
-                  </Title>
-                  <Input value={viewDetailsData?.location} readOnly />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Genre
-                  </Title>
-                  <Input value={viewDetailsData?.genre} readOnly />
-                </Col>
-              </Row>
-              <Row gutter={12}>
-                <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Book Image
-                  </Title>
-                  <Image src={viewDeatailsImg} alt="Book Details" />
-                </Col>
-                <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
-                  <Title
-                    level={5}
-                    style={{
-                      marginTop: "20px",
-                    }}
-                  >
-                    Notes
-                  </Title>
-                  <TextArea
-                    rows={3}
-                    maxLength={500}
-                    showCount
-                    placeholder="Enter Notes"
-                    value={viewDetailsData?.notes}
-                    readOnly
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Modal>
-      </div>
+      <AvailableBooksDetailsModal
+        viewDetailsModal={viewDetailsModal}
+        setViewDetailsModal={setViewDetailsModal}
+        setViewDetailsData={setViewDetailsData}
+        setViewDeatailsImg={setViewDeatailsImg}
+        viewDetailsData={viewDetailsData}
+        viewDeatailsImg={viewDeatailsImg}
+      />
     </>
   );
 };

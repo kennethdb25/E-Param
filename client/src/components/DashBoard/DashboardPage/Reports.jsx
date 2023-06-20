@@ -12,15 +12,16 @@ import {
   DatePicker,
   Space,
   Button,
-  Typography
+  Typography,
 } from "antd";
+import { BarChartOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { ReportData } from "../../../Data/Data";
 
 const { RangePicker } = DatePicker;
-const { Title} = Typography;
+const { Title } = Typography;
 
 const Reports = () => {
   const [form] = Form.useForm();
@@ -35,9 +36,7 @@ const Reports = () => {
       return;
     }
     setLoading(true);
-    fetch(
-      "/report/get-generated"
-    )
+    fetch("/report/get-generated")
       .then((res) => res.json())
       .then((body) => {
         setData([...body.body]);
@@ -96,8 +95,8 @@ const Reports = () => {
   };
 
   const handleDownload = (filename) => {
-    window.open(`/report/download-csv?filename=${filename}`, '_blank');
-  }
+    window.open(`/report/download-csv?filename=${filename}`, "_blank");
+  };
   return (
     <>
       <header>
@@ -189,7 +188,15 @@ const Reports = () => {
                   paddingTop: "20px",
                 }}
               >
-                <Button type="primary" htmlType="submit">
+                <Button
+                icon={<BarChartOutlined />}
+                  style={{
+                    backgroundColor: "purple",
+                    border: "1px solid #d9d9d9",
+                  }}
+                  type="primary"
+                  htmlType="submit"
+                >
                   Generate Report
                 </Button>
               </Row>
@@ -204,11 +211,11 @@ const Reports = () => {
                 overflow: "auto",
                 padding: "0 16px",
                 border: "1px solid rgba(140, 140, 140, 0.35)",
+                backgroundColor: "f9f9f9",
               }}
             >
               <InfiniteScroll
                 dataLength={data.length}
-                // hasMore={data.length < data.length}
                 loader={
                   <Skeleton
                     avatar
@@ -226,18 +233,18 @@ const Reports = () => {
                   renderItem={(item) => (
                     <List.Item key={item.filePath}>
                       <List.Item.Meta
-                        title={
-                          <p>{(item.filePath).toUpperCase()}</p>
-                        }
+                        title={<p>{item.filePath.toUpperCase()}</p>}
                         description={new Date(item.created).toLocaleString()}
                       />
                       <div
                         style={{
                           textDecorationLine: "underline",
                           color: "blue",
-                          cursor: "pointer"
+                          cursor: "pointer",
                         }}
-                        onClick={() => {handleDownload(item.filePath)}}
+                        onClick={() => {
+                          handleDownload(item.filePath);
+                        }}
                       >
                         Download
                       </div>
