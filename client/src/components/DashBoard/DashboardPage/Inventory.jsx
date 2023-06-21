@@ -270,23 +270,6 @@ const Inventory = (props) => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  const dataSource = [
-    {
-      key: "1",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 123123134323,
-      status: "Returned",
-    },
-    {
-      key: "2",
-      bookName: "Mike",
-      author: "John Doe",
-      isbn: 203453453408,
-      status: "Returned",
-    },
-  ];
-
   const onViewDetailsAvailable = async (record, e) => {
     console.log(record);
     e.defaultPrevented = true;

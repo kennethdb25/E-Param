@@ -12,10 +12,11 @@ const Dashboard = (props) => {
   const [imgNewBooks, setImgNewBooks] = useState();
   // eslint-disable-next-line no-unused-vars
   const [data, setData] = useState(newBooks.body);
-  const [shelfCount, setShelfCount] = useState(0);
-  const [borrowedCount, setBorrowedCount] = useState(0);
-  const [currBorrowedCount, setCurBorrowedCount] = useState(0);
+  const [shelfCount, setShelfCount] = useState();
+  const [borrowedCount, setBorrowedCount] = useState();
+  const [currBorrowedCount, setCurBorrowedCount] = useState();
   const [recentlyBorrowedCount, setRecentlyBorrowedCount] = useState();
+  const [lostBookCount, setLostBookCount] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSeeAll = () => {
@@ -79,6 +80,20 @@ const Dashboard = (props) => {
           if (resRecentlyBorrowed.status === 200) {
             setRecentlyBorrowedCount(resRecentlyBorrowed.body);
           }
+
+          const lostBooksData = await fetch(
+            `/book/get-lost?email=${loginData.validUser.email}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const resLostBook = await lostBooksData.json();
+          if (resLostBook.status === 200) {
+            setLostBookCount(resLostBook.body.length);
+          }
         } else {
           const allReservedData = await fetch("/book/get-reserved", {
             method: "GET",
@@ -129,6 +144,17 @@ const Dashboard = (props) => {
           if (resRecentlyBorrowed.status === 200) {
             setRecentlyBorrowedCount(resRecentlyBorrowed.body);
           }
+
+          const lostBooksData = await fetch("/book/get-all-lost", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const resLostBook = await lostBooksData.json();
+          if (resLostBook.status === 200) {
+            setLostBookCount(resLostBook.body.length);
+          }
         }
       }
     };
@@ -167,17 +193,17 @@ const Dashboard = (props) => {
   ];
 
   useEffect(() => {
-    if(loginData) {
+    if (loginData) {
       fetch(`/uploads/${loginData?.validUser?.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginData]);
@@ -242,7 +268,7 @@ const Dashboard = (props) => {
           </div>
           <div className="card-single">
             <div>
-              <h1>0</h1>
+              <h1>{lostBookCount}</h1>
               <span>Lost Books</span>
             </div>
             <div>
@@ -333,14 +359,9 @@ const Dashboard = (props) => {
                             alt=""
                           />
                           <div>
-                            <h4>{data.title}</h4>
+                            <h4 style={{ marginBottom: 0 }}>{data.title}</h4>
                             <small>Author: {data.author}</small>
                           </div>
-                        </div>
-                        <div className="contact">
-                          <span className="las la-user-circle"></span>
-                          <span className="las la-comment"></span>
-                          <span className="las la-phone"></span>
                         </div>
                       </div>
                     </>
@@ -348,24 +369,22 @@ const Dashboard = (props) => {
                 })}
               </div>
             </div>
+            <Modal
+              title="New Books"
+              width={1000}
+              open={isOpen}
+              onCancel={() => setIsOpen(false)}
+              footer={[
+                <Button key="cancel" onClick={() => setIsOpen(false)}>
+                  Cancel
+                </Button>,
+              ]}
+            >
+              <Table key="DashboardBook" dataSource={data} columns={columns} />
+            </Modal>
           </div>
         </div>
       </main>
-      <div className="modals">
-        <Modal
-          title="New Books"
-          width={1000}
-          open={isOpen}
-          onCancel={() => setIsOpen(false)}
-          footer={[
-            <Button key="cancel" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>,
-          ]}
-        >
-          <Table key="DashboardBook" dataSource={data} columns={columns} />
-        </Modal>
-      </div>
     </>
   );
 };

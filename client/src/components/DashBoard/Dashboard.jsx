@@ -77,12 +77,11 @@ const HomeDashboard = (props) => {
     total: allShelfCount,
   });
 
-
   // get borrowed books per student table config
   const [getBorrowedStudent, setGetBorrowedStudent] = useState();
   let studentBorrowedCount = 0;
-  for (var key1 in getBorrowedStudent) {
-    if (getBorrowedStudent.hasOwnProperty(key1)) {
+  for (var key2 in getBorrowedStudent) {
+    if (getBorrowedStudent.hasOwnProperty(key2)) {
       studentBorrowedCount++;
     }
   }
@@ -96,8 +95,8 @@ const HomeDashboard = (props) => {
   // ger all reserved books table config
   const [getAllBorrowed, setGetAllBorrowed] = useState();
   let allBorrowedCount = 0;
-  for (var keyRes in getAddToShelf) {
-    if (getAddToShelf.hasOwnProperty(keyRes)) {
+  for (var key3 in getAddToShelf) {
+    if (getAddToShelf.hasOwnProperty(key3)) {
       allBorrowedCount++;
     }
   }
@@ -163,7 +162,7 @@ const HomeDashboard = (props) => {
       }
       setCurrentActive(3);
     }
-  }
+  };
 
   const getBorrowedData = async () => {
     const allBorrowedData = await fetch("/book/get-borrowed", {
@@ -177,11 +176,11 @@ const HomeDashboard = (props) => {
       setGetAllBorrowed(allBorrowedRes.body);
     }
     setCurrentActive(3);
-  }
+  };
 
   // Get Inventory Data
   useEffect(() => {
-    if( loginData) {
+    if (loginData) {
       const getInventoryData = async () => {
         const data = await fetch("/book/get-available", {
           method: "GET",
@@ -297,14 +296,13 @@ const HomeDashboard = (props) => {
 
   return (
     <>
-      <input type="checkbox" id="nav-toggle" />
       <ToastContainer />
-
+      <input type="checkbox" id="nav-toggle" />
       <div className="sidebar">
         <div className="sidebar-brand">
           <h2>
             <span className="lab la-accusoft"></span>
-            <span>E-PARAM Library</span>
+            <span style={{color: "white"}}><img style={{width: "70px", height: "70px", marginRight: "10px"}} src={require("../../Assets/logo.png")} alt="logo-dashboard" />PHS LIBRARY</span>
           </h2>
         </div>
         <div className="sidebar-menu">
@@ -315,9 +313,8 @@ const HomeDashboard = (props) => {
                 className={currentActive === 1 ? "active" : "none"}
                 onClick={() => setCurrentActive(1)}
               >
-                <span className="las la-igloo">
-                  <HomeOutlined />
-                </span>
+                <HomeOutlined />
+                <span className="las la-igloo"></span>
                 <span>Dashboard</span>
               </a>
             </li>
@@ -327,9 +324,8 @@ const HomeDashboard = (props) => {
                 className={currentActive === 2 ? "active" : "none"}
                 onClick={() => getGenre()}
               >
-                <span className="las la-users">
-                  <FileProtectOutlined />
-                </span>
+                <FileProtectOutlined />
+                <span className="las la-users"></span>
                 <span>Available Books</span>
               </a>
             </li>
@@ -343,9 +339,8 @@ const HomeDashboard = (props) => {
                     : getBorrowedData()
                 }
               >
-                <span className="las la-clipboard-list">
-                  <BookOutlined />
-                </span>
+                <BookOutlined />
+                <span className="las la-clipboard-list"></span>
                 <span>Borrowed Books</span>
               </a>
             </li>
@@ -359,9 +354,8 @@ const HomeDashboard = (props) => {
                     : setCurrentActive(4)
                 }
               >
-                <span className="las la-clipboard-list">
-                  <ReadOutlined />
-                </span>
+                <ReadOutlined />
+                <span className="las la-clipboard-list"></span>
                 <span>Shelf</span>
               </a>
             </li>
@@ -374,9 +368,8 @@ const HomeDashboard = (props) => {
                     className={currentActive === 5 ? "active" : "none"}
                     onClick={() => setCurrentActive(5)}
                   >
-                    <span className="las la-clipboard-list">
-                      <FileDoneOutlined />
-                    </span>
+                    <FileDoneOutlined />
+                    <span className="las la-clipboard-list"></span>
                     <span>Inventory</span>
                   </a>
                 </li>
@@ -391,9 +384,8 @@ const HomeDashboard = (props) => {
                     className={currentActive === 6 ? "active" : "none"}
                     onClick={() => setCurrentActive(6)}
                   >
-                    <span className="las la-clipboard-list">
-                      <BarChartOutlined />
-                    </span>
+                    <BarChartOutlined />
+                    <span className="las la-clipboard-list"></span>
                     <span>Reports</span>
                   </a>
                 </li>
@@ -408,9 +400,8 @@ const HomeDashboard = (props) => {
                     className={currentActive === 7 ? "active" : "none"}
                     onClick={() => getStudentAccounts()}
                   >
-                    <span className="las la-clipboard-list">
-                      <UserOutlined />
-                    </span>
+                    <UserOutlined />
+                    <span className="las la-clipboard-list"></span>
                     <span>Student Accounts</span>
                   </a>
                 </li>
@@ -424,9 +415,8 @@ const HomeDashboard = (props) => {
                     className={currentActive === 8 ? "active" : "none"}
                     onClick={() => setCurrentActive(8)}
                   >
-                    <span className="las la-clipboard-list">
-                      <SettingOutlined />
-                    </span>
+                    <SettingOutlined />
+                    <span className="las la-clipboard-list"></span>
                     <span>Settings</span>
                   </a>
                 </li>
@@ -439,9 +429,8 @@ const HomeDashboard = (props) => {
                   handleLogout();
                 }}
               >
-                <span className="las la-clipboard-list">
-                  <LogoutOutlined />
-                </span>
+                <LogoutOutlined />
+                <span className="las la-clipboard-list"></span>
                 <span>Logout</span>
               </a>
             </li>
@@ -492,7 +481,7 @@ const HomeDashboard = (props) => {
                 loginData.validUser.userType === "Student"
                   ? paginationStudentShelf
                   : paginationAllShelf
-               }
+              }
             />
           </>
         ) : currentActive === 5 ? (

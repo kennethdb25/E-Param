@@ -5,7 +5,6 @@ import {
   Form,
   Row,
   Select,
-  Avatar,
   Divider,
   List,
   Skeleton,
@@ -48,6 +47,7 @@ const Reports = () => {
   };
   useEffect(() => {
     loadMoreData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFinish = async (values) => {

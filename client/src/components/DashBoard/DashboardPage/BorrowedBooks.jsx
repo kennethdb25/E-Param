@@ -1,16 +1,7 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
-import {
-  Table,
-  Button,
-  Space,
-  Input,
-  message,
-} from "antd";
-import {
-  SearchOutlined,
-  ReadOutlined,
-} from "@ant-design/icons";
+import { Table, Button, Space, Input, message } from "antd";
+import { SearchOutlined, ReadOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
@@ -285,25 +276,29 @@ const BorrowedBooks = (props) => {
         </div>
       </header>
       <main>
+        <div className="card-body">
+          <div className="table-responsive">
         <Table
           key="BorrowedBook"
           columns={columns}
           dataSource={getBorrowedStudent}
           pagination={paginationStudentBorrowed}
         />
+        {/* ViewDetails Modal */}
+        <BorrowedBooksViewDetailsModal
+          viewDetailsModal={viewDetailsModal}
+          setViewDetailsModal={setViewDetailsModal}
+          setViewDetailsData={setViewDetailsData}
+          setViewDeatailsImg={setViewDeatailsImg}
+          loginData={loginData}
+          viewDetailsData={viewDetailsData}
+          handleProcessReturn={handleProcessReturn}
+          handleProcessLost={handleProcessLost}
+          viewDeatailsImg={viewDeatailsImg}
+        />
+        </div>
+      </div>
       </main>
-      {/* ViewDetails Modal */}
-      <BorrowedBooksViewDetailsModal
-        viewDetailsModal={viewDetailsModal}
-        setViewDetailsModal={setViewDetailsModal}
-        setViewDetailsData={setViewDetailsData}
-        setViewDeatailsImg={setViewDeatailsImg}
-        loginData={loginData}
-        viewDetailsData={viewDetailsData}
-        handleProcessReturn={handleProcessReturn}
-        handleProcessLost={handleProcessLost}
-        viewDeatailsImg={viewDeatailsImg}
-      />
     </>
   );
 };

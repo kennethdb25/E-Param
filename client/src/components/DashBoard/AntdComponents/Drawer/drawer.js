@@ -1,26 +1,17 @@
 import {
-  Table,
   Button,
-  Modal,
-  message,
   Upload,
   Space,
-  Typography,
   Drawer,
   Form,
   Row,
   Col,
   Input,
-  Image,
 } from "antd";
 import {
-  PlusCircleOutlined,
-  InboxOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 
-const { Dragger } = Upload;
-const { Title } = Typography;
 const { TextArea } = Input;
 
 /* INVENTORY PAGE */

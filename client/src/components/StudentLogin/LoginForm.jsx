@@ -50,7 +50,6 @@ const LoginForm = (props) => {
     console.log("Failed:", error);
   };
 
-  const width = window.innerWidth;
   return (
     <Box className={classes.loginCard}>
       <Box alignItems="center">

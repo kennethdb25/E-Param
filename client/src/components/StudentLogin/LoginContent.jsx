@@ -3,6 +3,7 @@ import { Box } from "@mui/material";
 import { Space, Drawer, Button, Form } from "antd";
 import useStyles from "./style";
 import LoginForm from "./LoginForm";
+import { toast } from "react-toastify";
 import SignUp from "./SignUp";
 
 const LoginContent = (props) => {
@@ -48,6 +49,8 @@ const LoginContent = (props) => {
     }
   };
 
+  const width = window.innerWidth;
+
   return (
     <Box className={classes.loginContainer}>
       <LoginForm showSignUpForm={showSignUpForm} LoginValid={LoginValid}/>
@@ -57,11 +60,11 @@ const LoginContent = (props) => {
         onClose={onClose}
         open={visible}
         height="100%"
-        width={900}
+        width={ width >= 450 ? 900 : 400}
         style={{ display: "flex", justifyContent: "center" }}
         extra={<Space></Space>}
         footer={[
-          <div style={{display: "flex", justifyContent: "flex-end"}}>
+          <div style={ width >= 450 ? {display: "flex", justifyContent: "flex-end"} : {display: "flex", justifyContent: "flex-start"}}>
             <Button type="primary" onClick={() => form.submit()}>
               Confirm Registration
             </Button>

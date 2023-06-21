@@ -4,28 +4,23 @@ import { LoginContext } from "../../../Context/Context";
 import {
   Table,
   Button,
-  Modal,
-  Row,
-  Col,
   Space,
   message,
-  Typography,
   Input,
-  Image,
 } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
   EditOutlined,
-  RollbackOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
-import { ShelfProcessingModal, ShelfViewDetailsModal } from "../AntdComponents/Modal/modal";
+import {
+  ShelfProcessingModal,
+  ShelfViewDetailsModal,
+} from "../AntdComponents/Modal/modal";
 
-const { TextArea } = Input;
-const { Title } = Typography;
 
 const Shelf = (props) => {
   const { getAddToShelf, paginationStudentShelf } = props;
@@ -426,42 +421,45 @@ const Shelf = (props) => {
         </div>
       </header>
       <main>
-        <Table
-          key="ShelfBook"
-          columns={columns}
-          dataSource={getAddToShelf}
-          pagination={paginationStudentShelf}
-        />
+        <div className="card-body">
+          <div className="table-responsive">
+            <Table
+              key="ShelfBook"
+              columns={columns}
+              dataSource={getAddToShelf}
+              pagination={paginationStudentShelf}
+            />
+            {/* Process Modal */}
+            <ShelfProcessingModal
+              processModal={processModal}
+              onCancelProcess={onCancelProcess}
+              processButton={processButton}
+              onProcessProceed={onProcessProceed}
+              bookResult={bookResult}
+              studentResult={studentResult}
+              validateButton={validateButton}
+              libraryButton={libraryButton}
+              studentInfo={studentInfo}
+              bookButton={bookButton}
+              bookInfo={bookInfo}
+              handleLibraryScan={handleLibraryScan}
+              handleBookScan={handleBookScan}
+              fetchBookData={fetchBookData}
+              fetchStudentData={fetchStudentData}
+              onFinish={onFinish}
+            />
+            {/* ViewDetails Modal */}
+            <ShelfViewDetailsModal
+              viewDetailsModal={viewDetailsModal}
+              setViewDetailsModal={setViewDetailsModal}
+              setViewDetailsData={setViewDetailsData}
+              setViewDeatailsImg={setViewDeatailsImg}
+              viewDetailsData={viewDetailsData}
+              viewDeatailsImg={viewDeatailsImg}
+            />
+          </div>
+        </div>
       </main>
-
-      {/* Process Modal */}
-      <ShelfProcessingModal
-        processModal={processModal}
-        onCancelProcess={onCancelProcess}
-        processButton={processButton}
-        onProcessProceed={onProcessProceed}
-        bookResult={bookResult}
-        studentResult={studentResult}
-        validateButton={validateButton}
-        libraryButton={libraryButton}
-        studentInfo={studentInfo}
-        bookButton={bookButton}
-        bookInfo={bookInfo}
-        handleLibraryScan={handleLibraryScan}
-        handleBookScan={handleBookScan}
-        fetchBookData={fetchBookData}
-        fetchStudentData={fetchStudentData}
-        onFinish={onFinish}
-      />
-      {/* ViewDetails Modal */}
-      <ShelfViewDetailsModal
-      viewDetailsModal={viewDetailsModal}
-      setViewDetailsModal={setViewDetailsModal}
-      setViewDetailsData={setViewDetailsData}
-      setViewDeatailsImg={setViewDeatailsImg}
-      viewDetailsData={viewDetailsData}
-      viewDeatailsImg={viewDeatailsImg}
-      />
     </>
   );
 };

@@ -34,6 +34,7 @@ module.exports = function (app) {
       "/book/process-lost",
       "/book/process-return",
       "/book/get-lost",
+      "/book/get-all-lost",
       "/report/generate",
       "/report/get-generated",
       "/report/download-csv",

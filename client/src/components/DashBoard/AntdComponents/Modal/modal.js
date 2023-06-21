@@ -1,13 +1,8 @@
 import {
-  Table,
   Button,
   Modal,
-  message,
   Upload,
-  Space,
   Typography,
-  Drawer,
-  Form,
   Row,
   Col,
   Input,
@@ -15,9 +10,7 @@ import {
   Popconfirm,
 } from "antd";
 import {
-  PlusCircleOutlined,
   InboxOutlined,
-  PlusOutlined,
   RollbackOutlined,
   EditOutlined,
   QuestionOutlined,

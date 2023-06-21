@@ -7,7 +7,6 @@ import {
   message,
   Input,
   Space,
-  Typography,
 } from "antd";
 import {
   SearchOutlined,
@@ -310,33 +309,37 @@ const AvailableBooks = (props) => {
         </div>
       </header>
       <main>
-        <Tabs
-          onChange={onChange}
-          type="card"
-          items={genre.map((bookName, index) => {
-            const id = String(index + 1);
-            return {
-              label: `${bookName}`,
-              key: id,
-              children: <h1 key={id}>{`${bookName}`}</h1>,
-            };
-          })}
-        />
-        <Table
-          key="AvailableBook"
-          columns={columns}
-          dataSource={tabData[activeTab]}
-        />
+        <div className="card-body">
+          <div className="table-responsive">
+            <Tabs
+              onChange={onChange}
+              type="card"
+              items={genre.map((bookName, index) => {
+                const id = String(index + 1);
+                return {
+                  label: `${bookName}`,
+                  key: id,
+                  children: <h1 key={id}>{`${bookName}`}</h1>,
+                };
+              })}
+            />
+            <Table
+              key="AvailableBook"
+              columns={columns}
+              dataSource={tabData[activeTab]}
+            />
+            {/* ViewDetails Modal */}
+            <AvailableBooksDetailsModal
+              viewDetailsModal={viewDetailsModal}
+              setViewDetailsModal={setViewDetailsModal}
+              setViewDetailsData={setViewDetailsData}
+              setViewDeatailsImg={setViewDeatailsImg}
+              viewDetailsData={viewDetailsData}
+              viewDeatailsImg={viewDeatailsImg}
+            />
+          </div>
+        </div>
       </main>
-      {/* ViewDetails Modal */}
-      <AvailableBooksDetailsModal
-        viewDetailsModal={viewDetailsModal}
-        setViewDetailsModal={setViewDetailsModal}
-        setViewDetailsData={setViewDetailsData}
-        setViewDeatailsImg={setViewDeatailsImg}
-        viewDetailsData={viewDetailsData}
-        viewDeatailsImg={viewDeatailsImg}
-      />
     </>
   );
 };

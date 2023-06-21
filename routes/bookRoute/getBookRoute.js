@@ -60,17 +60,28 @@ GetBookRouter.get("/book/student-borrowed", async (req, res) => {
   }
 });
 
-// get all borrowed books per student
-GetBookRouter.get("/book/student-borrowed", async (req, res) => {
-  const all = req.query.email || "";
+GetBookRouter.get("/book/get-all-lost", async (req, res) => {
   try {
-    const borrowedBooks = await BorrowBookModel.find({ email: all });
-    return res.status(200).json({ status: 200, body: borrowedBooks });
+    const lostBooks = await BorrowBookModel.find({ status: "Lost" }).sort({ dateLost: -1 });
+    return res.status(200).json({ status: 200, body: lostBooks });
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);
   }
 });
+
+// get borrowed books per student
+GetBookRouter.get("/book/get-lost", async (req, res) => {
+  const all = req.query.email || "";
+  try {
+    const lostBooks = await BorrowBookModel.find({ email: all, status: "Lost" });
+    return res.status(200).json({ status: 200, body: lostBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 
 // get all currently borrowed books per student
 GetBookRouter.get("/book/student-currently-borrowed", async (req, res) => {
