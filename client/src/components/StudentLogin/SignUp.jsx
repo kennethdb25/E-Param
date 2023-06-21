@@ -17,38 +17,7 @@ import "antd/dist/antd.min.css";
 import { GradeData, SectionData } from "../../Data/Data";
 
 const SignUp = (props) => {
-  const [form] = Form.useForm();
-  const { onClose } = props;
-
-  const onFinish = async (values) => {
-    const newdata = new FormData();
-		newdata.append("photo", values.photo.file.originFileObj);
-		newdata.append("address", values.address);
-		newdata.append("confirmPassword", values.confirmPassword);
-		newdata.append("email", values.email);
-		newdata.append("firstName", values.firstName);
-		newdata.append("gender", values.gender);
-		newdata.append("lastName", values.lastName);
-		newdata.append("grade", values.grade);
-		newdata.append("middleName", values.middleName);
-		newdata.append("password", values.password);
-		newdata.append("section", values.section);
-		newdata.append("studentId", values.studentId);
-
-    const res = await fetch("/student/register", {
-      method: "POST",
-      body: newdata
-    });
-    if (res.status === 201) {
-      toast.success("Registered Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
-      onClose();
-      form.resetFields();
-    }else {
-      toast.error("ID already exists!", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
-    }
-  };
-
-  const onFinishFailed = (error) => {};
+  const { form, onFinish } = props;
 
   const imgprops = {
     beforeUpload: (file) => {
@@ -92,15 +61,14 @@ const SignUp = (props) => {
         }}
         layout="horizontal"
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         style={{
           width: "100%",
         }}
       >
         <Row>
-          <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
-          <Col xs={{ span: 24 }} md={{ span: 16 }}>
+          {/* <Col xs={{ span: 0 }} md={{ span: 4 }}></Col> */}
+          <Col xs={{ span: 24 }} md={{ span: 24 }}>
             <Row gutter={12}>
               <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
                 <Form.Item
@@ -327,7 +295,7 @@ const SignUp = (props) => {
                     },
                   ]}
                 >
-                  <Input placeholder="Enter your address" />
+                  <Input placeholder="House No./Street Name/Barangay/Municipality/Province" />
                 </Form.Item>
               </Col>
             </Row>
@@ -418,14 +386,6 @@ const SignUp = (props) => {
                   <Input.Password placeholder="********" />
                 </Form.Item>
               </Col>
-            </Row>
-            <Row
-              gutter={12}
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <Button type="primary" htmlType="submit">
-                Sign Up
-              </Button>
             </Row>
           </Col>
           <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>

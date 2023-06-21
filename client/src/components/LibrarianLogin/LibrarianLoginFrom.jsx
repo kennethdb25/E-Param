@@ -1,11 +1,14 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Form, Input, Row, Col, Button } from "antd";
-import { Typography, Box, Link } from "@mui/material";
+import { Form, Input, Row, Col, Button, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Box, Link } from "@mui/material";
 import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
+
+const { Title } = Typography;
 
 const LibrarianLoginForm = (props) => {
   const classes = useStyles();
@@ -50,7 +53,7 @@ const LibrarianLoginForm = (props) => {
   return (
     <Box className={classes.loginCard}>
       <Box alignItems="center">
-        <Typography fontSize="32px">LIBRARIAN LOGIN</Typography>
+        <Title level={2}>LIBRARIAN LOGIN</Title>
       </Box>
       <Form
         name="basic"
@@ -63,7 +66,6 @@ const LibrarianLoginForm = (props) => {
         className={classes.Form}
       >
         <Form.Item
-          label="Email"
           name="email"
           rules={[
             {
@@ -75,10 +77,13 @@ const LibrarianLoginForm = (props) => {
           ]}
           hasFeedback
         >
-          <Input placeholder="Email" />
+          <Input
+            prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Please enter your email address"
+            style={{ borderRadius: "10px" }}
+          />
         </Form.Item>
         <Form.Item
-          label="Password"
           name="password"
           rules={[
             {
@@ -87,29 +92,40 @@ const LibrarianLoginForm = (props) => {
             },
           ]}
         >
-          <Input.Password placeholder="Password" />
+          <Input.Password
+            prefix={<LockOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Please enter your password"
+            style={{ borderRadius: "10px" }}
+          />
         </Form.Item>
-      <Box className={classes.loginDetails}>
-        <Row gutter={8}>
-          <Col span={24}>
-            <Form.Item>
-              <Typography
-                component={Link}
-                style={{ textDecoration: "none"}}
-                href="/librarian-forgot-password"
-                sx={{ "&:hover": { cursor: "pointer" } }}
-              >
-                Forgot Password?
-              </Typography>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item>
-          <Button htmlType="submit" type="primary">
-            LOGIN
-          </Button>
-        </Form.Item>
-      </Box>
+        <Box className={classes.loginDetails}>
+          <Row gutter={8}>
+            <Col span={24}>
+              <Form.Item>
+                <Typography
+                  component={Link}
+                  style={{ textDecoration: "none", color: "gray" }}
+                  href="/librarian-forgot-password"
+                  sx={{ "&:hover": { cursor: "pointer" } }}
+                >
+                  FORGOT YOUR PASSWORD?
+                </Typography>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Form.Item>
+            <Button
+              htmlType="submit"
+              type="primary"
+              style={{
+                backgroundColor: "#FFC000",
+                border: "1px solid #d9d9d9",
+              }}
+            >
+              <span style={{ fontSize: "16px" }}>LOGIN</span>
+            </Button>
+          </Form.Item>
+        </Box>
       </Form>
     </Box>
   );

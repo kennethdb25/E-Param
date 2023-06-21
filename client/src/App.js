@@ -14,6 +14,7 @@ import AdminLoginContent from './components/AdminLogin/AdminLoginContent';
 import LibrarianLoginContent from './components/LibrarianLogin/LibrarianLoginContent';
 import LibrarianForgotPassword from "./components/ForgotPassword/LibrarianForgotPassword";
 import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword";
+import Attendance from "./components/Attendance/Attendance";
 
 function App() {
   const [data, setData] = useState("");
@@ -121,6 +122,7 @@ function App() {
             <Route path={ROUTE.LIBRARIANFORGOTPASS} element={<LibrarianForgotPassword />} />
             <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
             <Route path={ROUTE.ADMINFORGOTPASS} element={<AdminForgotPassword />} />
+            <Route path={ROUTE.ATTENDANCE} element={<Attendance />} />
           </Routes>
         </>
       ) : (

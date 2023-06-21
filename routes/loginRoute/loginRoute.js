@@ -13,7 +13,7 @@ SignInRouter.post('/student/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const userEmail = await StudentModel.findOne({ email: email });
+    const userEmail = await StudentModel.findOne({ email: email, acctStatus: "Active" });
     if (userEmail) {
       const isMatch = await cipher.compare(password, userEmail.password)
       if (!isMatch) {

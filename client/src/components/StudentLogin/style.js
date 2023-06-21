@@ -45,8 +45,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    padding: "20px",
-    background: "white",
+    padding: "10px",
 
     [theme.breakpoints.up("md")]: {
       width: "360px",

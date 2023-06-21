@@ -1,11 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Form, Input, Row, Col, Button } from "antd";
-import { Typography, Box, Link } from "@mui/material";
+import { Form, Input, Row, Col, Button, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Box, Link } from "@mui/material";
 import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
+
+const { Title } = Typography;
 
 const LoginForm = (props) => {
   const classes = useStyles();
@@ -36,7 +39,6 @@ const LoginForm = (props) => {
           history("/dashboard");
         }, 1000);
       }, 3000);
-
     } else {
       toast.error(res.message, {
         position: toast.POSITION.TOP_CENTER,
@@ -52,7 +54,7 @@ const LoginForm = (props) => {
   return (
     <Box className={classes.loginCard}>
       <Box alignItems="center">
-        <Typography fontSize="32px">STUDENT LOGIN</Typography>
+        <Title level={2}>STUDENT LOGIN</Title>
       </Box>
       <Form
         name="basic"
@@ -65,7 +67,6 @@ const LoginForm = (props) => {
         className={classes.Form}
       >
         <Form.Item
-          label="Email"
           name="email"
           rules={[
             {
@@ -77,10 +78,13 @@ const LoginForm = (props) => {
           ]}
           hasFeedback
         >
-          <Input placeholder="Email" />
+          <Input
+            prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Please enter your email address"
+            style={{ borderRadius: "10px" }}
+          />
         </Form.Item>
         <Form.Item
-          label="Password"
           name="password"
           rules={[
             {
@@ -89,94 +93,60 @@ const LoginForm = (props) => {
             },
           ]}
         >
-          <Input.Password placeholder="Password" />
+          <Input.Password
+            prefix={<LockOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Please enter your password"
+            style={{ borderRadius: "10px" }}
+          />
         </Form.Item>
-      <Box className={classes.loginDetails}>
-        <Row gutter={8}>
-          {width >= 450 ? (
-            <>
-              <Col xs={{ span: 24 }} md={{ span: 24 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Form.Item>
-                    <Typography
-                      onClick={showSignUpForm}
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    >
-                      Don't have an account? Sign Up Here!
-                    </Typography>
-                  </Form.Item>
-                </div>
-              </Col>
-            </>
-          ) : (
-            <>
-              <Col xs={{ span: 24 }} md={{ span: 24 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Form.Item>
-                    <Typography
-                      onClick={showSignUpForm}
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    >
-                      Don't have an account?
-                    </Typography>
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Form.Item>
-                    <Typography
-                      onClick={showSignUpForm}
-                      sx={{ "&:hover": { cursor: "pointer" } }}
-                    >
-                      Sign Up Here!
-                    </Typography>
-                  </Form.Item>
-                </div>
-              </Col>
-            </>
-          )}
-        </Row>
-        <Row gutter={8}>
-          <Col span={24}>
-            <Form.Item>
-              <Typography
-                component={Link}
-                style={{ textDecoration: "none" }}
-                href="/forgot-password"
-                sx={{ "&:hover": { cursor: "pointer" } }}
+        <Box>
+          <Row gutter={8}>
+            <Col xs={{ span: 24 }} md={{ span: 24 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  // alignItems: "center",
+                }}
               >
-                Forgot Password?
-              </Typography>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item>
-        <Button htmlType="submit" type="primary">
-            LOGIN
-          </Button>
-        </Form.Item>
-      </Box>
-    </Form>
+                <Form.Item>
+                  <Typography
+                    onClick={showSignUpForm}
+                    style={{ cursor: "pointer", color: "gray" }}
+                  >
+                    Register account?
+                  </Typography>
+                </Form.Item>
+                <Form.Item>
+                  <Typography
+                    component={Link}
+                    style={{ textDecoration: "none", color: "gray" }}
+                    href="/forgot-password"
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  >
+                    Forgot Password?
+                  </Typography>
+                </Form.Item>
+              </div>
+            </Col>
+          </Row>
+          <Form.Item>
+            <div className={classes.loginDetails}>
+              <Button
+                htmlType="submit"
+                type="primary"
+                style={{
+                  backgroundColor: "#FFC000",
+                  border: "1px solid #d9d9d9",
+                }}
+              >
+                <span style={{ fontSize: "16px"}}>LOGIN</span>
+              </Button>
+            </div>
+          </Form.Item>
+        </Box>
+      </Form>
     </Box>
   );
 };

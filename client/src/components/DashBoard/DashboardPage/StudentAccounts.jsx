@@ -220,6 +220,17 @@ const StudentAccounts = (props) => {
       dataIndex: "acctStatus",
       key: "acctStatus",
       width: "10%",
+      filters: [
+        {
+          text: "Active",
+          value: "Active",
+        },
+        {
+          text: "Disabled",
+          value: "Disabled",
+        },
+      ],
+      onFilter: (value, record) => record.acctStatus.indexOf(value) === 0,
     },
     {
       title: "",
