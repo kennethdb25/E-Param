@@ -8,6 +8,7 @@ import {
   Input,
   Image,
   Popconfirm,
+  Rate,
 } from "antd";
 import {
   InboxOutlined,
@@ -17,7 +18,13 @@ import {
   ScanOutlined,
   CheckOutlined,
   DeleteOutlined,
-  FormOutlined
+  FormOutlined,
+  UserOutlined,
+  MailOutlined,
+  InfoCircleOutlined,
+  BookOutlined,
+  FileAddOutlined,
+  FolderAddOutlined,
 } from "@ant-design/icons";
 
 const { Dragger } = Upload;
@@ -34,10 +41,11 @@ export const AvailableBooksDetailsModal = (props) => {
     viewDetailsData,
     viewDeatailsImg,
   } = props;
+  console.log(viewDetailsData);
   return (
     <Modal
       key="BookDetailsAvailable"
-      title="Book Details"
+      title="BOOK DETAILS"
       width={1200}
       open={viewDetailsModal}
       onCancel={() => {
@@ -73,7 +81,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Book Name
               </Title>
-              <Input value={viewDetailsData?.title} readOnly />
+              <Input
+                value={viewDetailsData?.title}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -84,7 +96,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Author Name
               </Title>
-              <Input value={viewDetailsData?.author} readOnly />
+              <Input
+                value={viewDetailsData?.author}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -95,7 +111,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 ISBN
               </Title>
-              <Input value={viewDetailsData?.isbn} readOnly />
+              <Input
+                value={viewDetailsData?.isbn}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -108,7 +128,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Accession Number
               </Title>
-              <Input value={viewDetailsData?.assession} readOnly />
+              <Input
+                value={viewDetailsData?.assession}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -119,7 +143,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Description
               </Title>
-              <Input value={viewDetailsData?.desc} readOnly />
+              <Input
+                value={viewDetailsData?.desc}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -130,7 +158,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input value={viewDetailsData?.publication} readOnly />
+              <Input
+                value={viewDetailsData?.publication}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -163,7 +195,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Location
               </Title>
-              <Input value={viewDetailsData?.location} readOnly />
+              <Input
+                value={viewDetailsData?.location}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -174,7 +210,11 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Genre
               </Title>
-              <Input value={viewDetailsData?.genre} readOnly />
+              <Input
+                value={viewDetailsData?.genre}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -208,6 +248,19 @@ export const AvailableBooksDetailsModal = (props) => {
               />
             </Col>
           </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Book Rate
+              </Title>
+              <Rate allowHalf value={viewDetailsData?.ratings} disabled />
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Modal>
@@ -226,60 +279,63 @@ export const BorrowedBooksViewDetailsModal = (props) => {
     handleProcessReturn,
     handleProcessLost,
     viewDeatailsImg,
+    setRateModal,
   } = props;
   return (
     <Modal
       key="BorrowedBookDetails"
-      title="Transaction Details"
+      title="TRANSACTION DETAILS"
       width={1200}
       open={viewDetailsModal}
       onCancel={() => {
         setViewDetailsModal(false);
         setViewDetailsData();
         setViewDeatailsImg();
+        setRateModal(0);
       }}
       footer={
         loginData.validUser.userType !== "Student" &&
-          viewDetailsData?.status === "Borrowed"
+        viewDetailsData?.status === "Borrowed"
           ? [
-            <Popconfirm
-              placement="top"
-              title="Are you sure want to complete the process return?"
-              onConfirm={handleProcessReturn}
-              okText="Confirm"
-              cancelText="Cancel"
-            >
-              <Button key="return" type="primary" icon={<EditOutlined />}>
-                Process Return
-              </Button>
-            </Popconfirm>,
-            <Popconfirm
-              placement="top"
-              title="Are you sure want to complete the process lost?"
-              onConfirm={handleProcessLost}
-              okText="Confirm"
-              cancelText="Cancel"
-            >
-              <Button key="lost" type="primary" icon={<QuestionOutlined />}>
-                Lost
-              </Button>
-            </Popconfirm>,
-            <Button
-              key="cancel"
-              type="primary"
-              icon={<RollbackOutlined />}
-              onClick={() => {
-                setViewDetailsModal(false);
-                setViewDeatailsImg();
-                setViewDetailsData();
-              }}
-            >
-              Cancel
-            </Button>,
-          ]
+              <Popconfirm
+                placement="top"
+                title="Are you sure want to complete the process return?"
+                onConfirm={handleProcessReturn}
+                okText="Confirm"
+                cancelText="Cancel"
+              >
+                <Button key="return" type="primary" icon={<EditOutlined />}>
+                  Process Return
+                </Button>
+              </Popconfirm>,
+              <Popconfirm
+                placement="top"
+                title="Are you sure want to complete the process lost?"
+                onConfirm={handleProcessLost}
+                okText="Confirm"
+                cancelText="Cancel"
+              >
+                <Button key="lost" type="primary" icon={<QuestionOutlined />}>
+                  Lost
+                </Button>
+              </Popconfirm>,
+              <Button
+                key="cancel"
+                type="primary"
+                icon={<RollbackOutlined />}
+                onClick={() => {
+                  setViewDetailsModal(false);
+                  setViewDeatailsImg();
+                  setViewDetailsData();
+                  setRateModal(0);
+                }}
+              >
+                Cancel
+              </Button>,
+            ]
           : loginData.validUser.userType !== "Student" &&
             viewDetailsData?.status === "Lost"
-            ? [
+          ? [
               <Popconfirm
                 placement="top"
                 title="Are you sure want to complete the process return?"
@@ -304,7 +360,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
                 Cancel
               </Button>,
             ]
-            : [
+          : [
               <Button
                 key="cancel"
                 type="primary"
@@ -334,7 +390,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 First Name
               </Title>
-              <Input value={viewDetailsData?.firstName} readOnly />
+              <Input
+                value={viewDetailsData?.firstName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -345,7 +405,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Middle Name
               </Title>
-              <Input value={viewDetailsData?.middleName} readOnly />
+              <Input
+                value={viewDetailsData?.middleName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -356,7 +420,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Last Name
               </Title>
-              <Input value={viewDetailsData?.lastName} readOnly />
+              <Input
+                value={viewDetailsData?.lastName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -367,7 +435,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Student ID
               </Title>
-              <Input value={viewDetailsData?.studentId} readOnly />
+              <Input
+                value={viewDetailsData?.studentId}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -378,7 +450,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Grade
               </Title>
-              <Input value={viewDetailsData?.grade} readOnly />
+              <Input
+                value={viewDetailsData?.grade}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -389,7 +465,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Section
               </Title>
-              <Input value={viewDetailsData?.section} readOnly />
+              <Input
+                value={viewDetailsData?.section}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -400,7 +480,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Email
               </Title>
-              <Input value={viewDetailsData?.email} readOnly />
+              <Input
+                value={viewDetailsData?.email}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -411,7 +495,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Status
               </Title>
-              <Input value={viewDetailsData?.status} readOnly />
+              <Input
+                value={viewDetailsData?.status}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -422,7 +510,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Date Borrowed
               </Title>
-              <Input value={new Date(viewDetailsData?.dateBorrowed)} readOnly />
+              <Input
+                value={new Date(viewDetailsData?.dateBorrowed).toLocaleString()}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <h1
@@ -442,7 +534,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Book Name
               </Title>
-              <Input value={viewDetailsData?.title} readOnly />
+              <Input
+                value={viewDetailsData?.title}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -453,7 +549,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Author Name
               </Title>
-              <Input value={viewDetailsData?.author} readOnly />
+              <Input
+                value={viewDetailsData?.author}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -464,7 +564,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 ISBN
               </Title>
-              <Input value={viewDetailsData?.isbn} readOnly />
+              <Input
+                value={viewDetailsData?.isbn}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -477,7 +581,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Accession Number
               </Title>
-              <Input value={viewDetailsData?.assession} readOnly />
+              <Input
+                value={viewDetailsData?.assession}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -488,7 +596,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Description
               </Title>
-              <Input value={viewDetailsData?.desc} readOnly />
+              <Input
+                value={viewDetailsData?.desc}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -499,7 +611,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input value={viewDetailsData?.publication} readOnly />
+              <Input
+                value={viewDetailsData?.publication}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -532,7 +648,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Location
               </Title>
-              <Input value={viewDetailsData?.location} readOnly />
+              <Input
+                value={viewDetailsData?.location}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -543,7 +663,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Genre
               </Title>
-              <Input value={viewDetailsData?.genre} readOnly />
+              <Input
+                value={viewDetailsData?.genre}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -577,8 +701,73 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               />
             </Col>
           </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Rate by Student
+              </Title>
+              <Rate disabled defaultValue={viewDetailsData?.ratings} />
+            </Col>
+          </Row>
         </Col>
       </Row>
+    </Modal>
+  );
+};
+
+export const BorrowedBookRateModal = (props) => {
+  const { value, rateModal, setValue, setRateModal, handleRateConfirm } = props;
+  const desc = ["Terrible", "Bad", "Normal", "Good", "Wonderful"];
+  return (
+    <Modal
+      key="BookRate"
+      title="RATE BOOK"
+      width={400}
+      open={rateModal}
+      onCancel={() => {
+        setRateModal(false);
+      }}
+      footer={[
+        <Button
+          type="primary"
+          icon={<CheckOutlined />}
+          key="cancel"
+          onClick={() => {
+            handleRateConfirm();
+          }}
+        >
+          Confirm
+        </Button>,
+        <Button
+          type="primary"
+          icon={<RollbackOutlined />}
+          key="confirm"
+          onClick={() => {
+            setRateModal(false);
+            setValue(0);
+          }}
+        >
+          Cancel
+        </Button>,
+      ]}
+    >
+      <span
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          alignContent: "center",
+        }}
+      >
+        <Rate tooltips={desc} onChange={setValue} value={value} />
+        {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ""}
+      </span>
     </Modal>
   );
 };
@@ -606,7 +795,7 @@ export const ShelfProcessingModal = (props) => {
   return (
     <Modal
       key="ProcessModal"
-      title="Processing"
+      title="PROCESSING..."
       width={1400}
       open={processModal}
       onCancel={onCancelProcess}
@@ -646,7 +835,10 @@ export const ShelfProcessingModal = (props) => {
         </Button>,
       ]}
     >
-      <h1>Student Info</h1>
+      <h1>
+        <UserOutlined style={{ marginRight: "10px" }} />
+        STUDENT INFO
+      </h1>
       <Row>
         <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
         <Col xs={{ span: 24 }} md={{ span: 24 }}>
@@ -679,86 +871,75 @@ export const ShelfProcessingModal = (props) => {
               </div>
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Student ID
-              </Title>
-              <Input value={studentInfo?.studentId} readOnly />
+              <Input
+                value={studentInfo?.studentId}
+                prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Student ID"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                First Name
-              </Title>
-              <Input value={studentInfo?.firstName} readOnly />
+              <Input
+                value={studentInfo?.firstName}
+                prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+                placeholder="First Name"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Middle Name
-              </Title>
-              <Input value={studentInfo?.middleName} readOnly />
+              <Input
+                value={studentInfo?.middleName}
+                prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Middle Name"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Last Name
-              </Title>
-              <Input value={studentInfo?.lastName} readOnly />
+              <Input
+                value={studentInfo?.lastName}
+                prefix={<UserOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Last Name"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Email
-              </Title>
-              <Input value={studentInfo?.email} readOnly />
+              <Input
+                value={studentInfo?.email}
+                prefix={<MailOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Email Address"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Grade
-              </Title>
-              <Input value={studentInfo?.grade} readOnly />
+              <Input
+                value={studentInfo?.grade}
+                prefix={<InfoCircleOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Grade"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
             <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-              <Title
-                level={5}
-                style={{
-                  marginTop: "20px",
-                }}
-              >
-                Section
-              </Title>
-              <Input value={studentInfo?.section} readOnly />
+              <Input
+                value={studentInfo?.section}
+                prefix={<InfoCircleOutlined style={{ marginRight: "10px" }} />}
+                placeholder="Section"
+                style={{ borderRadius: "10px", marginTop: "15px" }}
+                readOnly
+              />
             </Col>
           </Row>
         </Col>
       </Row>
-      <h1>Book Info</h1>
+      <h1>
+        <BookOutlined style={{ marginRight: "10px" }} />
+        BOOK INFO
+      </h1>
       <Row gutter={12}>
         <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
           <div
@@ -785,81 +966,67 @@ export const ShelfProcessingModal = (props) => {
           </div>
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            ISBN
-          </Title>
-          <Input value={bookInfo?.isbn} readOnly />
+          <Input
+            value={bookInfo?.isbn}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="ISBN"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Book Name
-          </Title>
-          <Input value={bookInfo?.title} readOnly />
+          <Input
+            value={bookInfo?.title}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Book Name"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Author Name
-          </Title>
-          <Input value={bookInfo?.author} readOnly />
+          <Input
+            value={bookInfo?.author}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Author Name"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Location
-          </Title>
-          <Input value={bookInfo?.location} readOnly />
+          <Input
+            value={bookInfo?.location}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Location"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Publication
-          </Title>
-          <Input value={bookInfo?.publication} readOnly />
+          <Input
+            value={bookInfo?.publication}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Publication"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Accession Number
-          </Title>
-          <Input value={bookInfo?.assession} readOnly />
+          <Input
+            value={bookInfo?.assession}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Accession Number"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
         <Col xs={{ span: 12 }} md={{ span: 8 }} layout="vertical">
-          <Title
-            level={5}
-            style={{
-              marginTop: "20px",
-            }}
-          >
-            Genre
-          </Title>
-          <Input value={bookInfo?.genre} readOnly />
+          <Input
+            value={bookInfo?.genre}
+            prefix={<BookOutlined style={{ marginRight: "10px" }} />}
+            placeholder="Genre"
+            style={{ borderRadius: "10px", marginTop: "15px" }}
+            readOnly
+          />
         </Col>
       </Row>
       <Row
@@ -887,7 +1054,7 @@ export const ShelfViewDetailsModal = (props) => {
   return (
     <Modal
       key="BookDetailsAvailable"
-      title="Reservation Details"
+      title="RESERVATION DETAILS"
       width={1200}
       open={viewDetailsModal}
       onCancel={() => {
@@ -913,7 +1080,10 @@ export const ShelfViewDetailsModal = (props) => {
       <Row>
         <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
         <Col xs={{ span: 24 }} md={{ span: 16 }}>
-          <h1>Student Info</h1>
+          <h1>
+            <UserOutlined style={{ marginRight: "10px" }} />
+            STUDENT INFO
+          </h1>
           <Row gutter={12}>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -924,7 +1094,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 First Name
               </Title>
-              <Input value={viewDetailsData?.firstName} readOnly />
+              <Input
+                value={viewDetailsData?.firstName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -935,7 +1109,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Middle Name
               </Title>
-              <Input value={viewDetailsData?.middleName} readOnly />
+              <Input
+                value={viewDetailsData?.middleName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -946,7 +1124,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Last Name
               </Title>
-              <Input value={viewDetailsData?.lastName} readOnly />
+              <Input
+                value={viewDetailsData?.lastName}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -957,7 +1139,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Student ID
               </Title>
-              <Input value={viewDetailsData?.studentId} readOnly />
+              <Input
+                value={viewDetailsData?.studentId}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -968,7 +1154,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Grade
               </Title>
-              <Input value={viewDetailsData?.grade} readOnly />
+              <Input
+                value={viewDetailsData?.grade}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -979,7 +1169,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Section
               </Title>
-              <Input value={viewDetailsData?.section} readOnly />
+              <Input
+                value={viewDetailsData?.section}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -990,7 +1184,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Email
               </Title>
-              <Input value={viewDetailsData?.email} readOnly />
+              <Input
+                value={viewDetailsData?.email}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1001,7 +1199,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Status
               </Title>
-              <Input value={viewDetailsData?.status} readOnly />
+              <Input
+                value={viewDetailsData?.status}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1012,7 +1214,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Date Reserved
               </Title>
-              <Input value={new Date(viewDetailsData?.dateReserved)} readOnly />
+              <Input
+                value={new Date(viewDetailsData?.dateReserved).toLocaleString()}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <h1
@@ -1020,7 +1226,8 @@ export const ShelfViewDetailsModal = (props) => {
               marginTop: "30px",
             }}
           >
-            Book Info
+            <BookOutlined style={{ marginRight: "10px" }} />
+            BOOK INFO
           </h1>
           <Row gutter={12}>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
@@ -1032,7 +1239,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Book Name
               </Title>
-              <Input value={viewDetailsData?.title} readOnly />
+              <Input
+                value={viewDetailsData?.title}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1043,7 +1254,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Author Name
               </Title>
-              <Input value={viewDetailsData?.author} readOnly />
+              <Input
+                value={viewDetailsData?.author}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1054,7 +1269,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 ISBN
               </Title>
-              <Input value={viewDetailsData?.isbn} readOnly />
+              <Input
+                value={viewDetailsData?.isbn}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1067,7 +1286,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Accession Number
               </Title>
-              <Input value={viewDetailsData?.assession} readOnly />
+              <Input
+                value={viewDetailsData?.assession}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1078,7 +1301,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Description
               </Title>
-              <Input value={viewDetailsData?.desc} readOnly />
+              <Input
+                value={viewDetailsData?.desc}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1089,7 +1316,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input value={viewDetailsData?.publication} readOnly />
+              <Input
+                value={viewDetailsData?.publication}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1122,7 +1353,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Location
               </Title>
-              <Input value={viewDetailsData?.location} readOnly />
+              <Input
+                value={viewDetailsData?.location}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1133,7 +1368,11 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Genre
               </Title>
-              <Input value={viewDetailsData?.genre} readOnly />
+              <Input
+                value={viewDetailsData?.genre}
+                readOnly
+                style={{ borderRadius: "10px" }}
+              />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1183,7 +1422,12 @@ export const InventoryAddBookModal = (props) => {
       open={isOpen}
       onCancel={() => setIsOpen(false)}
       footer={[
-        <Button key="cancel" onClick={() => setIsOpen(false)}>
+        <Button
+          type="primary"
+          icon={<RollbackOutlined />}
+          key="cancel"
+          onClick={() => setIsOpen(false)}
+        >
           Cancel
         </Button>,
       ]}
@@ -1197,8 +1441,20 @@ export const InventoryAddBookModal = (props) => {
           gap: "20px",
         }}
       >
-        <Button onClick={() => handleSingleModal()}>Single Add</Button>
-        <Button onClick={() => handleBatchModal()}>Batch Add</Button>
+        <Button
+          icon={<FileAddOutlined />}
+          type="primary"
+          onClick={() => handleSingleModal()}
+        >
+          SINGLE ADD
+        </Button>
+        <Button
+          icon={<FolderAddOutlined />}
+          type="primary"
+          onClick={() => handleBatchModal()}
+        >
+          BATCH ADD
+        </Button>
       </div>
     </Modal>
   );
@@ -1245,6 +1501,307 @@ export const InventoryBatchAddModal = (props) => {
           not supported by the given format.
         </p>
       </Dragger>
+    </Modal>
+  );
+};
+
+export const InventoryLostBooksModal = (props) => {
+  const {
+    viewDetailsLostModal,
+    setViewDetailsLostModal,
+    setViewDetailsData,
+    setViewDeatailsImg,
+    viewDetailsData,
+    viewDeatailsImg,
+  } = props;
+  return (
+    <Modal
+      key="LostBookDetails"
+      title="Lost Book Details"
+      width={1200}
+      open={viewDetailsLostModal}
+      onCancel={() => {
+        setViewDetailsLostModal(false);
+        setViewDetailsData();
+        setViewDeatailsImg();
+      }}
+      footer={[
+        <Button
+          type="primary"
+          icon={<RollbackOutlined />}
+          key="cancel"
+          onClick={() => {
+            setViewDetailsLostModal(false);
+            setViewDeatailsImg();
+            setViewDetailsData();
+          }}
+        >
+          Cancel
+        </Button>,
+      ]}
+    >
+      <Row>
+        <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+        <Col xs={{ span: 24 }} md={{ span: 16 }}>
+          <h1>Student Info</h1>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                First Name
+              </Title>
+              <Input value={viewDetailsData?.firstName} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Middle Name
+              </Title>
+              <Input value={viewDetailsData?.middleName} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Last Name
+              </Title>
+              <Input value={viewDetailsData?.lastName} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Student ID
+              </Title>
+              <Input value={viewDetailsData?.studentId} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Grade
+              </Title>
+              <Input value={viewDetailsData?.grade} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Section
+              </Title>
+              <Input value={viewDetailsData?.section} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Email
+              </Title>
+              <Input value={viewDetailsData?.email} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Status
+              </Title>
+              <Input value={viewDetailsData?.status} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Date Lost
+              </Title>
+              <Input
+                value={new Date(viewDetailsData?.dateLost).toLocaleString()}
+                readOnly
+              />
+            </Col>
+          </Row>
+          <h1
+            style={{
+              marginTop: "30px",
+            }}
+          >
+            Book Info
+          </h1>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Book Name
+              </Title>
+              <Input value={viewDetailsData?.title} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Author Name
+              </Title>
+              <Input value={viewDetailsData?.author} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                ISBN
+              </Title>
+              <Input value={viewDetailsData?.isbn} readOnly />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Accession Number
+              </Title>
+              <Input value={viewDetailsData?.assession} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Description
+              </Title>
+              <Input value={viewDetailsData?.desc} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Publication
+              </Title>
+              <Input value={viewDetailsData?.publication} readOnly />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Abstract
+              </Title>
+              <TextArea
+                rows={10}
+                maxLength={3000}
+                showCount
+                placeholder="Enter abstract"
+                value={viewDetailsData?.abstract}
+                readOnly
+              />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Location
+              </Title>
+              <Input value={viewDetailsData?.location} readOnly />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Genre
+              </Title>
+              <Input value={viewDetailsData?.genre} readOnly />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Book Image
+              </Title>
+              <Image src={viewDeatailsImg} alt="Book Details" />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 16 }} layout="vertical">
+              <Title
+                level={5}
+                style={{
+                  marginTop: "20px",
+                }}
+              >
+                Notes
+              </Title>
+              <TextArea
+                rows={3}
+                maxLength={500}
+                showCount
+                placeholder="Enter Notes"
+                value={viewDetailsData?.notes}
+                readOnly
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Modal>
   );
 };

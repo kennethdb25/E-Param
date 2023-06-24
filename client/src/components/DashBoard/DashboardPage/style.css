@@ -205,6 +205,13 @@ main{
 	grid-template-columns: 60% auto;
 
 }
+.recents-grid{
+	margin-top: 3.5rem;
+	display: grid;
+	grid-gap: 2rem;
+	grid-template-columns: auto 50%;
+
+}
 .card{
 	background: #fff;
 	border-radius: 5px;
@@ -476,6 +483,10 @@ header{
     color: rgb(255 255 255) !important;
     /* border: 1px solid #d9d9d9 !important;
     background:#FFC000 !important; */
+}
+.ant-modal-header {
+	color: rgb(255 255 255) !important;
+	background:#FFC000 !important;
 }
 
 .ant-table-filter-trigger {

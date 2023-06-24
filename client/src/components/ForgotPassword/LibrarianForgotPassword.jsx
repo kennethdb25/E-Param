@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Form, Input, Row, Col } from "antd";
-import { Typography, Box, Button } from "@mui/material";
+import { Form, Input, Row, Col, Typography, Button } from "antd";
+import { MailOutlined, InboxOutlined, LockOutlined } from "@ant-design/icons";
+import { Box } from "@mui/material";
 import emailjs from "@emailjs/browser";
 import useStyles from "./style";
 import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
+
+const { Title } = Typography;
 
 const LibrarianForgotPassword = () => {
   const [form] = Form.useForm();
@@ -123,13 +126,10 @@ const LibrarianForgotPassword = () => {
     <Box className={classes.forgotPassContainer}>
       <Box className={classes.forgotPassCard}>
         <Box paddingTop="20px">
-          <Typography fontSize="28px">Forgot your Password?</Typography>
+          <Title level={2}>Forgot your Password?</Title>
         </Box>
         {firstStep ? (
           <>
-            <Typography fontSize="16px" paddingTop="20px">
-              Please input your email
-            </Typography>
             <Form
               form={form}
               name="basic"
@@ -154,14 +154,24 @@ const LibrarianForgotPassword = () => {
                 ]}
                 hasFeedback
               >
-                <Input placeholder="Email" />
+                <Input
+                  prefix={<MailOutlined style={{ marginRight: "10px" }} />}
+                  placeholder="Please enter your email address"
+                  style={{ borderRadius: "10px" }}
+                />
               </Form.Item>
               <Row
                 gutter={12}
                 style={{ display: "flex", justifyContent: "center" }}
               >
-                <Button type="submit" variant="contained">
-                  Submit
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  style={{
+                    border: "1px solid #d9d9d9",
+                  }}
+                >
+                  <span style={{ fontSize: "14px" }}>SUBMIT</span>
                 </Button>
               </Row>
             </Form>
@@ -169,9 +179,6 @@ const LibrarianForgotPassword = () => {
         ) : null}
         {secondStep ? (
           <>
-            <Typography fontSize="16px" paddingTop="20px">
-              Please verify the 6 digits OTP sent in your email
-            </Typography>
             <Form
               name="basic"
               labelCol={{ span: 24 }}
@@ -197,18 +204,44 @@ const LibrarianForgotPassword = () => {
                 ]}
                 hasFeedback
               >
-                <Input placeholder="6-digits code" />
+                <Input
+                  prefix={<InboxOutlined style={{ marginRight: "10px" }} />}
+                  placeholder="Please verify the 6-digits code sent to your email"
+                  style={{ borderRadius: "10px" }}
+                />
               </Form.Item>
 
-              <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-                <Button type="submit" variant="contained">
-                  Submit
-                </Button>
+              <Form.Item>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                  }}
+                >
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{
+                      border: "1px solid #d9d9d9",
+                    }}
+                  >
+                    <span style={{ fontSize: "14px" }}>SUBMIT</span>
+                  </Button>
+                  <Button
+                    type="primary"
+                    style={{
+                      border: "1px solid #d9d9d9",
+                    }}
+                    onClick={sendOTP}
+                  >
+                    {sendButtonLabel}
+                  </Button>
+                </div>
               </Form.Item>
             </Form>
-            <Button variant="contained" onClick={sendOTP}>
-              {sendButtonLabel}
-            </Button>
           </>
         ) : null}
         {thirdStep ? (
@@ -232,7 +265,6 @@ const LibrarianForgotPassword = () => {
               <Row gutter={12}>
                 <Col xs={{ span: 24 }} md={{ span: 12 }}>
                   <Form.Item
-                    label="Password"
                     name="password"
                     labelCol={{
                       span: 24,
@@ -257,12 +289,15 @@ const LibrarianForgotPassword = () => {
                       },
                     ]}
                   >
-                    <Input.Password placeholder="Password" />
+                     <Input.Password
+                      prefix={<LockOutlined style={{ marginRight: "10px" }} />}
+                      placeholder="Password"
+                      style={{ borderRadius: "10px" }}
+                    />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} md={{ span: 12 }}>
                   <Form.Item
-                    label="Confirm Password"
                     name="confirmPassword"
                     labelCol={{
                       span: 24,
@@ -289,14 +324,23 @@ const LibrarianForgotPassword = () => {
                       }),
                     ]}
                   >
-                    <Input.Password placeholder="Confirm Password" />
+                    <Input.Password
+                      prefix={<LockOutlined style={{ marginRight: "10px" }} />}
+                      placeholder="Confirm Password"
+                      style={{ borderRadius: "10px" }}
+                    />
                   </Form.Item>
                 </Col>
               </Row>
-
               <Form.Item style={{ display: "flex", justifyContent: "center" }}>
-                <Button type="submit" variant="contained">
-                  Submit
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  style={{
+                    border: "1px solid #d9d9d9",
+                  }}
+                >
+                  CONFIRM
                 </Button>
               </Form.Item>
             </Form>
@@ -308,17 +352,20 @@ const LibrarianForgotPassword = () => {
               Recovery of password has been successfully done!
             </Typography>
             <Button
-              variant="contained"
+              type="primary"
+              style={{
+                border: "1px solid #d9d9d9",
+                marginTop: "20px",
+              }}
               onClick={backToLogin}
-              style={{ marginTop: "20px" }}
             >
-              Back to Login
+              BACK TO LOGIN
             </Button>
           </>
         ) : null}
       </Box>
     </Box>
   );
-}
+};
 
-export default LibrarianForgotPassword
+export default LibrarianForgotPassword;

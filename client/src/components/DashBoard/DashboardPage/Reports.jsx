@@ -73,7 +73,8 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+    if(loginData){
+      fetch(`/uploads/${loginData?.validUser.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -83,7 +84,8 @@ const Reports = () => {
           console.log(error);
         }
       );
-  });
+    }
+  }, [loginData]);
 
   const onChange = (value, dateString) => {
     setReportDate(dateString);

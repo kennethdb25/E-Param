@@ -1,1 +1,0 @@
-export GENERATE_SOURCEMAP=false

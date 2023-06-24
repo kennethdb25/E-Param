@@ -169,6 +169,7 @@ BorrowBookRouter.patch("/book/process-return/:_id", async (req, res) => {
     if (checkIfBookIsNotProcessed) {
       checkIfBookIsNotProcessed.status = "Returned";
       checkIfBookIsNotProcessed.dateReturned = new Date().toISOString();
+      checkIfBookIsNotProcessed.isRated = false;
 
       bookToChangeInAvailable.status = "Available";
 
@@ -205,6 +206,41 @@ BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
     }
   } catch (error) {
 
+  }
+});
+
+// book rate
+BorrowBookRouter.patch("/book-rate", async (req, res) => {
+  try {
+    const { _id: id, value } = req.query;
+    console.log(req.query);
+
+    const checkIfBookIsNotRated = await BorrowBookModel.findOne({ _id: id, isRated: false, status: "Returned" });
+
+    const bookToAddRatings = await BookModel.findOne({ isbn: checkIfBookIsNotRated.isbn });
+
+    let bookRateCount = parseInt(bookToAddRatings.bookRatingsCount) + 1;
+    let totalRateFromStudent = parseFloat(bookToAddRatings.totalRatings) + parseInt(value);
+
+    if (checkIfBookIsNotRated) {
+      checkIfBookIsNotRated.isRated = true;
+      checkIfBookIsNotRated.ratings = value;
+
+      bookToAddRatings.bookRatingsCount = parseInt(bookRateCount);
+      bookToAddRatings.totalRatings = parseInt(totalRateFromStudent);
+      bookToAddRatings.ratings = parseFloat(totalRateFromStudent / bookRateCount);
+
+      const ratedBook = await checkIfBookIsNotRated.save();
+
+      const addRatings = await bookToAddRatings.save();
+
+      return res.status(200).json({ status: 200, body: { ratedBook, addRatings } });
+    } else {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  } catch (error) {
+    console.log(error)
+    return res.status(404).json(error);
   }
 });
 

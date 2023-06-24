@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../Context/Context";
 import { ToastContainer, toast } from "react-toastify";
@@ -73,7 +73,7 @@ const HomeDashboard = (props) => {
   // eslint-disable-next-line no-unused-vars
   const [paginationAllShelf, setPaginationAllShelf] = useState({
     defaultCurrent: 1,
-    pageSize: 5,
+    pageSize: 10,
     total: allShelfCount,
   });
 
@@ -95,8 +95,8 @@ const HomeDashboard = (props) => {
   // ger all reserved books table config
   const [getAllBorrowed, setGetAllBorrowed] = useState();
   let allBorrowedCount = 0;
-  for (var key3 in getAddToShelf) {
-    if (getAddToShelf.hasOwnProperty(key3)) {
+  for (var key3 in getAllBorrowed) {
+    if (getAllBorrowed.hasOwnProperty(key3)) {
       allBorrowedCount++;
     }
   }
@@ -105,6 +105,36 @@ const HomeDashboard = (props) => {
     defaultCurrent: 1,
     pageSize: 5,
     total: allBorrowedCount,
+  });
+
+  // get all lost books
+  const [lostBookCount, setLostBookCount] = useState();
+  let allLostCount = 0;
+  for (var key4 in lostBookCount) {
+    if (lostBookCount.hasOwnProperty(key4)) {
+      allLostCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationAllLost, setPaginationAllLost] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: allLostCount,
+  });
+
+  // get all lost books
+  const [forReviewBook, setForReviewBook] = useState();
+  let allReviewCount = 0;
+  for (var key5 in forReviewBook) {
+    if (forReviewBook.hasOwnProperty(key5)) {
+      allReviewCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationAllRevew, setPaginationAllReview] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: allReviewCount,
   });
 
   const { newBooks } = props;
@@ -177,36 +207,52 @@ const HomeDashboard = (props) => {
     }
     setCurrentActive(3);
   };
-
-  // Get Inventory Data
-  useEffect(() => {
-    if (loginData) {
-      const getInventoryData = async () => {
-        const data = await fetch("/book/get-available", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const res = await data.json();
-        if (res.status === 200) {
-          setGetAvailable(res.body);
-        }
-
-        const allReservedData = await fetch("/book/get-reserved", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const allReservedRes = await allReservedData.json();
-        if (res.status === 200) {
-          setGetAllShelf(allReservedRes.body);
-        }
-      };
-      getInventoryData();
+  const getInventoryData = async () => {
+    const data = await fetch("/book/get-available", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      setGetAvailable(res.body);
     }
-  }, [loginData]);
+
+    const allReservedData = await fetch("/book/get-reserved", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const allReservedRes = await allReservedData.json();
+    if (res.status === 200) {
+      setGetAllShelf(allReservedRes.body);
+    }
+
+    const lostBooksData = await fetch("/book/get-all-lost", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const resLostBook = await lostBooksData.json();
+    if (resLostBook.status === 200) {
+      setLostBookCount(resLostBook.body);
+    }
+
+    const reviewBooksData = await fetch("/book/get-all-review", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const resReviewBook = await reviewBooksData.json();
+    if (resReviewBook.status === 200) {
+      setForReviewBook(resReviewBook.body);
+    }
+  };
+  // Get Inventory Data
 
   // Get Student Account
   const getStudentAccounts = async () => {
@@ -237,11 +283,14 @@ const HomeDashboard = (props) => {
       const data = await res.json();
 
       if (data.status === 201) {
-        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        toast.warn("Logging Out", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 1500,
+        });
         setTimeout(() => {
           localStorage.removeItem("studentToken");
           history("/");
-        }, 4000);
+        }, 3000);
       } else {
         toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
       }
@@ -302,7 +351,14 @@ const HomeDashboard = (props) => {
         <div className="sidebar-brand">
           <h2>
             <span className="lab la-accusoft"></span>
-            <span style={{color: "white"}}><img style={{width: "70px", height: "70px", marginRight: "10px"}} src={require("../../Assets/logo.png")} alt="logo-dashboard" />PHS LIBRARY</span>
+            <span style={{ color: "white" }}>
+              <img
+                style={{ width: "70px", height: "70px", marginRight: "10px" }}
+                src={require("../../Assets/logo.png")}
+                alt="logo-dashboard"
+              />
+              PHS LIBRARY
+            </span>
           </h2>
         </div>
         <div className="sidebar-menu">
@@ -351,7 +407,7 @@ const HomeDashboard = (props) => {
                 onClick={() =>
                   loginData.validUser.userType === "Student"
                     ? getAddShelfPerStudent()
-                    : setCurrentActive(4)
+                    : (setCurrentActive(4), getInventoryData())
                 }
               >
                 <ReadOutlined />
@@ -366,7 +422,7 @@ const HomeDashboard = (props) => {
                   <a
                     key={5}
                     className={currentActive === 5 ? "active" : "none"}
-                    onClick={() => setCurrentActive(5)}
+                    onClick={() => (setCurrentActive(5), getInventoryData())}
                   >
                     <FileDoneOutlined />
                     <span className="las la-clipboard-list"></span>
@@ -467,6 +523,7 @@ const HomeDashboard = (props) => {
                   : paginationAllBorrowed
               }
               getBorrowedData={getBorrowedData}
+              setCurrentActive={setCurrentActive}
             />
           </>
         ) : currentActive === 4 ? (
@@ -489,6 +546,10 @@ const HomeDashboard = (props) => {
             <Inventory
               getAvailable={getAvailable}
               paginationAvailable={paginationAvailable}
+              lostBookCount={lostBookCount}
+              paginationAllLost={paginationAllLost}
+              forReviewBook={forReviewBook}
+              paginationAllRevew={paginationAllRevew}
             />
           </>
         ) : currentActive === 6 ? (

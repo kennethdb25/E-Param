@@ -75,7 +75,7 @@ export const ReportData = [
     value: "reservedBooks"
   },
   {
-    name: "Number of Neww Books",
+    name: "Books need to Review",
     value: "newBooks"
   },
 ]

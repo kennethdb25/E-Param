@@ -1,17 +1,12 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { LoginContext } from "../../../Context/Context";
-import {
-  Table,
-  Button,
-  Space,
-  message,
-  Input,
-} from "antd";
+import { Table, Button, Space, message, Input } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
   EditOutlined,
+  UndoOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
@@ -20,7 +15,6 @@ import {
   ShelfProcessingModal,
   ShelfViewDetailsModal,
 } from "../AntdComponents/Modal/modal";
-
 
 const Shelf = (props) => {
   const { getAddToShelf, paginationStudentShelf } = props;
@@ -224,7 +218,7 @@ const Shelf = (props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex, colName) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -233,12 +227,15 @@ const Shelf = (props) => {
     }) => (
       <div
         style={{
+          display: "flex",
+          flexDirection: "column",
           padding: 8,
         }}
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${colName}`}
+          prefix={<SearchOutlined style={{ marginRight: "10px" }} />}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -246,7 +243,7 @@ const Shelf = (props) => {
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: "block",
+            borderRadius: "10px",
           }}
         />
         <Space>
@@ -264,6 +261,7 @@ const Shelf = (props) => {
           <Button
             type="link"
             size="small"
+            icon={<UndoOutlined />}
             onClick={() => {
               clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
@@ -314,35 +312,35 @@ const Shelf = (props) => {
       dataIndex: "studentId",
       key: "studentId",
       width: "15%",
-      ...getColumnSearchProps("studentId"),
+      ...getColumnSearchProps("studentId", "Student ID"),
     },
     {
       title: "Book Name",
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "15%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       width: "20%",
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("location", "Location"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "10%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Status",
@@ -392,17 +390,19 @@ const Shelf = (props) => {
   ];
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  });
+    if (loginData) {
+      fetch(`/uploads/${loginData?.validUser.imgpath}`)
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    }
+  }, [loginData]);
 
   return (
     <>

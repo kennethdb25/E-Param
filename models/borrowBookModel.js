@@ -88,6 +88,12 @@ const BorrowookSchema = new mongoose.Schema({
   dateReturned: {
     type: Date,
   },
+  ratings: {
+    type: Number,
+  },
+  isRated: {
+    type: Boolean,
+  },
   dateLost: {
     type: Date,
   },

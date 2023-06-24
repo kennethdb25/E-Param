@@ -264,7 +264,8 @@ const StudentAccounts = (props) => {
   };
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+    if(loginData){
+      fetch(`/uploads/${loginData?.validUser.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -274,7 +275,8 @@ const StudentAccounts = (props) => {
           console.log(error);
         }
       );
-  });
+    }
+  }, [loginData]);
 
   return (
     <>

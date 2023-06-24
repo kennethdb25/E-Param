@@ -1,21 +1,35 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
 import { Table, Button, Space, Input, message } from "antd";
-import { SearchOutlined, ReadOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  ReadOutlined,
+  LikeOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
-import { BorrowedBooksViewDetailsModal } from "../AntdComponents/Modal/modal";
+import {
+  BorrowedBookRateModal,
+  BorrowedBooksViewDetailsModal,
+} from "../AntdComponents/Modal/modal";
 
 const BorrowedBooks = (props) => {
-  const { getBorrowedStudent, paginationStudentBorrowed, getBorrowedData } =
-    props;
+  const {
+    getBorrowedStudent,
+    paginationStudentBorrowed,
+    getBorrowedData,
+    setCurrentActive,
+  } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   const [viewDeatailsImg, setViewDeatailsImg] = useState();
   const [viewDetailsData, setViewDetailsData] = useState(null);
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
-
+  const [value, setValue] = useState(0);
+  const [rateDetails, setRateDetails] = useState(null);
+  const [rateModal, setRateModal] = useState(false);
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -35,6 +49,12 @@ const BorrowedBooks = (props) => {
         }
       );
     setViewDetailsModal(true);
+  };
+
+  const onViewBookRate = (record, e) => {
+    e.defaultPrevented = true;
+    setRateDetails(record);
+    setRateModal(true);
   };
 
   const handleProcessReturn = async () => {
@@ -69,6 +89,25 @@ const BorrowedBooks = (props) => {
     }
   };
 
+  const handleRateConfirm = async () => {
+    const data = await fetch(
+      `/book-rate?_id=${rateDetails._id}&value=${value}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const res = await data.json();
+    if (res.status === 200) {
+      message.success("Rating Completed");
+      setRateDetails(null);
+      setRateModal(false);
+      setCurrentActive(1);
+    }
+  };
+
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -80,7 +119,7 @@ const BorrowedBooks = (props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex, colName) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -89,12 +128,15 @@ const BorrowedBooks = (props) => {
     }) => (
       <div
         style={{
+          display: "flex",
+          flexDirection: "column",
           padding: 8,
         }}
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          prefix={<SearchOutlined style={{ marginRight: "10px" }} />}
+          placeholder={`Search ${colName}`}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -102,7 +144,7 @@ const BorrowedBooks = (props) => {
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: "block",
+            borderRadius: "10px",
           }}
         />
         <Space>
@@ -120,6 +162,7 @@ const BorrowedBooks = (props) => {
           <Button
             type="link"
             size="small"
+            icon={<UndoOutlined />}
             onClick={() => {
               clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
@@ -170,35 +213,35 @@ const BorrowedBooks = (props) => {
       dataIndex: "studentId",
       key: "studentId",
       width: "15%",
-      ...getColumnSearchProps("studentId"),
+      ...getColumnSearchProps("studentId", "Student ID"),
     },
     {
       title: "Book Name",
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "15%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
       width: "20%",
-      ...getColumnSearchProps("location"),
+      ...getColumnSearchProps("location", "Location"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "10%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Status",
@@ -241,6 +284,23 @@ const BorrowedBooks = (props) => {
             >
               Details
             </Button>
+            {loginData.validUser.userType === "Student" &&
+            !record.isRated &&
+            record.status === "Returned" ? (
+              <Button
+                icon={<LikeOutlined />}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
+                type="primary"
+                onClick={(e) => {
+                  onViewBookRate(record, e);
+                }}
+              >
+                Rate Book
+              </Button>
+            ) : null}
           </div>
         </>
       ),
@@ -248,17 +308,19 @@ const BorrowedBooks = (props) => {
   ];
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  });
+    if (loginData) {
+      fetch(`/uploads/${loginData?.validUser.imgpath}`)
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    }
+  }, [loginData]);
   return (
     <>
       <header>
@@ -278,26 +340,35 @@ const BorrowedBooks = (props) => {
       <main>
         <div className="card-body">
           <div className="table-responsive">
-        <Table
-          key="BorrowedBook"
-          columns={columns}
-          dataSource={getBorrowedStudent}
-          pagination={paginationStudentBorrowed}
-        />
-        {/* ViewDetails Modal */}
-        <BorrowedBooksViewDetailsModal
-          viewDetailsModal={viewDetailsModal}
-          setViewDetailsModal={setViewDetailsModal}
-          setViewDetailsData={setViewDetailsData}
-          setViewDeatailsImg={setViewDeatailsImg}
-          loginData={loginData}
-          viewDetailsData={viewDetailsData}
-          handleProcessReturn={handleProcessReturn}
-          handleProcessLost={handleProcessLost}
-          viewDeatailsImg={viewDeatailsImg}
-        />
+            <Table
+              key="BorrowedBook"
+              columns={columns}
+              dataSource={getBorrowedStudent}
+              pagination={paginationStudentBorrowed}
+            />
+            {/* ViewDetails Modal */}
+            <BorrowedBooksViewDetailsModal
+              viewDetailsModal={viewDetailsModal}
+              setViewDetailsModal={setViewDetailsModal}
+              setViewDetailsData={setViewDetailsData}
+              setViewDeatailsImg={setViewDeatailsImg}
+              loginData={loginData}
+              viewDetailsData={viewDetailsData}
+              handleProcessReturn={handleProcessReturn}
+              handleProcessLost={handleProcessLost}
+              viewDeatailsImg={viewDeatailsImg}
+              setRateModal={setRateModal}
+            />
+            {/* RateBook Modal */}
+            <BorrowedBookRateModal
+              value={value}
+              setValue={setValue}
+              rateModal={rateModal}
+              setRateModal={setRateModal}
+              handleRateConfirm={handleRateConfirm}
+            />
+          </div>
         </div>
-      </div>
       </main>
     </>
   );

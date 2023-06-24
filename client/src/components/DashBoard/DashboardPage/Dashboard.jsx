@@ -1,8 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
+import Chart from "chart.js/auto";
+import { CategoryScale } from "chart.js";
+import { Line, Bar } from "react-chartjs-2";
 import { LoginContext } from "../../../Context/Context";
 import { Button, Modal, Table } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
+
+Chart.register(CategoryScale);
 
 const Dashboard = (props) => {
   const { setCurrentActive, newBooks } = props;
@@ -18,6 +23,81 @@ const Dashboard = (props) => {
   const [recentlyBorrowedCount, setRecentlyBorrowedCount] = useState();
   const [lostBookCount, setLostBookCount] = useState();
   const [isOpen, setIsOpen] = useState(false);
+
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const Data = [
+    {
+      id: 1,
+      year: "Grade 7",
+      userGain: 80000,
+      userLost: 823,
+    },
+    {
+      id: 2,
+      year: "Grade 8",
+      userGain: 45677,
+      userLost: 345,
+    },
+    {
+      id: 3,
+      year: "Grade 9",
+      userGain: 78888,
+      userLost: 555,
+    },
+    {
+      id: 4,
+      year: "Grade 10",
+      userGain: 90000,
+      userLost: 4555,
+    },
+    {
+      id: 5,
+      year: "Grade 11",
+      userGain: 4300,
+      userLost: 234,
+    },
+    {
+      id: 6,
+      year: "Grade 12",
+      userGain: 40300,
+      userLost: 234,
+    },
+  ];
+
+  // eslint-disable-next-line no-unused-vars
+  const [chartData, setChartData] = useState({
+    labels: Data.map((data) => data.year),
+    datasets: [
+      {
+        label: "Book Borrowed ",
+        data: Data.map((data) => data.userGain),
+        backgroundColor: [
+          "rgba(75,192,192,1)",
+          "pink",
+          "#50AF95",
+          "#f3ba2f",
+          "#2a71d0",
+          "purple"
+        ],
+        borderColor: "black",
+        borderWidth: 2,
+      },
+    ],
+  });
 
   const handleSeeAll = () => {
     setCurrentActive(3);
@@ -276,6 +356,56 @@ const Dashboard = (props) => {
             </div>
           </div>
         </div>
+        { loginData.validUser.userType !== "Student" ? (
+          <div className="recents-grid">
+          <div className="customers">
+            <div className="card-header">
+              <h3>Borrowed Books per Grade</h3>
+            </div>
+            <div className="card-body">
+              <Line
+                data={chartData}
+                options={{
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: `Total Borrowed Books from August 2023 - ${
+                        month[new Date().getMonth()]
+                      } ${new Date().getFullYear()}`,
+                    },
+                    legend: {
+                      display: false,
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+          <div className="customers">
+            <div className="card-header">
+              <h3>Borrowed Books per Grade</h3>
+            </div>
+            <div className="card-body">
+              <Bar
+                data={chartData}
+                options={{
+                  plugins: {
+                    title: {
+                      display: true,
+                      text: `Total Borrowed Books from August ${new Date().getFullYear()} - June ${
+                        new Date().getFullYear() + 1
+                      }`,
+                    },
+                    legend: {
+                      display: false,
+                    },
+                  },
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        ) : null}
         <div className="recent-grid">
           <div className="projects">
             <div className="card">

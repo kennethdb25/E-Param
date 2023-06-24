@@ -41,6 +41,15 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  bookRatingsCount: {
+    type: Number,
+  },
+  totalRatings: {
+    type: Number,
+  },
+  ratings: {
+    type: Number,
+  },
   notes: {
     type: String,
     required: true,

@@ -7,12 +7,12 @@ const ReserveBookModel = require("../../models/reserveBookModel.js");
 const BorrowBookModel = require("../../models/borrowBookModel");
 const StudentModel = require("../../models/studentModel");
 const ReportModel = require("../../models/reportsModel");
-const path = require('path');
+const path = require("path");
 
 AddReportRouter.post("/report/generate", async (req, res) => {
   const { report, start, end } = req.body;
-  let fileName = `${report}-${new Date().getTime()}-generated-report.csv`
-  let pathFile = path.resolve(__dirname, '../../file-uploads')
+  let fileName = `${report}-${new Date().getTime()}-generated-report.csv`;
+  let pathFile = path.resolve(__dirname, "../../file-uploads");
   const startDate = new Date(start);
   const endDate = new Date(end);
   let dataReport;
@@ -58,6 +58,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "firstName", title: "First Name" },
           { id: "middleName", title: "Middle Name" },
           { id: "lastName", title: "Last Name" },
+          { id: "dateBorrowed", title: "Date Borrowed" },
           { id: "grade", title: "Grade" },
           { id: "section", title: "Section" },
           { id: "email", title: "Email" },
@@ -73,20 +74,60 @@ AddReportRouter.post("/report/generate", async (req, res) => {
       break;
     case "returnedBooks":
       dataReport = await BorrowBookModel.find({
-        dateBorrowed: {
+        dateReturned: {
           $gt: startDate,
           $lt: endDate,
         },
         status: "Returned",
       });
+
+      csvWriter = createCsvWriter({
+        header: [
+          { id: "studentId", title: "Student ID" },
+          { id: "firstName", title: "First Name" },
+          { id: "middleName", title: "Middle Name" },
+          { id: "lastName", title: "Last Name" },
+          { id: "dateReturned", title: "Date Returned" },
+          { id: "grade", title: "Grade" },
+          { id: "section", title: "Section" },
+          { id: "email", title: "Email" },
+          { id: "title", title: "Book Title" },
+          { id: "isbn", title: "ISBN" },
+          { id: "author", title: "Author Name" },
+          { id: "assession", title: "Accession Number" },
+          { id: "publication", title: "Grade" },
+          { id: "status", title: "Status" },
+        ],
+        path: `${pathFile}/${fileName}`,
+      });
       break;
     case "lostBooks":
       dataReport = await BorrowBookModel.find({
-        dateBorrowed: {
+        dateLost: {
           $gt: startDate,
           $lt: endDate,
         },
         status: "Lost",
+      });
+
+      csvWriter = createCsvWriter({
+        header: [
+          { id: "studentId", title: "Student ID" },
+          { id: "firstName", title: "First Name" },
+          { id: "middleName", title: "Middle Name" },
+          { id: "lastName", title: "Last Name" },
+          { id: "dateLost", title: "Date Lost" },
+          { id: "grade", title: "Grade" },
+          { id: "section", title: "Section" },
+          { id: "email", title: "Email" },
+          { id: "title", title: "Book Title" },
+          { id: "isbn", title: "ISBN" },
+          { id: "author", title: "Author Name" },
+          { id: "assession", title: "Accession Number" },
+          { id: "publication", title: "Grade" },
+          { id: "status", title: "Status" },
+        ],
+        path: `${pathFile}/${fileName}`,
       });
       break;
     case "reservedBooks":
@@ -97,6 +138,25 @@ AddReportRouter.post("/report/generate", async (req, res) => {
         },
         status: "Reserved",
       });
+      csvWriter = createCsvWriter({
+        header: [
+          { id: "studentId", title: "Student ID" },
+          { id: "firstName", title: "First Name" },
+          { id: "middleName", title: "Middle Name" },
+          { id: "lastName", title: "Last Name" },
+          { id: "dateReserved", title: "Date Reserved" },
+          { id: "grade", title: "Grade" },
+          { id: "section", title: "Section" },
+          { id: "email", title: "Email" },
+          { id: "title", title: "Book Title" },
+          { id: "isbn", title: "ISBN" },
+          { id: "author", title: "Author Name" },
+          { id: "assession", title: "Accession Number" },
+          { id: "publication", title: "Grade" },
+          { id: "status", title: "Status" },
+        ],
+        path: `${pathFile}/${fileName}`,
+      });
       break;
     case "newBooks":
       dataReport = await BookModel.find({
@@ -104,55 +164,123 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           $gt: startDate,
           $lt: endDate,
         },
-        status: "Reserved",
+        status: "Review",
+      });
+
+      csvWriter = createCsvWriter({
+        header: [
+          { id: "title", title: "Book Title" },
+          { id: "isbn", title: "ISBN" },
+          { id: "author", title: "Author Name" },
+          { id: "assession", title: "Accession Number" },
+          { id: "publication", title: "Grade" },
+          { id: "desc", title: "Description" },
+          { id: "genre", title: "Genre" },
+          { id: "status", title: "Status" },
+          { id: "created", title: "Date Added" },
+        ],
+        path: `${pathFile}/${fileName}`,
       });
       break;
   }
   const { results } = await PromisePool.for(dataReport)
     .withConcurrency(300)
-    .process(
-      ((details) => {
-        switch (report) {
-          case "studentAccounts":
-            return {
-              studentId: details.studentId,
-              firstName: details.firstName,
-              middleName: details.middleName,
-              lastName: details.lastName,
-              address: details.address,
-              grade: details.grade,
-              section: details.section,
-              gender: details.gender,
-              email: details.email,
-              created: new Date(details.created),
-            }
-          case "borrowedBooks":
-            return {
-              studentId: details.studentId,
-              firstName: details.firstName,
-              middleName: details.middleName,
-              lastName: details.lastName,
-              grade: details.grade,
-              section: details.section,
-              email: details.email,
-              title: details.title,
-              isbn: details.firstName,
-              author: details.author,
-              assession: details.assession,
-              publication: details.publication,
-              status: details.status,
-            }
-          case "returnedBooks":
-            break;
-          case "lostBooks":
-            break;
-          case "reservedBooks":
-            break;
-          case "newBooks":
-            break;
-        }
-      })
-    );
+    .process((details) => {
+      switch (report) {
+        case "studentAccounts":
+          return {
+            studentId: details.studentId,
+            firstName: details.firstName,
+            middleName: details.middleName,
+            lastName: details.lastName,
+            address: details.address,
+            grade: details.grade,
+            section: details.section,
+            gender: details.gender,
+            email: details.email,
+            created: new Date(details.created),
+          };
+        case "borrowedBooks":
+          return {
+            studentId: details.studentId,
+            firstName: details.firstName,
+            middleName: details.middleName,
+            lastName: details.lastName,
+            dateBorrowed: details.dateBorrowed,
+            grade: details.grade,
+            section: details.section,
+            email: details.email,
+            title: details.title,
+            isbn: details.firstName,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            status: details.status,
+          };
+        case "returnedBooks":
+          return {
+            studentId: details.studentId,
+            firstName: details.firstName,
+            middleName: details.middleName,
+            lastName: details.lastName,
+            dateReturned: details.dateReturned,
+            grade: details.grade,
+            section: details.section,
+            email: details.email,
+            title: details.title,
+            isbn: details.firstName,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            status: details.status,
+          };
+        case "lostBooks":
+          return {
+            studentId: details.studentId,
+            firstName: details.firstName,
+            middleName: details.middleName,
+            lastName: details.lastName,
+            dateLost: details.dateLost,
+            grade: details.grade,
+            section: details.section,
+            email: details.email,
+            title: details.title,
+            isbn: details.firstName,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            status: details.status,
+          };
+        case "reservedBooks":
+          return {
+            studentId: details.studentId,
+            firstName: details.firstName,
+            middleName: details.middleName,
+            lastName: details.lastName,
+            dateReserved: details.dateReserved,
+            grade: details.grade,
+            section: details.section,
+            email: details.email,
+            title: details.title,
+            isbn: details.firstName,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            status: details.status,
+          };
+        case "newBooks":
+          return {
+            title: details.title,
+            isbn: details.isbn,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            desc: details.desc,
+            genre: details.genre,
+            created: details.created,
+          };
+      }
+    });
   await csvWriter.writeRecords(results);
   try {
     const finalRecord = new ReportModel({
@@ -173,7 +301,7 @@ AddReportRouter.get("/report/get-generated", async (req, res) => {
   } catch (error) {
     return res.status(422).json(error);
   }
-})
+});
 
 AddReportRouter.get("/report/download-csv", async (req, res) => {
   const file = req.query.filename || "";
@@ -184,8 +312,7 @@ AddReportRouter.get("/report/download-csv", async (req, res) => {
       console.error(err);
       res.status(500).json({ error: "An error occured" });
     }
-  })
+  });
 });
 
 module.exports = AddReportRouter;
-

@@ -12,6 +12,7 @@ import {
   SearchOutlined,
   ReadOutlined,
   PlusSquareOutlined,
+  UndoOutlined
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { LoginContext } from "../../../Context/Context";
@@ -92,7 +93,7 @@ const AvailableBooks = (props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex, colName) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -101,12 +102,15 @@ const AvailableBooks = (props) => {
     }) => (
       <div
         style={{
+          display: "flex",
+          flexDirection: "column",
           padding: 8,
         }}
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${colName}`}
+          prefix={<SearchOutlined style={{ marginRight: "10px" }} />}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -114,7 +118,7 @@ const AvailableBooks = (props) => {
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: "block",
+            borderRadius: "10px",
           }}
         />
         <Space>
@@ -132,6 +136,7 @@ const AvailableBooks = (props) => {
           <Button
             type="link"
             size="small"
+            icon={<UndoOutlined />}
             onClick={() => {
               clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
@@ -182,28 +187,28 @@ const AvailableBooks = (props) => {
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "20%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "20%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Genre",
       dataIndex: "genre",
       key: "genre",
       width: "10%",
-      ...getColumnSearchProps("genre"),
+      ...getColumnSearchProps("genre", "Genre"),
     },
     {
       title: "Status",
@@ -280,7 +285,8 @@ const AvailableBooks = (props) => {
   }, [activeTab, tabData]);
 
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser.imgpath}`)
+    if(loginData){
+      fetch(`/uploads/${loginData?.validUser.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -290,7 +296,8 @@ const AvailableBooks = (props) => {
           console.log(error);
         }
       );
-  });
+    }
+  }, [loginData]);
 
   return (
     <>

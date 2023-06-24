@@ -110,6 +110,8 @@ AddBookRouter.post(
         status: "Available",
         imgpath: filename,
         QRCode: qrCode,
+        bookRatingsCount: 0,
+        totalRatings: 0,
         created: new Date().toISOString(),
       });
 
@@ -129,7 +131,8 @@ AddBookRouter.post(
   async (req, res) => {
     const { filename } = req.file;
     const details = await parseFile(filename);
-
+    console.log(req.file);
+    console.log(details);
     await PromisePool.for(details)
       .withConcurrency(300)
       .process(
@@ -146,6 +149,7 @@ AddBookRouter.post(
           Assession
         }) => {
           const validate = await BookModel.findOne({ isbn: ISBN });
+          console.log(validate);
           if (validate) {
             return;
           }
@@ -164,6 +168,8 @@ AddBookRouter.post(
               assession: Assession,
               desc: Description,
               status: "Review",
+              bookRatingsCount: 0,
+              totalRatings: 0,
               QRCode: qrCode,
               created: new Date().toISOString(),
             });

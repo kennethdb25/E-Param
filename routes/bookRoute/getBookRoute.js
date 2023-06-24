@@ -26,6 +26,16 @@ GetBookRouter.get("/book/get-available", async (req, res) => {
   }
 });
 
+GetBookRouter.get("/book/get-all-review", async (req, res) => {
+  try {
+    const reviewBooks = await BookModel.find({ status: "Review" });
+    return res.status(200).json({ status: 200, body: reviewBooks });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 // Get all reserve books
 GetBookRouter.get("/book/get-reserved", async (req, res) => {
   try {

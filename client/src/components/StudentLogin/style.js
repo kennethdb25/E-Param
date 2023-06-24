@@ -5,7 +5,7 @@ const theme = createTheme();
 const useStyles = makeStyles(() => ({
 
   loginContainer: {
-    backgroundImage: "url(/login.png)",
+    backgroundImage: "url(/home-login.png)",
     backgroundPosition: "center",
     backgroundSize: "cover",
     minHeight: "100vh",
@@ -17,6 +17,7 @@ const useStyles = makeStyles(() => ({
       justifyContent: "end",
     },
     [theme.breakpoints.down("md")]: {
+      backgroundImage: "url(/cp-login.png)",
       paddingLeft: "0px",
       justifyContent: "center",
     },

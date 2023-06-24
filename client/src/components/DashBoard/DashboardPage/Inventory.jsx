@@ -16,7 +16,8 @@ import { Card, CardContent, Container, Grid, TextField } from "@mui/material";
 import {
   PlusCircleOutlined,
   ReadOutlined,
-  QrcodeOutlined
+  QrcodeOutlined,
+  UndoOutlined
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import useStyles from "./styles";
@@ -26,11 +27,19 @@ import {
   InventoryAddBookModal,
   InventoryAvailableBooksModal,
   InventoryBatchAddModal,
+  InventoryLostBooksModal,
 } from "../AntdComponents/Modal/modal";
 import { InventorySingleAddDrawer } from "../AntdComponents/Drawer/drawer";
 
 const Inventory = (props) => {
-  const { getAvailable, paginationAvailable } = props;
+  const {
+    getAvailable,
+    paginationAvailable,
+    lostBookCount,
+    paginationAllLost,
+    forReviewBook,
+    paginationAllRevew
+  } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -47,6 +56,7 @@ const Inventory = (props) => {
   const [viewDetailsData, setViewDetailsData] = useState(null);
   const [viewDeatailsImg, setViewDeatailsImg] = useState();
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
+  const [viewDetailsLostModal, setViewDetailsLostModal] = useState(false);
 
   const classes = useStyles();
 
@@ -81,7 +91,7 @@ const Inventory = (props) => {
     setSearchText("");
   };
 
-  const getColumnSearchProps = (dataIndex) => ({
+  const getColumnSearchProps = (dataIndex, colName) => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -89,13 +99,16 @@ const Inventory = (props) => {
       clearFilters,
     }) => (
       <div
-        style={{
-          padding: 8,
-        }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        padding: 8,
+      }}
       >
         <Input
           ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
+          placeholder={`Search ${colName}`}
+          prefix={<SearchOutlined style={{ marginRight: "10px" }} />}
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -103,7 +116,7 @@ const Inventory = (props) => {
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: "block",
+            borderRadius: "10px",
           }}
         />
         <Space>
@@ -121,6 +134,7 @@ const Inventory = (props) => {
           <Button
             type="link"
             size="small"
+            icon={<UndoOutlined />}
             onClick={() => {
               clearFilters && handleReset(clearFilters);
               setSearchText(selectedKeys[0]);
@@ -287,6 +301,22 @@ const Inventory = (props) => {
     setViewDetailsModal(true);
   };
 
+  const onViewDetailsLost = async (record, e) => {
+    // e.defaultPrevented = true;
+    setViewDetailsData(record);
+    fetch(`/uploads/${record?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setViewDeatailsImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    setViewDetailsLostModal(true);
+  };
+
   // Column Tables
   const columnsAvailable = [
     {
@@ -294,21 +324,21 @@ const Inventory = (props) => {
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "20%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "20%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Status",
@@ -368,21 +398,21 @@ const Inventory = (props) => {
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "20%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "20%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Status",
@@ -422,21 +452,21 @@ const Inventory = (props) => {
       dataIndex: "title",
       key: "title",
       width: "30%",
-      ...getColumnSearchProps("title"),
+      ...getColumnSearchProps("title", "Book Name"),
     },
     {
       title: "Author",
       dataIndex: "author",
       key: "author",
       width: "20%",
-      ...getColumnSearchProps("author"),
+      ...getColumnSearchProps("author", "Author"),
     },
     {
       title: "ISBN",
       dataIndex: "isbn",
       key: "isbn",
       width: "20%",
-      ...getColumnSearchProps("isbn"),
+      ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
       title: "Status",
@@ -458,7 +488,7 @@ const Inventory = (props) => {
               type="primary"
               icon={<ReadOutlined />}
               onClick={(e) => {
-                onViewDetailsAvailable(record, e);
+                onViewDetailsLost(record, e);
               }}
               style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
@@ -470,9 +500,9 @@ const Inventory = (props) => {
     },
   ];
 
-
   useEffect(() => {
-    fetch(`/uploads/${loginData?.validUser?.imgpath}`)
+    if(loginData) {
+      fetch(`/uploads/${loginData?.validUser?.imgpath}`)
       .then((res) => res.blob())
       .then(
         (result) => {
@@ -482,7 +512,8 @@ const Inventory = (props) => {
           console.log(error);
         }
       );
-  });
+    }
+  }, [loginData]);
 
   return (
     <>
@@ -569,15 +600,15 @@ const Inventory = (props) => {
         <Table
           key="ForReview"
           columns={columnsReview}
-          dataSource={getAvailable}
-          pagination={paginationAvailable}
+          dataSource={forReviewBook}
+          pagination={paginationAllRevew}
         />
         <h3>Lost Books</h3>
         <Table
           key="LostInventoryBook"
           columns={columnsLost}
-          dataSource={getAvailable}
-          pagination={paginationAvailable}
+          dataSource={lostBookCount}
+          pagination={paginationAllLost}
         />
       </main>
       <div className="modals">
@@ -611,6 +642,14 @@ const Inventory = (props) => {
         <InventoryAvailableBooksModal
           viewDetailsModal={viewDetailsModal}
           setViewDetailsModal={setViewDetailsModal}
+          setViewDetailsData={setViewDetailsData}
+          setViewDeatailsImg={setViewDeatailsImg}
+          viewDetailsData={viewDetailsData}
+          viewDeatailsImg={viewDeatailsImg}
+        />
+        <InventoryLostBooksModal
+          viewDetailsLostModal={viewDetailsLostModal}
+          setViewDetailsLostModal={setViewDetailsLostModal}
           setViewDetailsData={setViewDetailsData}
           setViewDeatailsImg={setViewDeatailsImg}
           viewDetailsData={viewDetailsData}
