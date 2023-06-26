@@ -295,47 +295,47 @@ export const BorrowedBooksViewDetailsModal = (props) => {
       }}
       footer={
         loginData.validUser.userType !== "Student" &&
-        viewDetailsData?.status === "Borrowed"
+          viewDetailsData?.status === "Borrowed"
           ? [
-              <Popconfirm
-                placement="top"
-                title="Are you sure want to complete the process return?"
-                onConfirm={handleProcessReturn}
-                okText="Confirm"
-                cancelText="Cancel"
-              >
-                <Button key="return" type="primary" icon={<EditOutlined />}>
-                  Process Return
-                </Button>
-              </Popconfirm>,
-              <Popconfirm
-                placement="top"
-                title="Are you sure want to complete the process lost?"
-                onConfirm={handleProcessLost}
-                okText="Confirm"
-                cancelText="Cancel"
-              >
-                <Button key="lost" type="primary" icon={<QuestionOutlined />}>
-                  Lost
-                </Button>
-              </Popconfirm>,
-              <Button
-                key="cancel"
-                type="primary"
-                icon={<RollbackOutlined />}
-                onClick={() => {
-                  setViewDetailsModal(false);
-                  setViewDeatailsImg();
-                  setViewDetailsData();
-                  setRateModal(0);
-                }}
-              >
-                Cancel
-              </Button>,
-            ]
+            <Popconfirm
+              placement="top"
+              title="Are you sure want to complete the process return?"
+              onConfirm={handleProcessReturn}
+              okText="Confirm"
+              cancelText="Cancel"
+            >
+              <Button key="return" type="primary" icon={<EditOutlined />}>
+                Process Return
+              </Button>
+            </Popconfirm>,
+            <Popconfirm
+              placement="top"
+              title="Are you sure want to complete the process lost?"
+              onConfirm={handleProcessLost}
+              okText="Confirm"
+              cancelText="Cancel"
+            >
+              <Button key="lost" type="primary" icon={<QuestionOutlined />}>
+                Lost
+              </Button>
+            </Popconfirm>,
+            <Button
+              key="cancel"
+              type="primary"
+              icon={<RollbackOutlined />}
+              onClick={() => {
+                setViewDetailsModal(false);
+                setViewDeatailsImg();
+                setViewDetailsData();
+                setRateModal(0);
+              }}
+            >
+              Cancel
+            </Button>,
+          ]
           : loginData.validUser.userType !== "Student" &&
             viewDetailsData?.status === "Lost"
-          ? [
+            ? [
               <Popconfirm
                 placement="top"
                 title="Are you sure want to complete the process return?"
@@ -360,7 +360,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
                 Cancel
               </Button>,
             ]
-          : [
+            : [
               <Button
                 key="cancel"
                 type="primary"
@@ -1814,11 +1814,13 @@ export const InventoryAvailableBooksModal = (props) => {
     setViewDeatailsImg,
     viewDetailsData,
     viewDeatailsImg,
+    handleBookDelete,
+    handleUpdateModal
   } = props;
   return (
     <Modal
       key="AvailableBookDetails"
-      title="Available Book Details"
+      title="AVAILABLE BOOK DETAILS"
       width={1200}
       open={viewDetailsModal}
       onCancel={() => {
@@ -1827,12 +1829,28 @@ export const InventoryAvailableBooksModal = (props) => {
         setViewDeatailsImg();
       }}
       footer={[
-        <Button icon={<FormOutlined />} type="primary" key="update">
-          Update
-        </Button>,
-        <Button icon={<DeleteOutlined />} type="primary" key="delete">
-          Delete
-        </Button>,
+        <Popconfirm
+          placement="top"
+          title="Are you sure want to update this book?"
+          onConfirm={() => handleUpdateModal(viewDetailsData)}
+          okText="Confirm"
+          cancelText="Cancel"
+        >
+          <Button icon={<FormOutlined />} type="primary" key="update">
+            Update
+          </Button>
+        </Popconfirm>,
+        <Popconfirm
+          placement="top"
+          title="Are you sure want to delete this book?"
+          onConfirm={() => handleBookDelete()}
+          okText="Confirm"
+          cancelText="Cancel"
+        >
+          <Button icon={<DeleteOutlined />} type="primary" key="delete">
+            Delete
+          </Button>
+        </Popconfirm>,
         <Button
           type="primary"
           icon={<RollbackOutlined />}

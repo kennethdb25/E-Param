@@ -29,7 +29,7 @@ import {
   InventoryBatchAddModal,
   InventoryLostBooksModal,
 } from "../AntdComponents/Modal/modal";
-import { InventorySingleAddDrawer } from "../AntdComponents/Drawer/drawer";
+import { InventorySingleAddDrawer, InventoryUpdateBookDrawer } from "../AntdComponents/Drawer/drawer";
 
 const Inventory = (props) => {
   const {
@@ -38,7 +38,8 @@ const Inventory = (props) => {
     lostBookCount,
     paginationAllLost,
     forReviewBook,
-    paginationAllRevew
+    paginationAllRevew,
+    getInventoryData
   } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
@@ -51,14 +52,28 @@ const Inventory = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [singleOpen, setSingleOpen] = useState(false);
   const [batchOpen, setBatchOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
   const [fileLists, setFileLists] = useState(null);
 
   const [viewDetailsData, setViewDetailsData] = useState(null);
+  const [updateData, setUpdateData] = useState(null);
   const [viewDeatailsImg, setViewDeatailsImg] = useState();
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
   const [viewDetailsLostModal, setViewDetailsLostModal] = useState(false);
 
   const classes = useStyles();
+  const initialValues = {
+    title: updateData?.title,
+    author: updateData?.author,
+    isbn: updateData?.isbn,
+    assession: updateData?.assession,
+    desc: updateData?.desc,
+    publication: updateData?.publication,
+    abstract: updateData?.abstract,
+    location: updateData?.location,
+    genre: updateData?.genre,
+    notes: updateData?.notes,
+  };
 
   const handleDownload = () => {
     setQrDetail("");
@@ -193,10 +208,6 @@ const Inventory = (props) => {
     }
   };
 
-  const onClose = () => {
-    setSingleOpen(false);
-    form.resetFields();
-  };
 
   // FORM FUNCTIONS
   const onFinish = async (values) => {
@@ -227,6 +238,52 @@ const Inventory = (props) => {
     console.error(error);
   };
 
+  const onFinishUpdate = async (values) => {
+    console.log(values)
+    // const newdata = new FormData();
+    // newdata.append("photo", values.photo.file.originFileObj);
+    // newdata.append("abstract", values.abstract);
+    // newdata.append("assession", values.assession);
+    // newdata.append("desc", values.desc);
+    // newdata.append("genre", values.genre);
+    // newdata.append("isbn", values.isbn);
+    // newdata.append("location", values.location);
+    // newdata.append("notes", values.notes);
+    // newdata.append("publication", values.publication);
+    // newdata.append("title", values.title);
+    // newdata.append("author", values.author);
+
+    // const res = await fetch("/book/single-add", {
+    //   method: "POST",
+    //   body: newdata,
+    // });
+    // if (res.status === 201) {
+    //   message.success("Book Added Successfully");
+    //   onClose();
+    // }
+  };
+
+  const onFinishUpdateFailed = (error) => {
+    console.error(error);
+  };
+
+
+  const handleUpdateModal = (data) => {
+    setUpdateData(data);
+    setViewDetailsModal(false);
+    setUpdateOpen(true);
+  }
+  const onClose = () => {
+    setSingleOpen(false);
+    form.resetFields();
+  };
+
+  const onCloseUpdate = () => {
+    setViewDetailsData(null);
+    setUpdateOpen(false);
+		form.resetFields();
+  };
+
   // METHOD FOR BATCH UPLOAD
   const handleFileUpload = async (file) => {
     if (file) {
@@ -249,6 +306,19 @@ const Inventory = (props) => {
   const handleFileRemove = (fileList) => {
     setFileLists(fileList);
   };
+
+  // handle deletetion of book
+  const handleBookDelete = async () => {
+    const data = await fetch(`/book-delete-available/${viewDetailsData._id}`, {
+      method: "PATCH",
+    });
+    const res = await data.json();
+    if(res.status === 201) {
+      getInventoryData();
+      message.success(res.body);
+      setViewDetailsModal(false);
+    }
+  }
 
   // IMAGE METHOD FOR SINGLE UPLOAD
   const imgprops = {
@@ -285,7 +355,6 @@ const Inventory = (props) => {
   };
 
   const onViewDetailsAvailable = async (record, e) => {
-    console.log(record);
     e.defaultPrevented = true;
     setViewDetailsData(record);
     fetch(`/uploads/${record?.imgpath}`)
@@ -515,6 +584,11 @@ const Inventory = (props) => {
     }
   }, [loginData]);
 
+  useEffect(() => {
+		form.resetFields();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	});
+
   return (
     <>
       <header>
@@ -646,6 +720,8 @@ const Inventory = (props) => {
           setViewDeatailsImg={setViewDeatailsImg}
           viewDetailsData={viewDetailsData}
           viewDeatailsImg={viewDeatailsImg}
+          handleBookDelete={handleBookDelete}
+          handleUpdateModal={handleUpdateModal}
         />
         <InventoryLostBooksModal
           viewDetailsLostModal={viewDetailsLostModal}
@@ -654,6 +730,17 @@ const Inventory = (props) => {
           setViewDeatailsImg={setViewDeatailsImg}
           viewDetailsData={viewDetailsData}
           viewDeatailsImg={viewDeatailsImg}
+        />
+
+        <InventoryUpdateBookDrawer
+          onCloseUpdate={onCloseUpdate}
+          updateOpen={updateOpen}
+          form={form}
+          onFinishUpdate={onFinishUpdate}
+          onFinishUpdateFailed={onFinishUpdateFailed}
+          imgprops={imgprops}
+          onPreview={onPreview}
+          initialValues={initialValues}
         />
       </div>
     </>

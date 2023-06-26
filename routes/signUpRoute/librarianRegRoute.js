@@ -67,4 +67,14 @@ LibrarianRegRouter.post("/librarian/register", upload.single("photo"), async (re
   }
 });
 
+LibrarianRegRouter.get("/librarian/accounts", async (req, res) => {
+  try {
+    const allAccounts = await LibrarianModel.find().sort({ lastName: -1 });
+    return res.status(200).json({ status: 200, body: allAccounts });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 module.exports = LibrarianRegRouter;

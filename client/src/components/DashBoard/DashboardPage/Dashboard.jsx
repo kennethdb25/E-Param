@@ -463,7 +463,6 @@ const Dashboard = (props) => {
               </div>
             </div>
           </div>
-
           <div className="customers">
             <div className="card">
               <div className="card-header">

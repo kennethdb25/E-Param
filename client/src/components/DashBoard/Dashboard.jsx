@@ -30,6 +30,8 @@ const HomeDashboard = (props) => {
   const { loginData } = useContext(LoginContext);
   const [currentActive, setCurrentActive] = useState(1);
   const [studentAccount, setStudentAccount] = useState();
+  const [adminAccount, setAdminAccount] = useState();
+  const [librarianAccount, setLibrarianAccount] = useState();
   const [genre, setGenre] = useState();
   // Table Data
   // get all available table config
@@ -207,6 +209,9 @@ const HomeDashboard = (props) => {
     }
     setCurrentActive(3);
   };
+
+  // Get Inventory Data
+
   const getInventoryData = async () => {
     const data = await fetch("/book/get-available", {
       method: "GET",
@@ -251,8 +256,29 @@ const HomeDashboard = (props) => {
     if (resReviewBook.status === 200) {
       setForReviewBook(resReviewBook.body);
     }
+
+    const adminData = await fetch("/admin/accounts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const resAdmin = await adminData.json();
+    if (resAdmin.status === 200) {
+      setAdminAccount(resAdmin.body);
+    }
+
+    const librarianData = await fetch("/librarian/accounts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const resLibrarian = await librarianData.json();
+    if (resLibrarian.status === 200) {
+      setLibrarianAccount(resLibrarian.body);
+    }
   };
-  // Get Inventory Data
 
   // Get Student Account
   const getStudentAccounts = async () => {
@@ -469,7 +495,7 @@ const HomeDashboard = (props) => {
                   <a
                     key={8}
                     className={currentActive === 8 ? "active" : "none"}
-                    onClick={() => setCurrentActive(8)}
+                    onClick={() => (setCurrentActive(8), getInventoryData())}
                   >
                     <SettingOutlined />
                     <span className="las la-clipboard-list"></span>
@@ -550,6 +576,7 @@ const HomeDashboard = (props) => {
               paginationAllLost={paginationAllLost}
               forReviewBook={forReviewBook}
               paginationAllRevew={paginationAllRevew}
+              getInventoryData={getInventoryData}
             />
           </>
         ) : currentActive === 6 ? (
@@ -565,7 +592,10 @@ const HomeDashboard = (props) => {
           </>
         ) : currentActive === 8 ? (
           <>
-            <Settings />
+            <Settings
+              adminAccount={adminAccount}
+              librarianAccount={librarianAccount}
+            />
           </>
         ) : null}
       </div>

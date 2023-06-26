@@ -67,4 +67,14 @@ AdminRegRouter.post("/admin/register", upload.single("photo"), async (req, res) 
   }
 });
 
+AdminRegRouter.get("/admin/accounts", async (req, res) => {
+  try {
+    const allAccounts = await AdminModel.find().sort({ lastName: -1 });
+    return res.status(200).json({ status: 200, body: allAccounts });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 module.exports = AdminRegRouter;

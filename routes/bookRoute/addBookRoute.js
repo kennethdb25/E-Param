@@ -64,7 +64,7 @@ const parseFile = (file) => {
       "Description",
       "Abstract",
       "Notes",
-      "Assession"
+      "Assession",
     ],
   }).fromFile(path.resolve(__dirname, `../../uploads/${file}`));
   return fileDetails;
@@ -85,7 +85,7 @@ AddBookRouter.post(
       genre,
       notes,
       desc,
-      assession
+      assession,
     } = req.body;
 
     // validate if book isbn is exist
@@ -146,7 +146,7 @@ AddBookRouter.post(
           Description,
           Abstract,
           Notes,
-          Assession
+          Assession,
         }) => {
           const validate = await BookModel.findOne({ isbn: ISBN });
           console.log(validate);
@@ -180,8 +180,116 @@ AddBookRouter.post(
           }
         }
       );
-    return res.status(201).json({ status: 201, message: "Batch Adding Completed" });
+    return res
+      .status(201)
+      .json({ status: 201, message: "Batch Adding Completed" });
   }
 );
+
+AddBookRouter.patch("/book-delete-available/:_id", async (req, res) => {
+  try {
+    console.log(req);
+    const id = req.params._id;
+
+    const getBookToDelete = await BookModel.findOne({
+      _id: id,
+    });
+    console.log(getBookToDelete);
+    if (!getBookToDelete) {
+      return res
+        .status(404)
+        .json({ error: "Something went wrong. Please try again later" });
+    }
+    await getBookToDelete.updateOne({
+      isbn: `deleted_${new Date().getTime()}_${getBookToDelete.isbn}`,
+      status: "Deleted",
+    });
+    return res.status(201).json({ status: 201, body: "Deleted Successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+AddBookRouter.patch("/book-update-review/:_id", upload.single("photo"), async (req, res) => {
+  try {
+    const { filename } = req.file;
+    const id = req.params._id;
+
+    const getBookReviewToUpdate = await BookModel.findOne({
+      _id: id,
+      status: "Review"
+    });
+
+    if (!getBookReviewToUpdate) {
+      return res
+        .status(404)
+        .json({ error: "Something went wrong. Please try again later" });
+    };
+
+    if (filename) {
+      getBookReviewToUpdate.imgpath = filename;
+      getBookReviewToUpdate.status = "Available";
+    }
+
+    const updatedData = await getBookReviewToUpdate.save();
+
+    return res.status(201).json({ status: 201, updatedData });
+  } catch (error) {
+    return res.status(404).json(error);
+  }
+});
+
+AddBookRouter.patch("/book-update-available/:_id", upload.single("photo"), async (req, res) => {
+  try {
+    const id = req.params._id;
+    const { filename } = req.file;
+    const {
+      title,
+      author,
+      isbn,
+      location,
+      publication,
+      abstract,
+      genre,
+      notes,
+      desc,
+      assession,
+    } = req.body;
+
+    const getBookToUpdate = await BookModel.findOne({
+      _id: id,
+    });
+
+    if (!getBookToUpdate) {
+      return res
+        .status(404)
+        .json({ error: "Something went wrong. Please try again later" });
+    };
+
+    const qrCode = await QRCode.toDataURL(isbn);
+
+    if (filename) getBookToUpdate.imgpath = filename;
+    if (title) getBookToUpdate.title = title;
+    if (author) getBookToUpdate.author = author;
+    if (isbn) {
+      getBookToUpdate.isbn = isbn;
+      getBookToUpdate.QRCode = qrCode;
+    }
+    if (location) getBookToUpdate.location = location;
+    if (publication) getBookToUpdate.publication = publication;
+    if (abstract) getBookToUpdate.abstract = abstract;
+    if (genre) getBookToUpdate.genre = genre;
+    if (notes) getBookToUpdate.notes = notes;
+    if (desc) getBookToUpdate.desc = desc;
+    if (assession) getBookToUpdate.assession = assession;
+
+    const updatedData = await getBookToUpdate.save();
+
+    return res.status(201).json({ status: 201, updatedData });
+  } catch (error) {
+    return res.status(404).json(error);
+  }
+});
 
 module.exports = AddBookRouter;

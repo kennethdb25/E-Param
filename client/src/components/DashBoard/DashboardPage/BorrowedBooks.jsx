@@ -35,7 +35,6 @@ const BorrowedBooks = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const onViewDetails = async (record, e) => {
-    console.log(record);
     e.defaultPrevented = true;
     setViewDetailsData(record);
     fetch(`/uploads/${record?.imgpath}`)

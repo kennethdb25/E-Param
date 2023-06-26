@@ -10,8 +10,10 @@ module.exports = function (app) {
       "/student/forgot-password",
       "/student/get-info",
       "/librarian/forgot-password",
-      "/admin/forgot-password",
+      "/librarian/accounts",
       "/librarian/scannerQrCode",
+      "/admin/forgot-password",
+      "/admin/accounts",
       "/book/single-add",
       "/book/batch-add",
       "/book/get-new",
@@ -19,6 +21,9 @@ module.exports = function (app) {
       "/book/get-genre",
       "/book/get-all-book-per-genre",
       "/book/get-available",
+      "/book-delete-available", // new
+      "/book-update-available", // new
+      "/book-update-review", // new
       "/book/add-shelf",
       "/book/get-info",
       "/book/get-borrowed",
