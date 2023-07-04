@@ -1,29 +1,100 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
-import { Col, Row, Table, Button, Space, Input, message, List } from "antd";
+import {
+  Col,
+  Row,
+  Table,
+  Button,
+  Space,
+  Input,
+  Form,
+  message,
+  Modal,
+  Select,
+} from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
   UndoOutlined,
   PlusCircleOutlined,
+  RollbackOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
 import "antd/dist/antd.min.css";
+import { GradeData } from "../../../Data/Data";
+
+const { TextArea } = Input;
 
 const Settings = (props) => {
-  const { adminAccount, librarianAccount} = props;
+  const [form] = Form.useForm();
+  const {
+    adminAccount,
+    librarianAccount,
+    section,
+    sectiionData,
+    announcement,
+    announcementData,
+  } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [onOpenSection, setOnOpenSection] = useState(false);
+  const [onOpenAnnouncement, setOnOpenAnnouncement] = useState(false);
 
   const [viewDetailsData, setViewDetailsData] = useState(null);
 
   const onViewDetails = async (record, e) => {
     e.defaultPrevented = true;
     setViewDetailsData(record);
+  };
+
+  const onSectionChangeStatus = async (record) => {
+    const data = await fetch(
+      `/change-status-section?sectionId=${record.sectionId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const res = await data.json();
+    if (res.status === 200) {
+      console.log(res);
+      message.success(
+        res.body.status === "Active"
+          ? "Section Activated Succesfully"
+          : "Section Deactivated Successfully"
+      );
+      sectiionData();
+    }
+  };
+
+  const onAnnouncementChangeStatus = async (record) => {
+    console.log(record);
+    const data = await fetch(
+      `/change-status-announcement?announcementId=${record.announcementId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const res = await data.json();
+    if (res.status === 200) {
+      console.log(res);
+      message.success(
+        res.body.status === "Active"
+          ? "Announcement Activated Succesfully"
+          : "Announcement Deactivated Successfully"
+      );
+      announcementData();
+    }
   };
 
   let adminCount = 0;
@@ -51,6 +122,77 @@ const Settings = (props) => {
     pageSize: 10,
     total: librarianCount,
   });
+
+  let sectionCount = 0;
+  for (var key3 in section) {
+    if (section.hasOwnProperty(key3)) {
+      sectionCount++;
+    }
+  }
+  // eslint-disable-next-line no-unused-vars
+  const [paginationSection, setPaginationSection] = useState({
+    defaultCurrent: 1,
+    pageSize: 5,
+    total: sectionCount,
+  });
+
+  const onAddAnnouncement = () => {
+    form.resetFields();
+    setOnOpenAnnouncement(true);
+  };
+
+  const onFinishAnnouncement = async (values) => {
+    const data = await fetch("/add-announcement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const res = await data.json();
+    if (res.status === 201) {
+      message.success("Announcement Added Successfully");
+      announcementData();
+    }
+  };
+
+  const onConfirmAnnouncement = () => {
+    form.submit();
+    setOnOpenAnnouncement(false);
+  };
+
+  const onFinishAnnouncementFailed = (error) => {
+    console.error(error);
+  };
+
+  const onAddSection = () => {
+    form.resetFields();
+    setOnOpenSection(true);
+  };
+
+  const onFinishSection = async (values) => {
+    const data = await fetch("/add-section", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const res = await data.json();
+    if (res.status === 201) {
+      message.success("Section Added Successfully");
+      sectiionData();
+    }
+  };
+
+  const onConfirmSection = () => {
+    form.submit();
+    setOnOpenSection(false);
+  };
+
+  const onFinishSectionFailed = (error) => {
+    console.error(error);
+  };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -153,7 +295,6 @@ const Settings = (props) => {
 
   // VIEW DETAILS
 
-
   const columns = [
     {
       title: "Employee ID",
@@ -221,7 +362,8 @@ const Settings = (props) => {
                   backgroundColor: "#000080",
                   border: "1px solid #d9d9d9",
                 }}
-              >LIBRARIAN ACCOUNT
+              >
+                LIBRARIAN ACCOUNT
               </Button>
             </div>
           ) : null}
@@ -361,48 +503,26 @@ const Settings = (props) => {
       title: "Content",
       dataIndex: "content",
       key: "content",
-      width: "30%",
-      ...getColumnSearchProps("content", "Content"),
+      width: "70%",
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: "10%",
+      width: "20%",
       filters: [
         {
           text: "Active",
           value: "Active",
         },
         {
-          text: "Inactive",
-          value: "Inactive",
+          text: "Not Active",
+          value: "Not Active",
         },
       ],
       onFilter: (value, record) => record.status.indexOf(value) === 0,
     },
     {
-      title: (
-        <>
-          {loginData?.validUser?.userType === "Librarian" ||
-          loginData?.validUser?.userType === "Super Admin" ? (
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Button
-                type="primary"
-                shape="round"
-                icon={<PlusCircleOutlined />}
-                // onClick={() => handleOpenModal()}
-                style={{
-                  backgroundColor: "#000080",
-                  border: "1px solid #d9d9d9",
-                }}
-              >
-                ADD AN ANNOUNCEMENT
-              </Button>
-            </div>
-          ) : null}
-        </>
-      ),
       dataIndex: "",
       key: "",
       width: "20%",
@@ -412,14 +532,91 @@ const Settings = (props) => {
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
             <Button
-              icon={<ReadOutlined />}
               type="primary"
               onClick={(e) => {
-                onViewDetails(record, e);
+                onAnnouncementChangeStatus(record);
               }}
               style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
-              Account Details
+              {record.status === "Active" ? "Deactivate" : "Activate"}
+            </Button>
+          </div>
+        </>
+      ),
+    },
+  ];
+
+  const sectionColumns = [
+    {
+      title: "ID",
+      dataIndex: "sectionId",
+      key: "sectionId",
+      width: "10%",
+      ...getColumnSearchProps("sectionId", "ID"),
+    },
+    {
+      title: "Grade",
+      dataIndex: "grade",
+      key: "grade",
+      width: "40%",
+      filters: [
+        {
+          text: "Grade 7",
+          value: "Grade 7",
+        },
+        {
+          text: "Grade 8",
+          value: "Grade 8",
+        },
+        {
+          text: "Grade 9",
+          value: "Grade 9",
+        },
+        {
+          text: "Grade 10",
+          value: "Grade 10",
+        },
+        {
+          text: "Grade 11",
+          value: "Grade 11",
+        },
+        {
+          text: "Grade 12",
+          value: "Grade 12",
+        },
+      ],
+      onFilter: (value, record) => record.grade.indexOf(value) === 0,
+    },
+    {
+      title: "Section",
+      dataIndex: "section",
+      key: "section",
+      width: "40%",
+      ...getColumnSearchProps("section", "Content"),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: "20%",
+    },
+    {
+      dataIndex: "",
+      key: "",
+      width: "20%",
+      render: (record) => (
+        <>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+          >
+            <Button
+              type="primary"
+              onClick={() => {
+                onSectionChangeStatus(record);
+              }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              {record.status === "Active" ? "Deactivate" : "Activate"}
             </Button>
           </div>
         </>
@@ -461,21 +658,49 @@ const Settings = (props) => {
         <Row gutter={20}>
           <Col span={24}>
             <h3>LIBRARIAN ACCOUNTS</h3>
-            <Table columns={columns} dataSource={librarianAccount}pagination={paginationLibrarian}/>
+            <Table
+              columns={columns}
+              dataSource={librarianAccount}
+              pagination={paginationLibrarian}
+            />
           </Col>
         </Row>
         <Row gutter={20}>
           <Col span={24}>
             <h3 style={{ marginTop: "20px" }}>ADMIN ACCOUNTS</h3>
-            <Table columns={columnAdmin} dataSource={adminAccount} pagination={paginationAdmin}/>
+            <Table
+              columns={columnAdmin}
+              dataSource={adminAccount}
+              pagination={paginationAdmin}
+            />
           </Col>
         </Row>
         <Row gutter={20} style={{ marginTop: "30px" }}>
-          <Col sxs={24} md={12}>
-            <h3>ATTENDACE ANNOUNCEMENT</h3>
-            <Table columns={columnAnnouncement} />
+          <Col sxs={24} md={16}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: "15px",
+              }}
+            >
+              <h3>ATTENDANCE ANNOUNCEMENT</h3>
+              <Button
+                type="primary"
+                icon={<PlusCircleOutlined />}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
+                onClick={() => onAddAnnouncement()}
+              >
+                ADD ANNOUNCEMENT
+              </Button>
+            </div>
+            <Table columns={columnAnnouncement} dataSource={announcement} />
           </Col>
-          <Col xs={24} md={12}>
+          <Col xs={24} md={8}>
             <div
               style={{
                 display: "flex",
@@ -492,25 +717,198 @@ const Settings = (props) => {
                   backgroundColor: "#000080",
                   border: "1px solid #d9d9d9",
                 }}
+                onClick={() => onAddSection()}
               >
                 ADD SECTIION
               </Button>
             </div>
-            <div
-              id="scrollableDiv"
-              style={{
-                height: 600,
-                overflow: "auto",
-                padding: "0 16px",
-                border: "1px solid rgba(140, 140, 140, 0.35)",
-                backgroundColor: "f9f9f9",
-              }}
-            >
-              <List></List>
-            </div>
+            <Table
+              columns={sectionColumns}
+              dataSource={section}
+              pagination={paginationSection}
+            />
           </Col>
         </Row>
       </main>
+      {/* MODAL ADD ANNOUNCEMENT */}
+      <Modal
+        key="AnnouncementModel"
+        title="ADDING ANNOUCEMENT"
+        width={600}
+        open={onOpenAnnouncement}
+        onCancel={() => setOnOpenAnnouncement(false)}
+        footer={[
+          <Button
+            type="primary"
+            icon={<CheckOutlined />}
+            key="cancel1"
+            onClick={() => onConfirmAnnouncement()}
+          >
+            Confirm
+          </Button>,
+          <Button
+            type="primary"
+            icon={<RollbackOutlined />}
+            key="cancel8"
+            onClick={() => {
+              setOnOpenAnnouncement(false);
+              form.resetFields();
+            }}
+          >
+            Cancel
+          </Button>,
+        ]}
+      >
+        <Form
+          form={form}
+          labelCol={{
+            span: 12,
+          }}
+          layout="horizontal"
+          onFinish={onFinishAnnouncement}
+          onFinishFailed={onFinishAnnouncementFailed}
+          autoComplete="off"
+          style={{
+            width: "100%",
+          }}
+        >
+          <Row>
+            <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+            <Col xs={{ span: 24 }} md={{ span: 24 }}>
+              <Row gutter={12}>
+                <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
+                  <Form.Item
+                    label="Announcement"
+                    name="content"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input announcement!",
+                      },
+                    ]}
+                  >
+                    <TextArea
+                      rows={10}
+                      maxLength={3000}
+                      showCount
+                      placeholder="Enter Announcement"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
+      {/* MODAL ADD SECTION */}
+      <Modal
+        key="SectionModel"
+        title="ADDING GRADE AND SECTION"
+        width={600}
+        open={onOpenSection}
+        onCancel={() => {
+          setOnOpenSection(false);
+          form.resetFields();
+        }}
+        footer={[
+          <Button
+            type="primary"
+            icon={<CheckOutlined />}
+            key="cancel4"
+            onClick={() => onConfirmSection()}
+          >
+            Confirm
+          </Button>,
+          <Button
+            type="primary"
+            icon={<RollbackOutlined />}
+            key="cancel6"
+            onClick={() => {
+              setOnOpenSection(false);
+              form.resetFields();
+            }}
+          >
+            Cancel
+          </Button>,
+        ]}
+      >
+        <Form
+          form={form}
+          labelCol={{
+            span: 12,
+          }}
+          layout="horizontal"
+          onFinish={onFinishSection}
+          onFinishFailed={onFinishSectionFailed}
+          autoComplete="off"
+          style={{
+            width: "100%",
+          }}
+        >
+          <Row>
+            <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+            <Col xs={{ span: 24 }} md={{ span: 24 }}>
+              <Row gutter={12}>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} layout="vertical">
+                  <Form.Item
+                    label="Grade"
+                    name="grade"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input grade!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select your Grade">
+                      {GradeData.map((value, index) => (
+                        <Select.Option key={index} value={value.value}>
+                          {value.name}
+                        </Select.Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 12 }} layout="vertical">
+                  <Form.Item
+                    label="Section"
+                    name="section"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input section!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter section" />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form>
+      </Modal>
     </>
   );
 };

@@ -26,46 +26,49 @@ const upload = multer({
 });
 
 // register admin
-LibrarianRegRouter.post("/librarian/register", upload.single("photo"), async (req, res) => {
-  const { filename } = req.file;
-  const {
-    employeeId,
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    confirmPassword,
-  } = req.body;
-
-  // validate if employee id exist
-  const validate = await LibrarianModel.findOne({ employeeId: employeeId });
-  if (validate) {
-    return res.status(422).json({ error: "ID is already exists" });
-  }
-
-  try {
-    const finalUser = new LibrarianModel({
+LibrarianRegRouter.post(
+  "/librarian/register",
+  upload.single("photo"),
+  async (req, res) => {
+    const { filename } = req.file;
+    const {
       employeeId,
       firstName,
       middleName,
       lastName,
-      imgpath: filename,
-      userType: "Librarian",
       email,
       password,
       confirmPassword,
-    });
+    } = req.body;
 
-    const storeData = await finalUser.save();
+    // validate if employee id exist
+    const validate = await LibrarianModel.findOne({ employeeId: employeeId });
+    if (validate) {
+      return res.status(422).json({ error: "ID is already exists" });
+    }
 
+    try {
+      const finalUser = new LibrarianModel({
+        employeeId,
+        firstName,
+        middleName,
+        lastName,
+        imgpath: filename,
+        userType: "Librarian",
+        email,
+        password,
+        confirmPassword,
+      });
 
-    return res.status(201).json(storeData)
-  } catch (error) {
-    console.log(error);
-    return res.status(422).json(error);
+      const storeData = await finalUser.save();
+
+      return res.status(201).json(storeData);
+    } catch (error) {
+      console.log(error);
+      return res.status(422).json(error);
+    }
   }
-});
+);
 
 LibrarianRegRouter.get("/librarian/accounts", async (req, res) => {
   try {

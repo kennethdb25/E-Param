@@ -17,7 +17,7 @@ import {
   PlusCircleOutlined,
   ReadOutlined,
   QrcodeOutlined,
-  UndoOutlined
+  UndoOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import useStyles from "./styles";
@@ -29,7 +29,10 @@ import {
   InventoryBatchAddModal,
   InventoryLostBooksModal,
 } from "../AntdComponents/Modal/modal";
-import { InventorySingleAddDrawer, InventoryUpdateBookDrawer } from "../AntdComponents/Drawer/drawer";
+import {
+  InventorySingleAddDrawer,
+  InventoryUpdateBookDrawer,
+} from "../AntdComponents/Drawer/drawer";
 
 const Inventory = (props) => {
   const {
@@ -39,7 +42,7 @@ const Inventory = (props) => {
     paginationAllLost,
     forReviewBook,
     paginationAllRevew,
-    getInventoryData
+    getInventoryData,
   } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
@@ -114,11 +117,11 @@ const Inventory = (props) => {
       clearFilters,
     }) => (
       <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: 8,
-      }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: 8,
+        }}
       >
         <Input
           ref={searchInput}
@@ -208,7 +211,6 @@ const Inventory = (props) => {
     }
   };
 
-
   // FORM FUNCTIONS
   const onFinish = async (values) => {
     const newdata = new FormData();
@@ -238,41 +240,36 @@ const Inventory = (props) => {
     console.error(error);
   };
 
-  const onFinishUpdate = async (values) => {
-    console.log(values)
-    // const newdata = new FormData();
-    // newdata.append("photo", values.photo.file.originFileObj);
-    // newdata.append("abstract", values.abstract);
-    // newdata.append("assession", values.assession);
-    // newdata.append("desc", values.desc);
-    // newdata.append("genre", values.genre);
-    // newdata.append("isbn", values.isbn);
-    // newdata.append("location", values.location);
-    // newdata.append("notes", values.notes);
-    // newdata.append("publication", values.publication);
-    // newdata.append("title", values.title);
-    // newdata.append("author", values.author);
+  const onConfirmUpdate = () => {
+    form.submit();
+  };
 
-    // const res = await fetch("/book/single-add", {
-    //   method: "POST",
-    //   body: newdata,
-    // });
-    // if (res.status === 201) {
-    //   message.success("Book Added Successfully");
-    //   onClose();
-    // }
+  const onFinishUpdate = async (values) => {
+    const data = await fetch(`/book-update-available/${viewDetailsData._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(values)
+    });
+
+    const res = await data.json();
+    if (res.status === 201) {
+      message.success("Book Updated Successfully");
+      onCloseUpdate();
+      getAvailable();
+    }
   };
 
   const onFinishUpdateFailed = (error) => {
     console.error(error);
   };
 
-
   const handleUpdateModal = (data) => {
-    setUpdateData(data);
     setViewDetailsModal(false);
     setUpdateOpen(true);
-  }
+    form.resetFields();
+  };
   const onClose = () => {
     setSingleOpen(false);
     form.resetFields();
@@ -281,7 +278,7 @@ const Inventory = (props) => {
   const onCloseUpdate = () => {
     setViewDetailsData(null);
     setUpdateOpen(false);
-		form.resetFields();
+    form.resetFields();
   };
 
   // METHOD FOR BATCH UPLOAD
@@ -313,12 +310,12 @@ const Inventory = (props) => {
       method: "PATCH",
     });
     const res = await data.json();
-    if(res.status === 201) {
+    if (res.status === 201) {
       getInventoryData();
       message.success(res.body);
       setViewDetailsModal(false);
     }
-  }
+  };
 
   // IMAGE METHOD FOR SINGLE UPLOAD
   const imgprops = {
@@ -355,8 +352,8 @@ const Inventory = (props) => {
   };
 
   const onViewDetailsAvailable = async (record, e) => {
+    setUpdateData(record);
     e.defaultPrevented = true;
-    setViewDetailsData(record);
     fetch(`/uploads/${record?.imgpath}`)
       .then((res) => res.blob())
       .then(
@@ -570,24 +567,24 @@ const Inventory = (props) => {
   ];
 
   useEffect(() => {
-    if(loginData) {
+    if (loginData) {
       fetch(`/uploads/${loginData?.validUser?.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
   }, [loginData]);
 
   useEffect(() => {
-		form.resetFields();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	});
+    form.resetFields();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   return (
     <>
@@ -741,6 +738,7 @@ const Inventory = (props) => {
           imgprops={imgprops}
           onPreview={onPreview}
           initialValues={initialValues}
+          onConfirmUpdate={onConfirmUpdate}
         />
       </div>
     </>

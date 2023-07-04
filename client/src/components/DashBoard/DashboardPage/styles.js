@@ -2,15 +2,15 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
   cardContent: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   gridContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   btn: {
     marginTop: 40,
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     // backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundSize: "700px 700px",
-  }
-}))
+  },
+}));
 
 export default useStyles;

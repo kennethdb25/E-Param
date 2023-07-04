@@ -140,7 +140,7 @@ const LoginForm = (props) => {
                   border: "1px solid #d9d9d9",
                 }}
               >
-                <span style={{ fontSize: "16px"}}>LOGIN</span>
+                <span style={{ fontSize: "16px" }}>LOGIN</span>
               </Button>
             </div>
           </Form.Item>

@@ -9,7 +9,7 @@ const AdminLoginContent = (props) => {
 
   return (
     <Box className={classes.loginContainer}>
-      <AdminLoginForm LoginValid={LoginValid}/>
+      <AdminLoginForm LoginValid={LoginValid} />
     </Box>
   );
 };

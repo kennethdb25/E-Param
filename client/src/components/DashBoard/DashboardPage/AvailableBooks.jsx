@@ -1,18 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  Table,
-  Tabs,
-  Button,
-  Popconfirm,
-  message,
-  Input,
-  Space,
-} from "antd";
+import { Table, Tabs, Button, Popconfirm, message, Input, Space } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
   PlusSquareOutlined,
-  UndoOutlined
+  UndoOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { LoginContext } from "../../../Context/Context";
@@ -285,17 +277,17 @@ const AvailableBooks = (props) => {
   }, [activeTab, tabData]);
 
   useEffect(() => {
-    if(loginData){
+    if (loginData) {
       fetch(`/uploads/${loginData?.validUser.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
   }, [loginData]);
 

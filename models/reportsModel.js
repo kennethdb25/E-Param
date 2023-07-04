@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ReportSchema = new mongoose.Schema({
   filePath: {
@@ -9,7 +9,7 @@ const ReportSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-})
+});
 
 const ReportModel = new mongoose.model("ReportInfo", ReportSchema);
 

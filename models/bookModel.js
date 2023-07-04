@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const BookSchema = new mongoose.Schema({
   title: {
@@ -70,7 +70,7 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-})
+});
 
 const BookModel = new mongoose.model("BookInfo", BookSchema);
 

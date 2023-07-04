@@ -1,24 +1,23 @@
-import {
-  Button,
-  Upload,
-  Space,
-  Drawer,
-  Form,
-  Row,
-  Col,
-  Input,
-} from "antd";
+import { Button, Upload, Space, Drawer, Form, Row, Col, Input } from "antd";
 import {
   PlusOutlined,
   FormOutlined,
-  RollbackOutlined
+  RollbackOutlined,
 } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
 /* INVENTORY PAGE */
 export const InventorySingleAddDrawer = (props) => {
-  const { onClose, singleOpen, form, onFinish, onFinishFailed, imgprops, onPreview } = props;
+  const {
+    onClose,
+    singleOpen,
+    form,
+    onFinish,
+    onFinishFailed,
+    imgprops,
+    onPreview,
+  } = props;
   return (
     <Drawer
       title="ADD SINGLE BOOK"
@@ -333,12 +332,23 @@ export const InventorySingleAddDrawer = (props) => {
         </Form>
       </div>
     </Drawer>
-  )
-}
-
+  );
+};
 
 export const InventoryUpdateBookDrawer = (props) => {
-  const { onCloseUpdate, updateOpen, form, onFinishUpdate, onFinishUpdateFailed, imgprops, onPreview, initialValues } = props;
+  const {
+    onCloseUpdate,
+    updateOpen,
+    form,
+    onFinishUpdate,
+    onFinishUpdateFailed,
+    imgprops,
+    onPreview,
+    initialValues,
+    onConfirmUpdate,
+  } = props;
+
+  console.log(initialValues);
   return (
     <Drawer
       title="UPDATE BOOK"
@@ -353,18 +363,20 @@ export const InventoryUpdateBookDrawer = (props) => {
         marginLeft: "342px",
       }}
       footer={[
-        <Button icon={<FormOutlined />} type="primary" key="update">
+        <Button
+          icon={<FormOutlined />}
+          type="primary"
+          key="update"
+          onClick={() => onConfirmUpdate()}
+          style={{ marginRight: "10px" }}
+        >
           Update
         </Button>,
         <Button
           type="primary"
           icon={<RollbackOutlined />}
           key="cancel"
-        // onClick={() => {
-        //   setViewDetailsModal(false);
-        //   setViewDeatailsImg();
-        //   setViewDetailsData();
-        // }}
+          onClick={() => onCloseUpdate()}
         >
           Cancel
         </Button>,
@@ -656,5 +668,5 @@ export const InventoryUpdateBookDrawer = (props) => {
         </Form>
       </div>
     </Drawer>
-  )
-}
+  );
+};

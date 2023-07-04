@@ -264,17 +264,17 @@ const StudentAccounts = (props) => {
   };
 
   useEffect(() => {
-    if(loginData){
+    if (loginData) {
       fetch(`/uploads/${loginData?.validUser.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
   }, [loginData]);
 

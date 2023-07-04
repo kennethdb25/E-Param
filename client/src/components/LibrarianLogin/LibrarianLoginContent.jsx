@@ -9,7 +9,7 @@ const LibrarianLoginContent = (props) => {
 
   return (
     <Box className={classes.loginContainer}>
-      <LibrarianLoginForm LoginValid={LoginValid}/>
+      <LibrarianLoginForm LoginValid={LoginValid} />
     </Box>
   );
 };

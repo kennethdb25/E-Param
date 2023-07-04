@@ -26,46 +26,49 @@ const upload = multer({
 });
 
 // register admin
-AdminRegRouter.post("/admin/register", upload.single("photo"), async (req, res) => {
-  const { filename } = req.file;
-  const {
-    employeeId,
-    firstName,
-    middleName,
-    lastName,
-    email,
-    password,
-    confirmPassword,
-  } = req.body;
-
-  // validate if employee id exist
-  const validate = await AdminModel.findOne({ employeeId: employeeId });
-  if (validate) {
-    return res.status(422).json({ error: "ID is already exists" });
-  }
-
-  try {
-    const finalUser = new AdminModel({
+AdminRegRouter.post(
+  "/admin/register",
+  upload.single("photo"),
+  async (req, res) => {
+    const { filename } = req.file;
+    const {
       employeeId,
       firstName,
       middleName,
       lastName,
-      imgpath: filename,
-      userType: "Super Admin",
       email,
       password,
       confirmPassword,
-    });
+    } = req.body;
 
-    const storeData = await finalUser.save();
+    // validate if employee id exist
+    const validate = await AdminModel.findOne({ employeeId: employeeId });
+    if (validate) {
+      return res.status(422).json({ error: "ID is already exists" });
+    }
 
+    try {
+      const finalUser = new AdminModel({
+        employeeId,
+        firstName,
+        middleName,
+        lastName,
+        imgpath: filename,
+        userType: "Super Admin",
+        email,
+        password,
+        confirmPassword,
+      });
 
-    return res.status(201).json(storeData)
-  } catch (error) {
-    console.log(error);
-    return res.status(422).json(error);
+      const storeData = await finalUser.save();
+
+      return res.status(201).json(storeData);
+    } catch (error) {
+      console.log(error);
+      return res.status(422).json(error);
+    }
   }
-});
+);
 
 AdminRegRouter.get("/admin/accounts", async (req, res) => {
   try {

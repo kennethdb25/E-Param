@@ -91,7 +91,7 @@ const Dashboard = (props) => {
           "#50AF95",
           "#f3ba2f",
           "#2a71d0",
-          "purple"
+          "purple",
         ],
         borderColor: "black",
         borderWidth: 2,
@@ -356,55 +356,55 @@ const Dashboard = (props) => {
             </div>
           </div>
         </div>
-        { loginData.validUser.userType !== "Student" ? (
+        {loginData?.validUser?.userType !== "Student" ? (
           <div className="recents-grid">
-          <div className="customers">
-            <div className="card-header">
-              <h3>Borrowed Books per Grade</h3>
+            <div className="customers">
+              <div className="card-header">
+                <h3>Borrowed Books per Grade</h3>
+              </div>
+              <div className="card-body">
+                <Line
+                  data={chartData}
+                  options={{
+                    plugins: {
+                      title: {
+                        display: true,
+                        text: `Total Borrowed Books from August 2023 - ${
+                          month[new Date().getMonth()]
+                        } ${new Date().getFullYear()}`,
+                      },
+                      legend: {
+                        display: false,
+                      },
+                    },
+                  }}
+                />
+              </div>
             </div>
-            <div className="card-body">
-              <Line
-                data={chartData}
-                options={{
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: `Total Borrowed Books from August 2023 - ${
-                        month[new Date().getMonth()]
-                      } ${new Date().getFullYear()}`,
+            <div className="customers">
+              <div className="card-header">
+                <h3>Borrowed Books per Grade</h3>
+              </div>
+              <div className="card-body">
+                <Bar
+                  data={chartData}
+                  options={{
+                    plugins: {
+                      title: {
+                        display: true,
+                        text: `Total Borrowed Books from August ${new Date().getFullYear()} - June ${
+                          new Date().getFullYear() + 1
+                        }`,
+                      },
+                      legend: {
+                        display: false,
+                      },
                     },
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
+                  }}
+                />
+              </div>
             </div>
           </div>
-          <div className="customers">
-            <div className="card-header">
-              <h3>Borrowed Books per Grade</h3>
-            </div>
-            <div className="card-body">
-              <Bar
-                data={chartData}
-                options={{
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: `Total Borrowed Books from August ${new Date().getFullYear()} - June ${
-                        new Date().getFullYear() + 1
-                      }`,
-                    },
-                    legend: {
-                      display: false,
-                    },
-                  },
-                }}
-              />
-            </div>
-          </div>
-        </div>
         ) : null}
         <div className="recent-grid">
           <div className="projects">

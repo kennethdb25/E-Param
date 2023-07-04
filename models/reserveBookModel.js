@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ReserveBookSchema = new mongoose.Schema({
   studentId: {
@@ -89,8 +89,11 @@ const ReserveBookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-})
+});
 
-const ReserveBookModel = new mongoose.model("ReserveBookInfo", ReserveBookSchema);
+const ReserveBookModel = new mongoose.model(
+  "ReserveBookInfo",
+  ReserveBookSchema
+);
 
 module.exports = ReserveBookModel;

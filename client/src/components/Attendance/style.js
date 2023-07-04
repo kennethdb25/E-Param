@@ -3,6 +3,37 @@ import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
+  attendanceContainer: {
+    backgroundImage: "url(/cp-login.png)",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+
+    [theme.breakpoints.up("md")]: {
+      justifyContent: "end",
+    },
+    [theme.breakpoints.down("md")]: {
+      backgroundImage: "url(/cp-login.png)",
+      paddingLeft: "0px",
+      justifyContent: "center",
+    },
+  },
+  attendanceCard: {
+    display: "flex",
+    alignContent: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    background: "white",
+    border: "1px lightgray solid",
+    borderRadius: "10px",
+
+    [theme.breakpoints.up("md")]: {
+      width: "400px",
+    },
+  },
   loginContainer: {
     backgroundImage: "url(/home-login.png)",
     backgroundPosition: "center",
@@ -45,7 +76,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "column",
-    padding: "10px",
+    padding: "20px",
+    background: "white",
 
     [theme.breakpoints.up("md")]: {
       width: "360px",

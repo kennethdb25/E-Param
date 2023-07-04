@@ -41,7 +41,7 @@ export const AvailableBooksDetailsModal = (props) => {
     viewDetailsData,
     viewDeatailsImg,
   } = props;
-  console.log(viewDetailsData);
+
   return (
     <Modal
       key="BookDetailsAvailable"
@@ -295,47 +295,47 @@ export const BorrowedBooksViewDetailsModal = (props) => {
       }}
       footer={
         loginData.validUser.userType !== "Student" &&
-          viewDetailsData?.status === "Borrowed"
+        viewDetailsData?.status === "Borrowed"
           ? [
-            <Popconfirm
-              placement="top"
-              title="Are you sure want to complete the process return?"
-              onConfirm={handleProcessReturn}
-              okText="Confirm"
-              cancelText="Cancel"
-            >
-              <Button key="return" type="primary" icon={<EditOutlined />}>
-                Process Return
-              </Button>
-            </Popconfirm>,
-            <Popconfirm
-              placement="top"
-              title="Are you sure want to complete the process lost?"
-              onConfirm={handleProcessLost}
-              okText="Confirm"
-              cancelText="Cancel"
-            >
-              <Button key="lost" type="primary" icon={<QuestionOutlined />}>
-                Lost
-              </Button>
-            </Popconfirm>,
-            <Button
-              key="cancel"
-              type="primary"
-              icon={<RollbackOutlined />}
-              onClick={() => {
-                setViewDetailsModal(false);
-                setViewDeatailsImg();
-                setViewDetailsData();
-                setRateModal(0);
-              }}
-            >
-              Cancel
-            </Button>,
-          ]
+              <Popconfirm
+                placement="top"
+                title="Are you sure want to complete the process return?"
+                onConfirm={handleProcessReturn}
+                okText="Confirm"
+                cancelText="Cancel"
+              >
+                <Button key="return" type="primary" icon={<EditOutlined />}>
+                  Process Return
+                </Button>
+              </Popconfirm>,
+              <Popconfirm
+                placement="top"
+                title="Are you sure want to complete the process lost?"
+                onConfirm={handleProcessLost}
+                okText="Confirm"
+                cancelText="Cancel"
+              >
+                <Button key="lost" type="primary" icon={<QuestionOutlined />}>
+                  Lost
+                </Button>
+              </Popconfirm>,
+              <Button
+                key="cancel"
+                type="primary"
+                icon={<RollbackOutlined />}
+                onClick={() => {
+                  setViewDetailsModal(false);
+                  setViewDeatailsImg();
+                  setViewDetailsData();
+                  setRateModal(0);
+                }}
+              >
+                Cancel
+              </Button>,
+            ]
           : loginData.validUser.userType !== "Student" &&
             viewDetailsData?.status === "Lost"
-            ? [
+          ? [
               <Popconfirm
                 placement="top"
                 title="Are you sure want to complete the process return?"
@@ -360,7 +360,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
                 Cancel
               </Button>,
             ]
-            : [
+          : [
               <Button
                 key="cancel"
                 type="primary"
@@ -1815,7 +1815,7 @@ export const InventoryAvailableBooksModal = (props) => {
     viewDetailsData,
     viewDeatailsImg,
     handleBookDelete,
-    handleUpdateModal
+    handleUpdateModal,
   } = props;
   return (
     <Modal

@@ -10,7 +10,7 @@ const ROUTE = {
   ADMINLOGINPAGE: "/admin-login",
   ADMINFORGOTPASS: "/admin-forgot-password",
 
-  ATTENDANCE: "/attendance"
-}
+  ATTENDANCEDASHBOARD: "/attendance/dashboard",
+};
 
 export default ROUTE;

@@ -1,28 +1,62 @@
-
 import { useContext, useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { LoginContext } from "./Context/Context";
 import { ToastContainer } from "react-toastify";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import './App.css';
-import ROUTE from './Routes/Route';
-import HomeDashboard from './components/DashBoard/Dashboard';
-import LoginContent from './components/StudentLogin/LoginContent';
-import ForgotPassword from './components/ForgotPassword/ForgotPassword';
-import AdminLoginContent from './components/AdminLogin/AdminLoginContent';
-import LibrarianLoginContent from './components/LibrarianLogin/LibrarianLoginContent';
+import "./App.css";
+import ROUTE from "./Routes/Route";
+import HomeDashboard from "./components/DashBoard/Dashboard";
+import LoginContent from "./components/StudentLogin/LoginContent";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import AdminLoginContent from "./components/AdminLogin/AdminLoginContent";
+import LibrarianLoginContent from "./components/LibrarianLogin/LibrarianLoginContent";
 import LibrarianForgotPassword from "./components/ForgotPassword/LibrarianForgotPassword";
 import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword";
-import Attendance from "./components/Attendance/Attendance";
+import AttendanceDashboard from "./components/Attendance/AttendanceDashboard";
 
 function App() {
   const [data, setData] = useState("");
   const [newBooks, setNewBooks] = useState();
+  const [section, setSection] = useState();
+  const [announcement, setAnnouncement] = useState();
+  const [activeAnnouncement, setActiveAnnouncement] = useState();
   // eslint-disable-next-line no-unused-vars
   const { loginData, setLoginData } = useContext(LoginContext);
   const history = useNavigate();
 
+  const sectiionData = async () => {
+    const data = await fetch("/get-all-section", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setSection(res.body);
+  };
+
+  const announcementData = async () => {
+    const data = await fetch("/get-announcement", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setAnnouncement(res.body);
+  };
+
+  const activeAnnouncementData = async () => {
+    const data = await fetch("/get-active-announcement", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setActiveAnnouncement(res.body);
+  };
 
   const LoginValid = async () => {
     if (localStorage.getItem("studentToken")) {
@@ -32,7 +66,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
           Authorization: validToken,
-        }
+        },
       });
 
       const data = await res.json();
@@ -51,7 +85,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
           Authorization: validToken,
-        }
+        },
       });
 
       const data = await res.json();
@@ -70,7 +104,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
           Authorization: validToken,
-        }
+        },
       });
 
       const data = await res.json();
@@ -83,27 +117,30 @@ function App() {
         history("/dashboard");
       }
     } else {
-      setData(true)
+      setData(true);
     }
-  }
+  };
 
   const getNewBooks = async () => {
-    const res = await fetch('/book/get-new', {
+    const res = await fetch("/book/get-new", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     });
     const newData = await res.json();
     setNewBooks(newData);
-  }
+  };
 
   useEffect(() => {
     setTimeout(() => {
       LoginValid();
+      sectiionData();
+      announcementData();
+      activeAnnouncementData();
     }, 3000);
     setTimeout(() => {
-      setData(true)
+      setData(true);
     }, 3000);
     getNewBooks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,23 +152,56 @@ function App() {
       {data ? (
         <>
           <Routes>
-            <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.DASHBOARD} element={<HomeDashboard newBooks={newBooks} />} />
+            <Route
+              path={ROUTE.HOMEPAGE}
+              element={<LoginContent LoginValid={LoginValid} />}
+            />
+            <Route
+              path={ROUTE.DASHBOARD}
+              element={
+                <HomeDashboard
+                  newBooks={newBooks}
+                  section={section}
+                  sectiionData={sectiionData}
+                  announcement={announcement}
+                  announcementData={announcementData}
+                  activeAnnouncement={activeAnnouncement}
+                  activeAnnouncementData={activeAnnouncementData}
+                />
+              }
+            />
             <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
-            <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.LIBRARIANFORGOTPASS} element={<LibrarianForgotPassword />} />
-            <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.ADMINFORGOTPASS} element={<AdminForgotPassword />} />
-            <Route path={ROUTE.ATTENDANCE} element={<Attendance />} />
+            <Route
+              path={ROUTE.LIBRARIANLOGINPAGE}
+              element={<LibrarianLoginContent LoginValid={LoginValid} />}
+            />
+            <Route
+              path={ROUTE.LIBRARIANFORGOTPASS}
+              element={<LibrarianForgotPassword />}
+            />
+            <Route
+              path={ROUTE.ADMINLOGINPAGE}
+              element={<AdminLoginContent LoginValid={LoginValid} />}
+            />
+            <Route
+              path={ROUTE.ADMINFORGOTPASS}
+              element={<AdminForgotPassword />}
+            />
           </Routes>
         </>
       ) : (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
           Loading Portal &nbsp;
           <CircularProgress />
         </Box>
       )}
-
     </div>
   );
 }

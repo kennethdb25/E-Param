@@ -13,6 +13,7 @@ import {
   SettingOutlined,
   LogoutOutlined,
   UserOutlined,
+  ScheduleOutlined,
 } from "@ant-design/icons";
 import Dashboard from "./DashboardPage/Dashboard";
 import AvailableBooks from "./DashboardPage/AvailableBooks";
@@ -24,6 +25,8 @@ import StudentAccounts from "./DashboardPage/StudentAccounts";
 import Settings from "./DashboardPage/Settings";
 import "./style.css";
 import "antd/dist/antd.min.css";
+import { Drawer, Space } from "antd";
+import AttendanceDashboard from "../Attendance/AttendanceDashboard";
 
 const HomeDashboard = (props) => {
   const history = useNavigate();
@@ -139,7 +142,15 @@ const HomeDashboard = (props) => {
     total: allReviewCount,
   });
 
-  const { newBooks } = props;
+  const {
+    newBooks,
+    section,
+    sectiionData,
+    announcement,
+    announcementData,
+    activeAnnouncement,
+    activeAnnouncementData,
+  } = props;
 
   // Genre Tab
   const getGenre = async () => {
@@ -160,7 +171,7 @@ const HomeDashboard = (props) => {
   const getAddShelfPerStudent = async () => {
     if (loginData) {
       const data = await fetch(
-        `/book/student-shelf?email=${loginData.validUser.email}`,
+        `/book/student-shelf?email=${loginData?.validUser?.email}`,
         {
           method: "GET",
           headers: {
@@ -180,7 +191,7 @@ const HomeDashboard = (props) => {
   const getBorrowedPerStudent = async () => {
     if (loginData) {
       const data = await fetch(
-        `/book/student-borrowed?email=${loginData.validUser.email}`,
+        `/book/student-borrowed?email=${loginData?.validUser?.email}`,
         {
           method: "GET",
           headers: {
@@ -416,7 +427,7 @@ const HomeDashboard = (props) => {
                 key={3}
                 className={currentActive === 3 ? "active" : "none"}
                 onClick={() =>
-                  loginData.validUser.userType === "Student"
+                  loginData?.validUser?.userType === "Student"
                     ? getBorrowedPerStudent()
                     : getBorrowedData()
                 }
@@ -431,7 +442,7 @@ const HomeDashboard = (props) => {
                 key={4}
                 className={currentActive === 4 ? "active" : "none"}
                 onClick={() =>
-                  loginData.validUser.userType === "Student"
+                  loginData?.validUser?.userType === "Student"
                     ? getAddShelfPerStudent()
                     : (setCurrentActive(4), getInventoryData())
                 }
@@ -506,7 +517,17 @@ const HomeDashboard = (props) => {
             ) : null}
             <li key="li9">
               <a
-                key={8}
+                key={9}
+                onClick={() => (setCurrentActive(9), activeAnnouncementData())}
+              >
+                <ScheduleOutlined />
+                <span className="las la-clipboard-list"></span>
+                <span>Attendance Dashboard</span>
+              </a>
+            </li>
+            <li key="li10">
+              <a
+                key={10}
                 onClick={() => {
                   handleLogout();
                 }}
@@ -539,12 +560,12 @@ const HomeDashboard = (props) => {
           <>
             <BorrowedBooks
               getBorrowedStudent={
-                loginData.validUser.userType === "Student"
+                loginData?.validUser?.userType === "Student"
                   ? getBorrowedStudent
                   : getAllBorrowed
               }
               paginationStudentBorrowed={
-                loginData.validUser.userType === "Student"
+                loginData?.validUser?.userType === "Student"
                   ? paginationStudentBorrowed
                   : paginationAllBorrowed
               }
@@ -556,12 +577,12 @@ const HomeDashboard = (props) => {
           <>
             <Shelf
               getAddToShelf={
-                loginData.validUser.userType === "Student"
+                loginData?.validUser?.userType === "Student"
                   ? getAddToShelf
                   : getAllShelf
               }
               paginationStudentShelf={
-                loginData.validUser.userType === "Student"
+                loginData?.validUser?.userType === "Student"
                   ? paginationStudentShelf
                   : paginationAllShelf
               }
@@ -595,10 +616,26 @@ const HomeDashboard = (props) => {
             <Settings
               adminAccount={adminAccount}
               librarianAccount={librarianAccount}
+              section={section}
+              sectiionData={sectiionData}
+              announcement={announcement}
+              announcementData={announcementData}
             />
           </>
         ) : null}
       </div>
+      <Drawer
+        title="PAMPANGA HIGH SCHOOL LIBRARY"
+        placement="left"
+        onClose={() => setCurrentActive(1)}
+        open={currentActive === 9 ? true : false}
+        height="100%"
+        width="100%"
+        style={{ display: "flex", justifyContent: "center" }}
+        extra={<Space></Space>}
+      >
+        <AttendanceDashboard activeAnnouncement={activeAnnouncement} />
+      </Drawer>
     </>
   );
 };

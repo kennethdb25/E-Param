@@ -1,21 +1,23 @@
 import React from "react";
-import {
-  Form,
-  Input,
-  Radio,
-  Row,
-  Col,
-  message,
-  Upload,
-  Select
-} from "antd";
+import { Form, Input, Radio, Row, Col, message, Upload, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import './style.css';
+import "./style.css";
 import "antd/dist/antd.min.css";
-import { GradeData, SectionData } from "../../Data/Data";
+import { GradeData } from "../../Data/Data";
 
 const SignUp = (props) => {
-  const { form, onFinish } = props;
+  const { form, onFinish, section, setSection } = props;
+
+  const onGradeChange = async (event) => {
+    const data = await fetch(`/get-section?grade=${event}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setSection([res.body]);
+  };
 
   const imgprops = {
     beforeUpload: (file) => {
@@ -176,7 +178,10 @@ const SignUp = (props) => {
                     },
                   ]}
                 >
-                  <Select placeholder="Select your Grade">
+                  <Select
+                    placeholder="Select your Grade"
+                    onChange={onGradeChange}
+                  >
                     {GradeData.map((value, index) => (
                       <Select.Option key={index} value={value.value}>
                         {value.name}
@@ -203,12 +208,17 @@ const SignUp = (props) => {
                     },
                   ]}
                 >
-                  <Select placeholder="Select your Section">
-                    {SectionData.map((value, index) => (
-                      <Select.Option key={index} value={value.value}>
-                        {value.name}
-                      </Select.Option>
-                    ))}
+                  <Select
+                    placeholder="Select your Section"
+                    disabled={section ? false : true}
+                  >
+                    {section && section.length > 0
+                      ? section[0].map((value, index) => (
+                          <Select.Option key={index} value={value}>
+                            {value}
+                          </Select.Option>
+                        ))
+                      : ""}
                   </Select>
                 </Form.Item>
               </Col>
@@ -368,7 +378,7 @@ const SignUp = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "Confirm Password is required!"
+                      message: "Confirm Password is required!",
                     },
                     ({ getFieldValue }) => ({
                       validator(_, value) {

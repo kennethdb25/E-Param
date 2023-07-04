@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const BorrowookSchema = new mongoose.Schema({
   studentId: {
@@ -101,7 +101,7 @@ const BorrowookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-})
+});
 
 const BorrowBookModel = new mongoose.model("BorrowBookInfo", BorrowookSchema);
 

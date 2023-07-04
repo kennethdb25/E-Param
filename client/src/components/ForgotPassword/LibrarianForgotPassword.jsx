@@ -289,7 +289,7 @@ const LibrarianForgotPassword = () => {
                       },
                     ]}
                   >
-                     <Input.Password
+                    <Input.Password
                       prefix={<LockOutlined style={{ marginRight: "10px" }} />}
                       placeholder="Password"
                       style={{ borderRadius: "10px" }}

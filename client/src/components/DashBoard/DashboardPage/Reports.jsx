@@ -47,7 +47,7 @@ const Reports = () => {
   };
   useEffect(() => {
     loadMoreData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onFinish = async (values) => {
@@ -73,17 +73,17 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    if(loginData){
+    if (loginData) {
       fetch(`/uploads/${loginData?.validUser.imgpath}`)
-      .then((res) => res.blob())
-      .then(
-        (result) => {
-          setImg(URL.createObjectURL(result));
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+        .then((res) => res.blob())
+        .then(
+          (result) => {
+            setImg(URL.createObjectURL(result));
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
     }
   }, [loginData]);
 
@@ -101,7 +101,7 @@ const Reports = () => {
   };
   return (
     <>
-      <header>
+      <header className="attendance-header">
         <h1>
           <label htmlFor="nav-toggle">
             <span className="las la-bars">Reports</span>
@@ -191,7 +191,7 @@ const Reports = () => {
                 }}
               >
                 <Button
-                icon={<BarChartOutlined />}
+                  icon={<BarChartOutlined />}
                   style={{
                     backgroundColor: "purple",
                     border: "1px solid #d9d9d9",

@@ -7,7 +7,9 @@ const Context = ({ children }) => {
 
   return (
     <>
-      <LoginContext.Provider value={{ loginData, setLoginData }}>{children}</LoginContext.Provider>
+      <LoginContext.Provider value={{ loginData, setLoginData }}>
+        {children}
+      </LoginContext.Provider>
     </>
   );
 };

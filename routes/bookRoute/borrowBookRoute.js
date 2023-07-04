@@ -30,10 +30,16 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
   } = req.body;
 
   // validate if book is existing
-  const availableBook = await BookModel.findOne({ _id: _id, status: "Available" });
+  const availableBook = await BookModel.findOne({
+    _id: _id,
+    status: "Available",
+  });
 
   if (availableBook) {
-    const validate = await ReserveBookModel.findOne({ bookId: _id, status: "Reserved" });
+    const validate = await ReserveBookModel.findOne({
+      bookId: _id,
+      status: "Reserved",
+    });
     if (validate) {
       return res.status(404).json({ error: "Book is already reserved" });
     }
@@ -138,7 +144,9 @@ BorrowBookRouter.post("/book/add-borrowed", async (req, res) => {
 BorrowBookRouter.get("/book/student-recently-borrowed", async (req, res) => {
   const all = req.query.email || "";
   try {
-    const borrowedBooks = await BorrowBookModel.find({ email: all }).sort({ dateBorrowed: -1 }).limit(10);
+    const borrowedBooks = await BorrowBookModel.find({ email: all })
+      .sort({ dateBorrowed: -1 })
+      .limit(10);
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -149,7 +157,9 @@ BorrowBookRouter.get("/book/student-recently-borrowed", async (req, res) => {
 // get all recently borrowed books for librarian and admin
 BorrowBookRouter.get("/book/all-recently-borrowed", async (req, res) => {
   try {
-    const borrowedBooks = await BorrowBookModel.find().sort({ dateBorrowed: -1 }).limit(10);
+    const borrowedBooks = await BorrowBookModel.find()
+      .sort({ dateBorrowed: -1 })
+      .limit(10);
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -162,9 +172,14 @@ BorrowBookRouter.patch("/book/process-return/:_id", async (req, res) => {
   try {
     const id = req.params._id;
 
-    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({ _id: id, status: "Borrowed" });
+    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({
+      _id: id,
+      status: "Borrowed",
+    });
 
-    const bookToChangeInAvailable = await BookModel.findOne({ isbn: checkIfBookIsNotProcessed.isbn });
+    const bookToChangeInAvailable = await BookModel.findOne({
+      isbn: checkIfBookIsNotProcessed.isbn,
+    });
 
     if (checkIfBookIsNotProcessed) {
       checkIfBookIsNotProcessed.status = "Returned";
@@ -177,12 +192,14 @@ BorrowBookRouter.patch("/book/process-return/:_id", async (req, res) => {
 
       const changeBookToAvailable = await bookToChangeInAvailable.save();
 
-      return res.status(200).json({ status: 200, body: { proccessBook, changeBookToAvailable } });
+      return res
+        .status(200)
+        .json({ status: 200, body: { proccessBook, changeBookToAvailable } });
     } else {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(404).json(error);
   }
 });
@@ -192,7 +209,10 @@ BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
   try {
     const id = req.params._id;
 
-    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({ _id: id, status: "Borrowed" });
+    const checkIfBookIsNotProcessed = await BorrowBookModel.findOne({
+      _id: id,
+      status: "Borrowed",
+    });
 
     if (checkIfBookIsNotProcessed) {
       checkIfBookIsNotProcessed.status = "Lost";
@@ -204,9 +224,7 @@ BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
     } else {
       return res.status(500).json({ error: "Internal Server Error" });
     }
-  } catch (error) {
-
-  }
+  } catch (error) {}
 });
 
 // book rate
@@ -215,12 +233,19 @@ BorrowBookRouter.patch("/book-rate", async (req, res) => {
     const { _id: id, value } = req.query;
     console.log(req.query);
 
-    const checkIfBookIsNotRated = await BorrowBookModel.findOne({ _id: id, isRated: false, status: "Returned" });
+    const checkIfBookIsNotRated = await BorrowBookModel.findOne({
+      _id: id,
+      isRated: false,
+      status: "Returned",
+    });
 
-    const bookToAddRatings = await BookModel.findOne({ isbn: checkIfBookIsNotRated.isbn });
+    const bookToAddRatings = await BookModel.findOne({
+      isbn: checkIfBookIsNotRated.isbn,
+    });
 
     let bookRateCount = parseInt(bookToAddRatings.bookRatingsCount) + 1;
-    let totalRateFromStudent = parseFloat(bookToAddRatings.totalRatings) + parseInt(value);
+    let totalRateFromStudent =
+      parseFloat(bookToAddRatings.totalRatings) + parseInt(value);
 
     if (checkIfBookIsNotRated) {
       checkIfBookIsNotRated.isRated = true;
@@ -228,18 +253,22 @@ BorrowBookRouter.patch("/book-rate", async (req, res) => {
 
       bookToAddRatings.bookRatingsCount = parseInt(bookRateCount);
       bookToAddRatings.totalRatings = parseInt(totalRateFromStudent);
-      bookToAddRatings.ratings = parseFloat(totalRateFromStudent / bookRateCount);
+      bookToAddRatings.ratings = parseFloat(
+        totalRateFromStudent / bookRateCount
+      );
 
       const ratedBook = await checkIfBookIsNotRated.save();
 
       const addRatings = await bookToAddRatings.save();
 
-      return res.status(200).json({ status: 200, body: { ratedBook, addRatings } });
+      return res
+        .status(200)
+        .json({ status: 200, body: { ratedBook, addRatings } });
     } else {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(404).json(error);
   }
 });

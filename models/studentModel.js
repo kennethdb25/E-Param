@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
-const jwt = require('jsonwebtoken');
-const cipher = require('bcryptjs');
-const keys = require('../config/keys');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const jwt = require("jsonwebtoken");
+const cipher = require("bcryptjs");
+const keys = require("../config/keys");
 
 const StudentSchema = new mongoose.Schema({
   studentId: {
@@ -65,7 +65,7 @@ const StudentSchema = new mongoose.Schema({
       if (!validator.isEmail(value)) {
         throw new Error("Not a valid email");
       }
-    }
+    },
   },
   password: {
     type: String,
@@ -95,7 +95,9 @@ StudentSchema.pre("save", async function (next) {
 
 StudentSchema.methods.generateAuthToken = async function () {
   try {
-    let token24 = jwt.sign({ _id: this._id }, keys.cookieKey, { expiresIn: "7d" });
+    let token24 = jwt.sign({ _id: this._id }, keys.cookieKey, {
+      expiresIn: "7d",
+    });
 
     this.tokens = this.tokens.concat({ token: token24 });
     await this.save();
