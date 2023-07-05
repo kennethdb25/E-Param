@@ -347,8 +347,6 @@ export const InventoryUpdateBookDrawer = (props) => {
     initialValues,
     onConfirmUpdate,
   } = props;
-
-  console.log(initialValues);
   return (
     <Drawer
       title="UPDATE BOOK"

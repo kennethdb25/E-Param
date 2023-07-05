@@ -115,7 +115,6 @@ AttendanceRouter.patch("/change-status-announcement", async (req, res) => {
     const getActiveAnnouncement = await AnnouncementModel.findOne({
       status: "Active",
     });
-    console.log("first", getActiveAnnouncement);
     if (getActiveAnnouncement && getActiveAnnouncement.announcementId !== id) {
       getActiveAnnouncement.status = "Not Active";
 
@@ -124,7 +123,6 @@ AttendanceRouter.patch("/change-status-announcement", async (req, res) => {
 
     const toActivate = await AnnouncementModel.findOne({ announcementId: id });
 
-    console.log("second", toActivate);
     if (!toActivate) {
       return res
         .status(404)

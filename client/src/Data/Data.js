@@ -76,6 +76,10 @@ export const ReportData = [
   },
   {
     name: "Books need to Review",
-    value: "newBooks",
+    value: "reviewBooks",
+  },
+  {
+    name: "Student Attendance",
+    value: "attendanceStudents",
   },
 ];

@@ -201,4 +201,78 @@ GetBookRouter.get("/book/get-info", async (req, res) => {
   }
 });
 
+GetBookRouter.get("/book-graph-ratings", async (req, res) => {
+  try {
+    const ratings = await BookModel.aggregate([
+      {
+        $match: {
+          status: {
+            $ne: "Deleted",
+          },
+          ratings: {
+            $exists: true,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$title",
+          ratings: {
+            $addToSet: "$ratings",
+          },
+        },
+      },
+      {
+        $sort: {
+          ratings: -1,
+        },
+      },
+      {
+        $limit: 5,
+      },
+    ]);
+    return res.status(200).json({
+      status: 200,
+      body: ratings,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
+GetBookRouter.get("/book-borrowed-ratings", async (req, res) => {
+  try {
+    const ratings = await BorrowBookModel.aggregate([
+      {
+        $match: {
+          status: {
+            $ne: "Lost",
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$grade",
+          gradeNumber: {
+            $addToSet: "$_id",
+          },
+        },
+      },
+      {
+        $sort: {
+          grade: -1,
+        },
+      },
+    ]);
+    return res.status(200).json({
+      status: 200,
+      body: ratings,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 module.exports = GetBookRouter;

@@ -9,7 +9,6 @@ QrCodeRouter.post("/librarian/scannerQrCode", async (req, res) => {
   }
 
   QRCode.toDataURL(detail, function (err, detail) {
-    console.log(detail);
     res.send(detail);
   });
 });

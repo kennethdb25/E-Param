@@ -131,7 +131,6 @@ const Shelf = (props) => {
 
   const handleProcess = (e, record) => {
     e.defaultPrevented = true;
-    console.log(record);
     setRecordedData(record);
     setProcessModal(true);
   };
@@ -191,7 +190,6 @@ const Shelf = (props) => {
   };
 
   const onViewDetails = async (record, e) => {
-    console.log(record);
     e.defaultPrevented = true;
     setViewDetailsData(record);
     fetch(`/uploads/${record?.imgpath}`)

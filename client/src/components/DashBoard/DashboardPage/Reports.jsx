@@ -12,6 +12,7 @@ import {
   Space,
   Button,
   Typography,
+  message,
 } from "antd";
 import { BarChartOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -64,6 +65,7 @@ const Reports = () => {
     const res = await data.json();
     if (res.status === 201) {
       form.resetFields();
+      message.success("Reports Successfully Generated and Ready to Download");
       loadMoreData();
     }
   };

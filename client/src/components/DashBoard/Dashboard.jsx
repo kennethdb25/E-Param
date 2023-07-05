@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -150,6 +151,10 @@ const HomeDashboard = (props) => {
     announcementData,
     activeAnnouncement,
     activeAnnouncementData,
+    bookRatingsChart,
+    bookRatingsData,
+    borrowedRatingsChart,
+    borrowedRatingsData,
   } = props;
 
   // Genre Tab
@@ -404,7 +409,11 @@ const HomeDashboard = (props) => {
               <a
                 key={1}
                 className={currentActive === 1 ? "active" : "none"}
-                onClick={() => setCurrentActive(1)}
+                onClick={() => (
+                  setCurrentActive(1),
+                  bookRatingsChart(),
+                  borrowedRatingsChart()
+                )}
               >
                 <HomeOutlined />
                 <span className="las la-igloo"></span>
@@ -546,6 +555,8 @@ const HomeDashboard = (props) => {
             <Dashboard
               setCurrentActive={setCurrentActive}
               newBooks={newBooks}
+              bookRatingsData={bookRatingsData}
+              borrowedRatingsData={borrowedRatingsData}
             />
           </>
         ) : currentActive === 2 ? (

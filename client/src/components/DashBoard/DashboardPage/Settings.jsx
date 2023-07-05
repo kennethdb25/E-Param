@@ -45,6 +45,7 @@ const Settings = (props) => {
   const [onOpenSection, setOnOpenSection] = useState(false);
   const [onOpenAnnouncement, setOnOpenAnnouncement] = useState(false);
 
+  // eslint-disable-next-line no-unused-vars
   const [viewDetailsData, setViewDetailsData] = useState(null);
 
   const onViewDetails = async (record, e) => {
@@ -75,7 +76,6 @@ const Settings = (props) => {
   };
 
   const onAnnouncementChangeStatus = async (record) => {
-    console.log(record);
     const data = await fetch(
       `/change-status-announcement?announcementId=${record.announcementId}`,
       {

@@ -13,7 +13,6 @@ import AdminLoginContent from "./components/AdminLogin/AdminLoginContent";
 import LibrarianLoginContent from "./components/LibrarianLogin/LibrarianLoginContent";
 import LibrarianForgotPassword from "./components/ForgotPassword/LibrarianForgotPassword";
 import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword";
-import AttendanceDashboard from "./components/Attendance/AttendanceDashboard";
 
 function App() {
   const [data, setData] = useState("");
@@ -21,6 +20,8 @@ function App() {
   const [section, setSection] = useState();
   const [announcement, setAnnouncement] = useState();
   const [activeAnnouncement, setActiveAnnouncement] = useState();
+  const [bookRatingsData, setBookRatingsData] = useState();
+  const [borrowedRatingsData, setBorrowedRatingsData] = useState();
   // eslint-disable-next-line no-unused-vars
   const { loginData, setLoginData } = useContext(LoginContext);
   const history = useNavigate();
@@ -56,6 +57,28 @@ function App() {
     });
     const res = await data.json();
     setActiveAnnouncement(res.body);
+  };
+
+  const bookRatingsChart = async () => {
+    const data = await fetch("/book-graph-ratings", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setBookRatingsData(res.body);
+  };
+
+  const borrowedRatingsChart = async () => {
+    const data = await fetch("/book-borrowed-ratings", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setBorrowedRatingsData(res.body);
   };
 
   const LoginValid = async () => {
@@ -138,6 +161,8 @@ function App() {
       sectiionData();
       announcementData();
       activeAnnouncementData();
+      bookRatingsChart();
+      borrowedRatingsChart();
     }, 3000);
     setTimeout(() => {
       setData(true);
@@ -167,6 +192,10 @@ function App() {
                   announcementData={announcementData}
                   activeAnnouncement={activeAnnouncement}
                   activeAnnouncementData={activeAnnouncementData}
+                  bookRatingsChart={bookRatingsChart}
+                  bookRatingsData={bookRatingsData}
+                  borrowedRatingsChart={borrowedRatingsChart}
+                  borrowedRatingsData={borrowedRatingsData}
                 />
               }
             />

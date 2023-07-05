@@ -131,8 +131,7 @@ AddBookRouter.post(
   async (req, res) => {
     const { filename } = req.file;
     const details = await parseFile(filename);
-    console.log(req.file);
-    console.log(details);
+
     await PromisePool.for(details)
       .withConcurrency(300)
       .process(
@@ -149,7 +148,6 @@ AddBookRouter.post(
           Assession,
         }) => {
           const validate = await BookModel.findOne({ isbn: ISBN });
-          console.log(validate);
           if (validate) {
             return;
           }
@@ -194,7 +192,6 @@ AddBookRouter.patch("/book-delete-available/:_id", async (req, res) => {
     const getBookToDelete = await BookModel.findOne({
       _id: id,
     });
-    console.log(getBookToDelete);
     if (!getBookToDelete) {
       return res
         .status(404)
@@ -239,6 +236,7 @@ AddBookRouter.patch(
 
       return res.status(201).json({ status: 201, updatedData });
     } catch (error) {
+      console.log(error);
       return res.status(404).json(error);
     }
   }
@@ -250,7 +248,7 @@ AddBookRouter.patch(
   async (req, res) => {
     try {
       const id = req.params._id;
-      console.log(id)
+      console.log(id);
       // const { filename } = req.file;
       const {
         title,

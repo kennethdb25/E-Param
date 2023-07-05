@@ -27,6 +27,7 @@ import {
   InventoryAddBookModal,
   InventoryAvailableBooksModal,
   InventoryBatchAddModal,
+  InventoryForReviewAddImageModal,
   InventoryLostBooksModal,
 } from "../AntdComponents/Modal/modal";
 import {
@@ -57,6 +58,8 @@ const Inventory = (props) => {
   const [batchOpen, setBatchOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [fileLists, setFileLists] = useState(null);
+  const [forReviewOpen, setForReviewOpen] = useState(false);
+  const [viewReviewData, setViewReviewData] = useState(null);
 
   const [viewDetailsData, setViewDetailsData] = useState(null);
   const [updateData, setUpdateData] = useState(null);
@@ -240,6 +243,10 @@ const Inventory = (props) => {
     console.error(error);
   };
 
+  const onConfirmReview = () => {
+    form.submit();
+  };
+
   const onConfirmUpdate = () => {
     form.submit();
   };
@@ -248,16 +255,16 @@ const Inventory = (props) => {
     const data = await fetch(`/book-update-available/${viewDetailsData._id}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(values)
+      body: JSON.stringify(values),
     });
 
     const res = await data.json();
     if (res.status === 201) {
       message.success("Book Updated Successfully");
       onCloseUpdate();
-      getAvailable();
+      getInventoryData();
     }
   };
 
@@ -279,6 +286,23 @@ const Inventory = (props) => {
     setViewDetailsData(null);
     setUpdateOpen(false);
     form.resetFields();
+  };
+
+  const handleFileUpdloadReview = async (values) => {
+    // console.log(file);
+    const newdata = new FormData();
+    newdata.append("photo", values.photo.file.originFileObj);
+
+    const data = await fetch(`/book-update-review/${viewReviewData._id}`, {
+      method: "PATCH",
+      body: newdata,
+    });
+    const res = await data.json();
+    if (res.status === 201) {
+      message.success("Adding Image Success");
+      getInventoryData();
+      setForReviewOpen(false);
+    }
   };
 
   // METHOD FOR BATCH UPLOAD
@@ -351,8 +375,16 @@ const Inventory = (props) => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  const onViewForReview = async (record, e) => {
+    console.log(record);
+    setForReviewOpen(true);
+    e.defaultPrevented = true;
+    setViewReviewData(record);
+  };
+
   const onViewDetailsAvailable = async (record, e) => {
     setUpdateData(record);
+    setViewDetailsData(record);
     e.defaultPrevented = true;
     fetch(`/uploads/${record?.imgpath}`)
       .then((res) => res.blob())
@@ -500,11 +532,11 @@ const Inventory = (props) => {
               type="primary"
               icon={<ReadOutlined />}
               onClick={(e) => {
-                onViewDetailsAvailable(record, e);
+                onViewForReview(record, e);
               }}
               style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
-              View Details
+              ADD IMAGE
             </Button>
           </div>
         </>
@@ -719,6 +751,7 @@ const Inventory = (props) => {
           viewDeatailsImg={viewDeatailsImg}
           handleBookDelete={handleBookDelete}
           handleUpdateModal={handleUpdateModal}
+          updateData={updateData}
         />
         <InventoryLostBooksModal
           viewDetailsLostModal={viewDetailsLostModal}
@@ -739,6 +772,17 @@ const Inventory = (props) => {
           onPreview={onPreview}
           initialValues={initialValues}
           onConfirmUpdate={onConfirmUpdate}
+        />
+        <InventoryForReviewAddImageModal
+          forReviewOpen={forReviewOpen}
+          setForReviewOpen={setForReviewOpen}
+          fileLists={fileLists}
+          handleFileUpdloadReview={handleFileUpdloadReview}
+          handleFileRemove={handleFileRemove}
+          imgprops={imgprops}
+          onPreview={onPreview}
+          form={form}
+          onConfirmReview={onConfirmReview}
         />
       </div>
     </>

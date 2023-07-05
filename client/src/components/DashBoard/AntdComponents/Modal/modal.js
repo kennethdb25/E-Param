@@ -9,6 +9,7 @@ import {
   Image,
   Popconfirm,
   Rate,
+  Form,
 } from "antd";
 import {
   InboxOutlined,
@@ -25,6 +26,7 @@ import {
   BookOutlined,
   FileAddOutlined,
   FolderAddOutlined,
+  PlusOutlined,
 } from "@ant-design/icons";
 
 const { Dragger } = Upload;
@@ -1816,6 +1818,7 @@ export const InventoryAvailableBooksModal = (props) => {
     viewDeatailsImg,
     handleBookDelete,
     handleUpdateModal,
+    updateData,
   } = props;
   return (
     <Modal
@@ -1878,7 +1881,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Book Name
               </Title>
-              <Input value={viewDetailsData?.title} readOnly />
+              <Input value={updateData?.title} readOnly />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1889,7 +1892,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Author Name
               </Title>
-              <Input value={viewDetailsData?.author} readOnly />
+              <Input value={updateData?.author} readOnly />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1900,7 +1903,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 ISBN
               </Title>
-              <Input value={viewDetailsData?.isbn} readOnly />
+              <Input value={updateData?.isbn} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1913,7 +1916,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Accession Number
               </Title>
-              <Input value={viewDetailsData?.assession} readOnly />
+              <Input value={updateData?.assession} readOnly />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1924,7 +1927,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Description
               </Title>
-              <Input value={viewDetailsData?.desc} readOnly />
+              <Input value={updateData?.desc} readOnly />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1935,7 +1938,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Publication
               </Title>
-              <Input value={viewDetailsData?.publication} readOnly />
+              <Input value={updateData?.publication} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1953,7 +1956,7 @@ export const InventoryAvailableBooksModal = (props) => {
                 maxLength={3000}
                 showCount
                 placeholder="Enter abstract"
-                value={viewDetailsData?.abstract}
+                value={updateData?.abstract}
                 readOnly
               />
             </Col>
@@ -1968,7 +1971,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Location
               </Title>
-              <Input value={viewDetailsData?.location} readOnly />
+              <Input value={updateData?.location} readOnly />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
               <Title
@@ -1979,7 +1982,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Genre
               </Title>
-              <Input value={viewDetailsData?.genre} readOnly />
+              <Input value={updateData?.genre} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -2008,13 +2011,105 @@ export const InventoryAvailableBooksModal = (props) => {
                 maxLength={500}
                 showCount
                 placeholder="Enter Notes"
-                value={viewDetailsData?.notes}
+                value={updateData?.notes}
                 readOnly
               />
             </Col>
           </Row>
         </Col>
       </Row>
+    </Modal>
+  );
+};
+
+export const InventoryForReviewAddImageModal = (props) => {
+  const {
+    forReviewOpen,
+    setForReviewOpen,
+    fileLists,
+    handleFileUpdloadReview,
+    handleFileRemove,
+    imgprops,
+    onPreview,
+    form,
+    onConfirmReview,
+  } = props;
+  return (
+    <Modal
+      title="ADD IMAGE FOR REVIEW"
+      width={400}
+      open={forReviewOpen}
+      onCancel={() => setForReviewOpen(false)}
+      footer={[
+        <Button
+          type="primary"
+          icon={<CheckOutlined />}
+          key="cancel9"
+          onClick={() => onConfirmReview()}
+        >
+          Confirm
+        </Button>,
+        <Button
+          type="primary"
+          icon={<RollbackOutlined />}
+          key="cancel9"
+          onClick={() => setForReviewOpen(false)}
+        >
+          Cancel
+        </Button>,
+      ]}
+    >
+      <Form
+        form={form}
+        labelCol={{
+          span: 8,
+        }}
+        layout="horizontal"
+        onFinish={handleFileUpdloadReview}
+        autoComplete="off"
+        style={{
+          width: "100%",
+        }}
+      >
+        <Row>
+          <Col xs={{ span: 24 }} md={{ span: 24 }}>
+            <Row>
+              <Col xs={{ span: 24 }} md={{ span: 24 }}>
+                <Form.Item
+                  label="Book Image"
+                  name="photo"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please upload an image",
+                    },
+                  ]}
+                >
+                  <Upload
+                    {...imgprops}
+                    listType="picture-card"
+                    maxCount={1}
+                    onPreview={onPreview}
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   );
 };

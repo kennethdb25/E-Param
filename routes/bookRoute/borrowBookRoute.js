@@ -231,7 +231,6 @@ BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
 BorrowBookRouter.patch("/book-rate", async (req, res) => {
   try {
     const { _id: id, value } = req.query;
-    console.log(req.query);
 
     const checkIfBookIsNotRated = await BorrowBookModel.findOne({
       _id: id,
@@ -272,5 +271,7 @@ BorrowBookRouter.patch("/book-rate", async (req, res) => {
     return res.status(404).json(error);
   }
 });
+
+BorrowBookRouter.get("/book-borrowed-ratings", async (req, res) => {});
 
 module.exports = BorrowBookRouter;

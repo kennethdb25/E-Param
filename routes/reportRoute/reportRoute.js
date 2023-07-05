@@ -8,6 +8,7 @@ const BorrowBookModel = require("../../models/borrowBookModel");
 const StudentModel = require("../../models/studentModel");
 const ReportModel = require("../../models/reportsModel");
 const path = require("path");
+const AttendanceModel = require("../../models/attendanceModel");
 
 AddReportRouter.post("/report/generate", async (req, res) => {
   const { report, start, end } = req.body;
@@ -152,13 +153,13 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "isbn", title: "ISBN" },
           { id: "author", title: "Author Name" },
           { id: "assession", title: "Accession Number" },
-          { id: "publication", title: "Grade" },
+          { id: "publication", title: "Publication" },
           { id: "status", title: "Status" },
         ],
         path: `${pathFile}/${fileName}`,
       });
       break;
-    case "newBooks":
+    case "reviewBooks":
       dataReport = await BookModel.find({
         dateReserved: {
           $gt: startDate,
@@ -173,11 +174,32 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "isbn", title: "ISBN" },
           { id: "author", title: "Author Name" },
           { id: "assession", title: "Accession Number" },
-          { id: "publication", title: "Grade" },
+          { id: "publication", title: "Publication" },
           { id: "desc", title: "Description" },
           { id: "genre", title: "Genre" },
           { id: "status", title: "Status" },
           { id: "created", title: "Date Added" },
+        ],
+        path: `${pathFile}/${fileName}`,
+      });
+      break;
+    case "attendanceStudents":
+      dataReport = await AttendanceModel.find({
+        attendanceDate: {
+          $gt: startDate,
+          $lt: endDate,
+        },
+      });
+
+      csvWriter = createCsvWriter({
+        header: [
+          { id: "studentId", title: "Student ID" },
+          { id: "studentName", title: "Student Name" },
+          { id: "studentEmail", title: "Email" },
+          { id: "studentGrade", title: "Grade" },
+          { id: "studentSection", title: "Section" },
+          { id: "attendanceStatus", title: "Status" },
+          { id: "attendanceDate", title: "Time and Date" },
         ],
         path: `${pathFile}/${fileName}`,
       });
@@ -278,6 +300,16 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             desc: details.desc,
             genre: details.genre,
             created: details.created,
+          };
+        case "attendanceStudents":
+          return {
+            studentId: details.studentId,
+            studentName: details.studentName,
+            studentEmail: details.studentEmail,
+            studentGrade: details.studentGrade,
+            studentSection: details.studentSection,
+            attendanceStatus: details.attendanceStatus,
+            attendanceDate: details.attendanceDate,
           };
       }
     });

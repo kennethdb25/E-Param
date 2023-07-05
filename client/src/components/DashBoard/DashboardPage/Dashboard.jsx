@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
-import { Line, Bar } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import { LoginContext } from "../../../Context/Context";
 import { Button, Modal, Table } from "antd";
 import "./style.css";
@@ -10,7 +10,8 @@ import "antd/dist/antd.min.css";
 Chart.register(CategoryScale);
 
 const Dashboard = (props) => {
-  const { setCurrentActive, newBooks } = props;
+  const { setCurrentActive, newBooks, bookRatingsData, borrowedRatingsData } =
+    props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   // eslint-disable-next-line no-unused-vars
@@ -24,75 +25,38 @@ const Dashboard = (props) => {
   const [lostBookCount, setLostBookCount] = useState();
   const [isOpen, setIsOpen] = useState(false);
 
-  const month = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const Data = [
-    {
-      id: 1,
-      year: "Grade 7",
-      userGain: 80000,
-      userLost: 823,
-    },
-    {
-      id: 2,
-      year: "Grade 8",
-      userGain: 45677,
-      userLost: 345,
-    },
-    {
-      id: 3,
-      year: "Grade 9",
-      userGain: 78888,
-      userLost: 555,
-    },
-    {
-      id: 4,
-      year: "Grade 10",
-      userGain: 90000,
-      userLost: 4555,
-    },
-    {
-      id: 5,
-      year: "Grade 11",
-      userGain: 4300,
-      userLost: 234,
-    },
-    {
-      id: 6,
-      year: "Grade 12",
-      userGain: 40300,
-      userLost: 234,
-    },
-  ];
-
+  borrowedRatingsData.sort((a, b) =>
+    a.gradeNumber.length > b.gradeNumber.length ? -1 : b.gradeNumber.length > a.gradeNumber.length ? 1 : 0
+  );
+  console.log(borrowedRatingsData);
   // eslint-disable-next-line no-unused-vars
   const [chartData, setChartData] = useState({
-    labels: Data.map((data) => data.year),
+    labels: borrowedRatingsData.map((data) => data._id),
     datasets: [
       {
-        label: "Book Borrowed ",
-        data: Data.map((data) => data.userGain),
+        label: "Book Borrowed",
+        data: borrowedRatingsData.map((data) => data.gradeNumber.length),
         backgroundColor: [
           "rgba(75,192,192,1)",
           "pink",
           "#50AF95",
           "#f3ba2f",
           "#2a71d0",
-          "purple",
+          "orange",
         ],
+        borderColor: "black",
+        borderWidth: 2,
+      },
+    ],
+  });
+  // eslint-disable-next-line no-unused-vars
+  const [ratingsData, setRatingsData] = useState({
+    labels: bookRatingsData.map((data) => data._id),
+    datasets: [
+      {
+        label: "Rating",
+        data: bookRatingsData.map((data) => data.ratings[0]),
+        backgroundColor: ["purple", "green", "yellow", "blue", "red"],
         borderColor: "black",
         borderWidth: 2,
       },
@@ -360,18 +324,16 @@ const Dashboard = (props) => {
           <div className="recents-grid">
             <div className="customers">
               <div className="card-header">
-                <h3>Borrowed Books per Grade</h3>
+                <h3>Book Ratings</h3>
               </div>
               <div className="card-body">
-                <Line
-                  data={chartData}
+                <Bar
+                  data={ratingsData}
                   options={{
                     plugins: {
                       title: {
                         display: true,
-                        text: `Total Borrowed Books from August 2023 - ${
-                          month[new Date().getMonth()]
-                        } ${new Date().getFullYear()}`,
+                        text: "Pampanga High School Library Book Ratings",
                       },
                       legend: {
                         display: false,
@@ -392,9 +354,7 @@ const Dashboard = (props) => {
                     plugins: {
                       title: {
                         display: true,
-                        text: `Total Borrowed Books from August ${new Date().getFullYear()} - June ${
-                          new Date().getFullYear() + 1
-                        }`,
+                        text: "Pampanga High School Library Book Borrowed Ratings",
                       },
                       legend: {
                         display: false,
@@ -436,7 +396,7 @@ const Dashboard = (props) => {
                               <tr>
                                 <td>{data.title}</td>
                                 <td>
-                                  {new Date(data.dateBorrowed).toDateString()}
+                                  {new Date(data.dateBorrowed).toLocaleString()}
                                 </td>
                                 <td>
                                   <span
