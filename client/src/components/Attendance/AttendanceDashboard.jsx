@@ -156,7 +156,7 @@ const AttendanceDashboard = (props) => {
                 alignItems: "center",
               }}
             >
-              {`Announcement:` + " "}
+              {`Announcement: `}
               {activeAnnouncement
                 ? activeAnnouncement.content
                 : "NO ANNOUNCEMENT"}
