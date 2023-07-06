@@ -804,7 +804,7 @@ const Settings = (props) => {
                   >
                     <TextArea
                       rows={10}
-                      maxLength={3000}
+                      maxLength={120}
                       showCount
                       placeholder="Enter Announcement"
                     />
