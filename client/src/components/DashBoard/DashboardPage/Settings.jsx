@@ -11,6 +11,7 @@ import {
   message,
   Modal,
   Select,
+  Divider,
 } from "antd";
 import {
   SearchOutlined,
@@ -657,7 +658,9 @@ const Settings = (props) => {
       <main>
         <Row gutter={20}>
           <Col span={24}>
-            <h3>LIBRARIAN ACCOUNTS</h3>
+            <Divider orientation="left" orientationMargin="0">
+              <h3>LIBRARIAN ACCOUNTS</h3>
+            </Divider>
             <Table
               columns={columns}
               dataSource={librarianAccount}
@@ -667,7 +670,9 @@ const Settings = (props) => {
         </Row>
         <Row gutter={20}>
           <Col span={24}>
-            <h3 style={{ marginTop: "20px" }}>ADMIN ACCOUNTS</h3>
+            <Divider orientation="left" orientationMargin="0">
+              <h3 style={{ marginTop: "20px" }}>ADMIN ACCOUNTS</h3>
+            </Divider>
             <Table
               columns={columnAdmin}
               dataSource={adminAccount}
@@ -675,6 +680,9 @@ const Settings = (props) => {
             />
           </Col>
         </Row>
+        <Divider orientation="left" orientationMargin="0">
+          <h3>OTHER SETTINGS</h3>
+        </Divider>
         <Row gutter={20} style={{ marginTop: "30px" }}>
           <Col sxs={24} md={16}>
             <div

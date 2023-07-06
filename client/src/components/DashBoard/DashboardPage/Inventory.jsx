@@ -10,6 +10,7 @@ import {
   Form,
   Input,
   Image,
+  Divider,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { Card, CardContent, Container, Grid, TextField } from "@mui/material";
@@ -637,7 +638,9 @@ const Inventory = (props) => {
       <main>
         <div className="inventory-grid">
           <div className="projects">
-            <h3>Available Books</h3>
+            <Divider orientation="left" orientationMargin="0">
+              <h3>AVAILABLE BOOKS</h3>
+            </Divider>
             <Table
               key="AvailableInventoryBook"
               columns={columnsAvailable}
@@ -646,7 +649,9 @@ const Inventory = (props) => {
             />
           </div>
           <div className="customers">
-            <h3>Generate and Download QR Code</h3>
+            <Divider orientation="left" orientationMargin="0">
+              <h3>Generate and Download QR Code</h3>
+            </Divider>
             <Container>
               <Card>
                 <CardContent className={classes.cardContent}>
@@ -699,14 +704,18 @@ const Inventory = (props) => {
             </Container>
           </div>
         </div>
-        <h3>For Review</h3>
+        <Divider orientation="left" orientationMargin="0">
+          <h3>FOR REVIEW</h3>
+        </Divider>
         <Table
           key="ForReview"
           columns={columnsReview}
           dataSource={forReviewBook}
           pagination={paginationAllRevew}
         />
-        <h3>Lost Books</h3>
+        <Divider orientation="left" orientationMargin="0">
+          <h3>LOST BOOKS</h3>
+        </Divider>
         <Table
           key="LostInventoryBook"
           columns={columnsLost}

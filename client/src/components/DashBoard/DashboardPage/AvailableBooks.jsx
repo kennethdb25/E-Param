@@ -1,5 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Table, Tabs, Button, Popconfirm, message, Input, Space } from "antd";
+import {
+  Table,
+  Tabs,
+  Button,
+  Popconfirm,
+  message,
+  Input,
+  Space,
+  Divider,
+} from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
@@ -318,7 +327,11 @@ const AvailableBooks = (props) => {
                 return {
                   label: `${bookName}`,
                   key: id,
-                  children: <h1 key={id}>{`${bookName}`}</h1>,
+                  children: (
+                    <Divider orientation="left" orientationMargin="0">
+                      <h1 key={id}>{`${bookName}`}</h1>
+                    </Divider>
+                  ),
                 };
               })}
             />

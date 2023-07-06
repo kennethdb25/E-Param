@@ -3,7 +3,7 @@ import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { LoginContext } from "../../../Context/Context";
-import { Button, Modal, Table } from "antd";
+import { Button, Modal, Table, Divider } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
@@ -26,7 +26,11 @@ const Dashboard = (props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   borrowedRatingsData.sort((a, b) =>
-    a.gradeNumber.length > b.gradeNumber.length ? -1 : b.gradeNumber.length > a.gradeNumber.length ? 1 : 0
+    a.gradeNumber.length > b.gradeNumber.length
+      ? -1
+      : b.gradeNumber.length > a.gradeNumber.length
+      ? 1
+      : 0
   );
   console.log(borrowedRatingsData);
   // eslint-disable-next-line no-unused-vars
@@ -324,7 +328,9 @@ const Dashboard = (props) => {
           <div className="recents-grid">
             <div className="customers">
               <div className="card-header">
-                <h3>Book Ratings</h3>
+                <Divider orientation="left" orientationMargin="0">
+                  <h3>BOOK RATINGS</h3>
+                </Divider>
               </div>
               <div className="card-body">
                 <Bar
@@ -345,7 +351,9 @@ const Dashboard = (props) => {
             </div>
             <div className="customers">
               <div className="card-header">
-                <h3>Borrowed Books per Grade</h3>
+                <Divider orientation="left" orientationMargin="0">
+                  <h3>BORROWED BOOKS PER GRADE</h3>
+                </Divider>
               </div>
               <div className="card-body">
                 <Bar

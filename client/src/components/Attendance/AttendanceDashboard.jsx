@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import useStyles from "./style";
 import { Box } from "@mui/material";
-import { PageHeader, Descriptions, Row, Col, Input, Image } from "antd";
+import {
+  PageHeader,
+  Descriptions,
+  Row,
+  Col,
+  Input,
+  Image,
+  Divider,
+} from "antd";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import {
   UserOutlined,
@@ -138,7 +146,7 @@ const AttendanceDashboard = (props) => {
         ghost={false}
         title="ATTENDANCE LIBRARY"
       >
-        <Descriptions title={"Student Attendance"} size="medium" column={3}>
+        <Descriptions title={"ATTENDANCE ANALYSIS"} size="medium" column={3}>
           <Descriptions.Item label="Total Students(Today)">
             {totalStudents}
           </Descriptions.Item>
@@ -149,8 +157,16 @@ const AttendanceDashboard = (props) => {
             {totalTimeOut}
           </Descriptions.Item>
         </Descriptions>
-        <Descriptions title="Student Details" size="medium" column={2}>
-          <Descriptions.Item label="Student Info" style={{ margin: 20 }}>
+        <Descriptions
+          title={
+            <Divider>
+              <h3>STUDENT DETAILS</h3>
+            </Divider>
+          }
+          size="medium"
+          column={2}
+        >
+          <Descriptions.Item label="STUDENT INFO" style={{ margin: 20 }}>
             <Col xs={{ span: 24 }} md={{ span: 24 }}>
               <Row gutter={12}>
                 <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">
@@ -288,7 +304,7 @@ const AttendanceDashboard = (props) => {
               ) : null}
             </Col>
           </Descriptions.Item>
-          <Descriptions.Item label="QR Scanner">
+          <Descriptions.Item label="QR SCANNER">
             <div
               id="reader-library"
               style={{ height: 500, width: 600, margin: 20 }}

@@ -429,6 +429,11 @@ tr td:last-child {
   }
 }
 
+.ant-divider-horizontal.ant-divider-with-text-left::before,
+.ant-divider-horizontal.ant-divider-with-text-left::after {
+  border-top: 1px solid red;
+}
+
 @media only screen and (max-width: 560px) {
   .cards {
     grid-template-columns: 100%;
