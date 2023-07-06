@@ -530,7 +530,7 @@ const Settings = (props) => {
       render: (record) => (
         <>
           <div
-            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+            // style={{ display: "flex", justifyContent: "center", gap: "10px", alignItems: "center", justifyContent: "center", alignContent: "center" }}
           >
             <Button
               type="primary"

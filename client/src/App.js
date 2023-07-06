@@ -156,6 +156,8 @@ function App() {
   };
 
   useEffect(() => {
+    bookRatingsChart();
+    borrowedRatingsChart();
     setTimeout(() => {
       LoginValid();
       sectiionData();

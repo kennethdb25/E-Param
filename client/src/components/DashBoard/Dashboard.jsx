@@ -640,7 +640,7 @@ const HomeDashboard = (props) => {
         placement="left"
         onClose={() => setCurrentActive(1)}
         open={currentActive === 9 ? true : false}
-        height="100%"
+        height="100vh"
         width="100%"
         style={{ display: "flex", justifyContent: "center" }}
         extra={<Space></Space>}
