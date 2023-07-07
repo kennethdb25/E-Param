@@ -84,6 +84,17 @@
   display: none;
 }
 
+#nav-toggle:checked + .sidebar .sidebar-brand .lab img{
+  display: inline-block;
+  width: 55px;
+  height: 55px;
+  justify-content: center;
+}
+
+.sidebar .sidebar-brand .lab img{
+  display: none;
+}
+
 #nav-toggle:checked ~ .main-content {
   margin-left: 70px;
 }

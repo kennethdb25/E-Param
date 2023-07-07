@@ -392,7 +392,13 @@ const HomeDashboard = (props) => {
       <div className="sidebar">
         <div className="sidebar-brand">
           <h2>
-            <span className="lab la-accusoft"></span>
+            <span className="lab la-accusoft">
+            <img
+                // style={{ width: "70px", height: "70px", marginRight: "10px" }}
+                src={require("../../Assets/logo.png")}
+                alt="logo-dashboard"
+              />
+            </span>
             <span style={{ color: "white" }}>
               <img
                 style={{ width: "70px", height: "70px", marginRight: "10px" }}
