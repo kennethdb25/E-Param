@@ -328,9 +328,7 @@ const AttendanceDashboard = (props) => {
             ></div>
           </Descriptions.Item>
         </Descriptions>
-
       </PageHeader>
-
     </Box>
   );
 };

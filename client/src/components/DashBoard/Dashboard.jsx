@@ -524,16 +524,20 @@ const HomeDashboard = (props) => {
                 </li>
               </>
             ) : null}
-            <li key="li9">
-              <a
-                key={9}
-                onClick={() => (setCurrentActive(9), activeAnnouncementData())}
-              >
-                <ScheduleOutlined />
-                <span className="las la-clipboard-list"></span>
-                <span>Attendance Dashboard</span>
-              </a>
-            </li>
+            {loginData.validUser?.userType !== "Student" ? (
+              <li key="li9">
+                <a
+                  key={9}
+                  onClick={() => (
+                    setCurrentActive(9), activeAnnouncementData()
+                  )}
+                >
+                  <ScheduleOutlined />
+                  <span className="las la-clipboard-list"></span>
+                  <span>Attendance Dashboard</span>
+                </a>
+              </li>
+            ) : null}
             <li key="li10">
               <a
                 key={10}
