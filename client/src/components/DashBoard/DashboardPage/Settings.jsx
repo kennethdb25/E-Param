@@ -687,7 +687,10 @@ const Settings = (props) => {
         ) : null}
 
         <Row gutter={20} style={{ marginTop: "30px" }}>
-          <Col xs={24} md={loginData.validUser.userType === "Super Admin" ? 16 : 24}>
+          <Col
+            xs={24}
+            md={loginData.validUser.userType === "Super Admin" ? 16 : 24}
+          >
             <div
               style={{
                 display: "flex",

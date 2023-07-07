@@ -275,4 +275,30 @@ GetBookRouter.get("/book-borrowed-ratings", async (req, res) => {
   }
 });
 
+GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
+  const today = new Date();
+  const startPoint = today.getDay() !== 5 ? 2 : 4;
+  let initialDate = new Date(today);
+  initialDate.setDate(today.getDate() + startPoint);
+
+  const startDate = new Date(
+    initialDate.toISOString().split("T")[0] + "T00:00:00.000Z"
+  );
+  const endDate = new Date(
+    initialDate.toISOString().split("T")[0] + "T23:59:59.999Z"
+  );
+  try {
+    const users = await BorrowBookModel.find({
+      returnDate: { $gte: startDate, $lte: endDate },
+    });
+    return res.status(200).json({
+      status: 200,
+      body: users,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 module.exports = GetBookRouter;

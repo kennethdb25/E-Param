@@ -128,7 +128,7 @@ BorrowBookRouter.post("/book/add-borrowed", async (req, res) => {
       status: "Borrowed",
       reservationId: _id,
       dateBorrowed: new Date().toISOString(),
-      returnDate: new Date().getTime() + 7 * 24 * 60 * 60 * 1000
+      returnDate: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
     });
 
     validate.status = "Processed";
@@ -225,7 +225,7 @@ BorrowBookRouter.patch("/book/process-lost/:_id", async (req, res) => {
     } else {
       return res.status(500).json({ error: "Internal Server Error" });
     }
-  } catch (error) { }
+  } catch (error) {}
 });
 
 // book rate
@@ -272,6 +272,5 @@ BorrowBookRouter.patch("/book-rate", async (req, res) => {
     return res.status(404).json(error);
   }
 });
-
 
 module.exports = BorrowBookRouter;

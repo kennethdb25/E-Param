@@ -56,6 +56,7 @@ module.exports = function (app) {
       "/get-section",
       "/get-all-section",
       "/change-status-section",
+      "/book/borrowed/push-notification",
       "/book-rate",
       "/book",
       "/admin",

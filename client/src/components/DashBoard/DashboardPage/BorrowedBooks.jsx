@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
 import { Table, Button, Space, Input, message } from "antd";
@@ -6,7 +7,7 @@ import {
   ReadOutlined,
   LikeOutlined,
   UndoOutlined,
-  BellOutlined
+  BellOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
@@ -15,6 +16,7 @@ import {
   BorrowedBookRateModal,
   BorrowedBooksViewDetailsModal,
 } from "../AntdComponents/Modal/modal";
+import emailjs from "@emailjs/browser";
 
 const BorrowedBooks = (props) => {
   const {
@@ -34,6 +36,7 @@ const BorrowedBooks = (props) => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [notifButton, setNotifButton] = useState(false);
 
   const onViewDetails = async (record, e) => {
     e.defaultPrevented = true;
@@ -105,6 +108,40 @@ const BorrowedBooks = (props) => {
       setRateDetails(null);
       setRateModal(false);
       setCurrentActive(1);
+    }
+  };
+
+  const handlePushNotification = async () => {
+    setNotifButton(true);
+    const data = await fetch("/book/borrowed/push-notification", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    if (res.status === 200) {
+      if (res.body.length > 0) {
+        res.body.map((data) => {
+          emailjs.send(
+            "service_in36rqr",
+            "template_erxzdqe",
+            {
+              title: data.title,
+              returnDate: new Date(data.returnDate).toLocaleString(),
+              toName: data.firstName,
+              toEmail: data.email,
+            },
+            "dDsfpQqNAM0v0YbNC"
+          );
+        });
+        message.success("Notification Sent");
+        setTimeout(() => {
+          setNotifButton(false);
+        }, 180000);
+      } else {
+        message.warn("Notification Failed, No upcoming deadlines");
+      }
     }
   };
 
@@ -267,20 +304,21 @@ const BorrowedBooks = (props) => {
     {
       title: (
         <>
-            <div>
-              <Button
-                type="primary"
-                shape="round"
-                icon={<BellOutlined />}
-                // onClick={() => handleOpenModal()}
-                style={{
-                  backgroundColor: "#000080",
-                  border: "1px solid #d9d9d9",
-                }}
-              >
-                SEND NOTIFICATION
-              </Button>
-            </div>
+          <div>
+            <Button
+              disabled={notifButton}
+              type="primary"
+              shape="round"
+              icon={<BellOutlined />}
+              onClick={() => handlePushNotification()}
+              style={{
+                backgroundColor: "#000080",
+                border: "1px solid #d9d9d9",
+              }}
+            >
+              SEND NOTIFICATION
+            </Button>
+          </div>
         </>
       ),
       dataIndex: "",
