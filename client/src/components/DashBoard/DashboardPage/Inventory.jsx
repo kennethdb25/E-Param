@@ -19,6 +19,7 @@ import {
   ReadOutlined,
   QrcodeOutlined,
   UndoOutlined,
+  FileImageOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import useStyles from "./styles";
@@ -377,7 +378,6 @@ const Inventory = (props) => {
   };
 
   const onViewForReview = async (record, e) => {
-    console.log(record);
     setForReviewOpen(true);
     e.defaultPrevented = true;
     setViewReviewData(record);
@@ -531,7 +531,7 @@ const Inventory = (props) => {
           >
             <Button
               type="primary"
-              icon={<ReadOutlined />}
+              icon={<FileImageOutlined />}
               onClick={(e) => {
                 onViewForReview(record, e);
               }}

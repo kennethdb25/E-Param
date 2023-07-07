@@ -85,6 +85,9 @@ const BorrowookSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  returnDate: {
+    type: Date,
+  },
   dateReturned: {
     type: Date,
   },

@@ -66,7 +66,6 @@ const Settings = (props) => {
     );
     const res = await data.json();
     if (res.status === 200) {
-      console.log(res);
       message.success(
         res.body.status === "Active"
           ? "Section Activated Succesfully"
@@ -88,7 +87,6 @@ const Settings = (props) => {
     );
     const res = await data.json();
     if (res.status === 200) {
-      console.log(res);
       message.success(
         res.body.status === "Active"
           ? "Announcement Activated Succesfully"
@@ -656,35 +654,40 @@ const Settings = (props) => {
         </div>
       </header>
       <main>
-        <Row gutter={20}>
-          <Col span={24}>
+        {loginData.validUser?.userType === "Super Admin" ? (
+          <>
+            <Row gutter={20}>
+              <Col span={24}>
+                <Divider orientation="left" orientationMargin="0">
+                  <h3>LIBRARIAN ACCOUNTS</h3>
+                </Divider>
+                <Table
+                  columns={columns}
+                  dataSource={librarianAccount}
+                  pagination={paginationLibrarian}
+                />
+              </Col>
+            </Row>
+            <Row gutter={20}>
+              <Col span={24}>
+                <Divider orientation="left" orientationMargin="0">
+                  <h3 style={{ marginTop: "20px" }}>ADMIN ACCOUNTS</h3>
+                </Divider>
+                <Table
+                  columns={columnAdmin}
+                  dataSource={adminAccount}
+                  pagination={paginationAdmin}
+                />
+              </Col>
+            </Row>
             <Divider orientation="left" orientationMargin="0">
-              <h3>LIBRARIAN ACCOUNTS</h3>
+              <h3>OTHER SETTINGS</h3>
             </Divider>
-            <Table
-              columns={columns}
-              dataSource={librarianAccount}
-              pagination={paginationLibrarian}
-            />
-          </Col>
-        </Row>
-        <Row gutter={20}>
-          <Col span={24}>
-            <Divider orientation="left" orientationMargin="0">
-              <h3 style={{ marginTop: "20px" }}>ADMIN ACCOUNTS</h3>
-            </Divider>
-            <Table
-              columns={columnAdmin}
-              dataSource={adminAccount}
-              pagination={paginationAdmin}
-            />
-          </Col>
-        </Row>
-        <Divider orientation="left" orientationMargin="0">
-          <h3>OTHER SETTINGS</h3>
-        </Divider>
+          </>
+        ) : null}
+
         <Row gutter={20} style={{ marginTop: "30px" }}>
-          <Col sxs={24} md={16}>
+          <Col xs={24} md={loginData.validUser.userType === "Super Admin" ? 16 : 24}>
             <div
               style={{
                 display: "flex",
@@ -708,34 +711,38 @@ const Settings = (props) => {
             </div>
             <Table columns={columnAnnouncement} dataSource={announcement} />
           </Col>
-          <Col xs={24} md={8}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: "15px",
-              }}
-            >
-              <h3>SECTION SETTINGS</h3>
-              <Button
-                type="primary"
-                icon={<PlusCircleOutlined />}
-                style={{
-                  backgroundColor: "#000080",
-                  border: "1px solid #d9d9d9",
-                }}
-                onClick={() => onAddSection()}
-              >
-                ADD SECTIION
-              </Button>
-            </div>
-            <Table
-              columns={sectionColumns}
-              dataSource={section}
-              pagination={paginationSection}
-            />
-          </Col>
+          {loginData.validUser?.userType === "Super Admin" ? (
+            <>
+              <Col xs={24} md={8}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginBottom: "15px",
+                  }}
+                >
+                  <h3>SECTION SETTINGS</h3>
+                  <Button
+                    type="primary"
+                    icon={<PlusCircleOutlined />}
+                    style={{
+                      backgroundColor: "#000080",
+                      border: "1px solid #d9d9d9",
+                    }}
+                    onClick={() => onAddSection()}
+                  >
+                    ADD SECTIION
+                  </Button>
+                </div>
+                <Table
+                  columns={sectionColumns}
+                  dataSource={section}
+                  pagination={paginationSection}
+                />
+              </Col>
+            </>
+          ) : null}
         </Row>
       </main>
       {/* MODAL ADD ANNOUNCEMENT */}

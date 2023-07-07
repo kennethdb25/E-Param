@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 import React, { useContext, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
@@ -10,8 +11,13 @@ import "antd/dist/antd.min.css";
 Chart.register(CategoryScale);
 
 const Dashboard = (props) => {
-  const { setCurrentActive, newBooks, bookRatingsData, borrowedRatingsData } =
-    props;
+  const {
+    setCurrentActive,
+    newBooks,
+    bookRatingsData,
+    borrowedRatingsData,
+    getBorrowedData,
+  } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   // eslint-disable-next-line no-unused-vars
@@ -32,7 +38,6 @@ const Dashboard = (props) => {
       ? 1
       : 0
   );
-  console.log(borrowedRatingsData);
   // eslint-disable-next-line no-unused-vars
   const [chartData, setChartData] = useState({
     labels: borrowedRatingsData.map((data) => data._id),
@@ -381,7 +386,7 @@ const Dashboard = (props) => {
                 <h3>Recently Borrowed</h3>
                 <button
                   style={{ cursor: "pointer" }}
-                  onClick={() => handleSeeAll()}
+                  onClick={() => (handleSeeAll(), getBorrowedData())}
                 >
                   See all<span className="las la-arrow-right"></span>
                 </button>

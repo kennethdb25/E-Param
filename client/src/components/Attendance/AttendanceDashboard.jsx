@@ -139,9 +139,6 @@ const AttendanceDashboard = (props) => {
           flexDirection: "column",
           alignItems: "center",
           height: "100vh",
-          // backgroundImage: "url(/home-login.png)",
-          // backgroundPosition: "center",
-          // backgroundSize: "cover",
         }}
         ghost={false}
         title="ATTENDANCE LIBRARY"

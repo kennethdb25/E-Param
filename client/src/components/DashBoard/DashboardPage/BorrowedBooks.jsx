@@ -6,6 +6,7 @@ import {
   ReadOutlined,
   LikeOutlined,
   UndoOutlined,
+  BellOutlined
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import "./style.css";
@@ -264,7 +265,24 @@ const BorrowedBooks = (props) => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
     },
     {
-      title: "",
+      title: (
+        <>
+            <div>
+              <Button
+                type="primary"
+                shape="round"
+                icon={<BellOutlined />}
+                // onClick={() => handleOpenModal()}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
+              >
+                SEND NOTIFICATION
+              </Button>
+            </div>
+        </>
+      ),
       dataIndex: "",
       key: "",
       width: "20%",

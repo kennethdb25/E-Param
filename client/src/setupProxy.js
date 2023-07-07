@@ -21,9 +21,9 @@ module.exports = function (app) {
       "/book/get-genre",
       "/book/get-all-book-per-genre",
       "/book/get-available",
-      "/book-delete-available", // new
-      "/book-update-available", // new
-      "/book-update-review", // new
+      "/book-delete-available",
+      "/book-update-available",
+      "/book-update-review",
       "/book/add-shelf",
       "/book/get-info",
       "/book/get-borrowed",

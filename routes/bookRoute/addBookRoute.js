@@ -186,7 +186,6 @@ AddBookRouter.post(
 
 AddBookRouter.patch("/book-delete-available/:_id", async (req, res) => {
   try {
-    console.log(req);
     const id = req.params._id;
 
     const getBookToDelete = await BookModel.findOne({
@@ -242,61 +241,55 @@ AddBookRouter.patch(
   }
 );
 
-AddBookRouter.patch(
-  "/book-update-available/:_id",
-  // upload.single("photo"),
-  async (req, res) => {
-    try {
-      const id = req.params._id;
-      console.log(id);
-      // const { filename } = req.file;
-      const {
-        title,
-        author,
-        isbn,
-        location,
-        publication,
-        abstract,
-        genre,
-        notes,
-        desc,
-        assession,
-      } = req.body;
+AddBookRouter.patch("/book-update-available/:_id", async (req, res) => {
+  try {
+    const id = req.params._id;
+    const {
+      title,
+      author,
+      isbn,
+      location,
+      publication,
+      abstract,
+      genre,
+      notes,
+      desc,
+      assession,
+    } = req.body;
 
-      const getBookToUpdate = await BookModel.findOne({
-        _id: id,
-      });
+    const getBookToUpdate = await BookModel.findOne({
+      _id: id,
+    });
 
-      if (!getBookToUpdate) {
-        return res
-          .status(404)
-          .json({ error: "Something went wrong. Please try again later" });
-      }
-
-      const qrCode = await QRCode.toDataURL(isbn);
-
-      // if (filename) getBookToUpdate.imgpath = filename;
-      if (title) getBookToUpdate.title = title;
-      if (author) getBookToUpdate.author = author;
-      if (isbn) {
-        getBookToUpdate.isbn = isbn;
-        getBookToUpdate.QRCode = qrCode;
-      }
-      if (location) getBookToUpdate.location = location;
-      if (publication) getBookToUpdate.publication = publication;
-      if (abstract) getBookToUpdate.abstract = abstract;
-      if (genre) getBookToUpdate.genre = genre;
-      if (notes) getBookToUpdate.notes = notes;
-      if (desc) getBookToUpdate.desc = desc;
-      if (assession) getBookToUpdate.assession = assession;
-
-      const updatedData = await getBookToUpdate.save();
-
-      return res.status(201).json({ status: 201, updatedData });
-    } catch (error) {
-      return res.status(404).json(error);
+    if (!getBookToUpdate) {
+      return res
+        .status(404)
+        .json({ error: "Something went wrong. Please try again later" });
     }
+
+    const qrCode = await QRCode.toDataURL(isbn);
+
+    // if (filename) getBookToUpdate.imgpath = filename;
+    if (title) getBookToUpdate.title = title;
+    if (author) getBookToUpdate.author = author;
+    if (isbn) {
+      getBookToUpdate.isbn = isbn;
+      getBookToUpdate.QRCode = qrCode;
+    }
+    if (location) getBookToUpdate.location = location;
+    if (publication) getBookToUpdate.publication = publication;
+    if (abstract) getBookToUpdate.abstract = abstract;
+    if (genre) getBookToUpdate.genre = genre;
+    if (notes) getBookToUpdate.notes = notes;
+    if (desc) getBookToUpdate.desc = desc;
+    if (assession) getBookToUpdate.assession = assession;
+
+    const updatedData = await getBookToUpdate.save();
+
+    return res.status(201).json({ status: 201, updatedData });
+  } catch (error) {
+    return res.status(404).json(error);
   }
-);
+});
 
 module.exports = AddBookRouter;

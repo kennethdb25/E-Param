@@ -393,7 +393,7 @@ const HomeDashboard = (props) => {
         <div className="sidebar-brand">
           <h2>
             <span className="lab la-accusoft">
-            <img
+              <img
                 // style={{ width: "70px", height: "70px", marginRight: "10px" }}
                 src={require("../../Assets/logo.png")}
                 alt="logo-dashboard"
@@ -515,7 +515,7 @@ const HomeDashboard = (props) => {
                 </li>
               </>
             ) : null}
-            {loginData?.validUser?.userType === "Super Admin" ? (
+            {loginData?.validUser?.userType !== "Student" ? (
               <>
                 <li key="li8">
                   <a
@@ -567,6 +567,7 @@ const HomeDashboard = (props) => {
               newBooks={newBooks}
               bookRatingsData={bookRatingsData}
               borrowedRatingsData={borrowedRatingsData}
+              getBorrowedData={getBorrowedData}
             />
           </>
         ) : currentActive === 2 ? (

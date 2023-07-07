@@ -84,14 +84,14 @@
   display: none;
 }
 
-#nav-toggle:checked + .sidebar .sidebar-brand .lab img{
+#nav-toggle:checked + .sidebar .sidebar-brand .lab img {
   display: inline-block;
   width: 55px;
   height: 55px;
   justify-content: center;
 }
 
-.sidebar .sidebar-brand .lab img{
+.sidebar .sidebar-brand .lab img {
   display: none;
 }
 
