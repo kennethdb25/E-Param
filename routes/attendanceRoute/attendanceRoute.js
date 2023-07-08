@@ -37,9 +37,20 @@ AttendanceRouter.post("/add-attendance", async (req, res) => {
 });
 
 AttendanceRouter.get("/get-attendance", async (req, res) => {
+  const today = new Date();
+  let initialDate = new Date(today);
+  initialDate.setDate(today.getDate());
+
+  const startDate = new Date(
+    initialDate.toISOString().split("T")[0] + "T00:00:00.000Z"
+  );
+  const endDate = new Date(
+    initialDate.toISOString().split("T")[0] + "T23:59:59.999Z"
+  );
+
   try {
     const students = await AttendanceModel.find({
-      attendanceDate: { $gte: new Date().toDateString() },
+      attendanceDate: { $gte: startDate, $lte: endDate },
     });
     const distintStudentId = students
       .map((item) => item.studentId)
@@ -48,12 +59,12 @@ AttendanceRouter.get("/get-attendance", async (req, res) => {
       );
     const timeIn = await AttendanceModel.find({
       attendanceStatus: "TIME-IN",
-      attendanceDate: { $gte: new Date().toDateString() },
+      attendanceDate: { $gte: startDate, $lte: endDate },
     });
 
     const timeOut = await AttendanceModel.find({
       attendanceStatus: "TIME-OUT",
-      attendanceDate: { $gte: new Date().toDateString() },
+      attendanceDate: { $gte: startDate, $lte: endDate },
     });
 
     return res.status(201).json({

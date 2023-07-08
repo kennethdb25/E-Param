@@ -302,25 +302,28 @@ const BorrowedBooks = (props) => {
       onFilter: (value, record) => record.status.indexOf(value) === 0,
     },
     {
-      title: (
-        <>
-          <div>
-            <Button
-              disabled={notifButton}
-              type="primary"
-              shape="round"
-              icon={<BellOutlined />}
-              onClick={() => handlePushNotification()}
-              style={{
-                backgroundColor: "#000080",
-                border: "1px solid #d9d9d9",
-              }}
-            >
-              SEND NOTIFICATION
-            </Button>
-          </div>
-        </>
-      ),
+      title:
+        loginData.validUser.userType !== "Student" ? (
+          <>
+            <div>
+              <Button
+                disabled={notifButton}
+                type="primary"
+                shape="round"
+                icon={<BellOutlined />}
+                onClick={() => handlePushNotification()}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
+              >
+                SEND NOTIFICATION
+              </Button>
+            </div>
+          </>
+        ) : (
+          ""
+        ),
       dataIndex: "",
       key: "",
       width: "20%",

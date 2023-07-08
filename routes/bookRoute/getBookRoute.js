@@ -301,4 +301,41 @@ GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
   }
 });
 
+GetBookRouter.delete("/book/reserved/delete", async (req, res) => {
+  const id = req.query._id || "";
+  const isbn = req.query.isbn || "";
+
+  try {
+    const checkBook = await ReserveBookModel.findOne({
+      _id: id,
+      status: "Reserved",
+    });
+
+    const toChangeStatus = await BookModel.findOne({ isbn: isbn });
+
+    if (!checkBook || !toChangeStatus) {
+      return res.status(404).json({ error: "Book Not Found" });
+    }
+    const deleteBook = await ReserveBookModel.deleteOne({
+      _id: id,
+      status: "Reserved",
+    });
+
+    if (toChangeStatus) {
+      toChangeStatus.status = "Available";
+
+      const proccessBook = await toChangeStatus.save();
+
+      return res
+        .status(200)
+        .json({ status: 200, body: { deleteBook, proccessBook } });
+    } else {
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(422).json(error);
+  }
+});
+
 module.exports = GetBookRouter;

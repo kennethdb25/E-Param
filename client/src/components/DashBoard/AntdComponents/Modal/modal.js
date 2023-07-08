@@ -27,6 +27,7 @@ import {
   FileAddOutlined,
   FolderAddOutlined,
   PlusOutlined,
+  MinusCircleOutlined,
 } from "@ant-design/icons";
 
 const { Dragger } = Upload;
@@ -1052,6 +1053,8 @@ export const ShelfViewDetailsModal = (props) => {
     setViewDeatailsImg,
     viewDetailsData,
     viewDeatailsImg,
+    onConfirmRemoveBook,
+    loginData,
   } = props;
   return (
     <Modal
@@ -1065,6 +1068,21 @@ export const ShelfViewDetailsModal = (props) => {
         setViewDeatailsImg();
       }}
       footer={[
+        <Popconfirm
+          placement="top"
+          title={
+            loginData.validUser.userType === "Student"
+              ? "Are you sure want to remove this book?"
+              : "Are you sure want to reject this book?"
+          }
+          onConfirm={onConfirmRemoveBook}
+          okText="Confirm"
+          cancelText="Cancel"
+        >
+          <Button key="remove" type="primary" icon={<MinusCircleOutlined />}>
+            {loginData.validUser.userType === "Student" ? "Remove" : "Reject"}
+          </Button>
+        </Popconfirm>,
         <Button
           key="cancel"
           type="primary"
@@ -2026,9 +2044,7 @@ export const InventoryForReviewAddImageModal = (props) => {
   const {
     forReviewOpen,
     setForReviewOpen,
-    fileLists,
     handleFileUpdloadReview,
-    handleFileRemove,
     imgprops,
     onPreview,
     form,

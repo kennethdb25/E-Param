@@ -17,7 +17,12 @@ import {
 } from "../AntdComponents/Modal/modal";
 
 const Shelf = (props) => {
-  const { getAddToShelf, paginationStudentShelf } = props;
+  const {
+    getAddToShelf,
+    paginationStudentShelf,
+    getAddShelfPerStudent,
+    getInventoryData,
+  } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   const [processModal, setProcessModal] = useState(false);
@@ -187,6 +192,34 @@ const Shelf = (props) => {
     setScannerBook(false);
     setProcessButton(true);
     setEnableBookScanBtn(true);
+  };
+
+  const onConfirmRemoveBook = async () => {
+    console.log(viewDetailsData);
+    const data = await fetch(
+      `/book/reserved/delete?_id=${viewDetailsData._id}&isbn=${viewDetailsData.isbn}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const res = await data.json();
+
+    if (res.status === 200) {
+      message.success(
+        loginData.validUser.userType === "Student"
+          ? "Book removed in Shelf"
+          : "Book Rejected Successfully"
+      );
+      getAddShelfPerStudent();
+      getInventoryData();
+      setViewDetailsModal(false);
+    } else {
+      onCancelProcess();
+      message.warn("Something went wrong. Please try again later");
+    }
   };
 
   const onViewDetails = async (record, e) => {
@@ -454,6 +487,8 @@ const Shelf = (props) => {
               setViewDeatailsImg={setViewDeatailsImg}
               viewDetailsData={viewDetailsData}
               viewDeatailsImg={viewDeatailsImg}
+              onConfirmRemoveBook={onConfirmRemoveBook}
+              loginData={loginData}
             />
           </div>
         </div>

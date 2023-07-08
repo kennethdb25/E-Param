@@ -608,6 +608,8 @@ const HomeDashboard = (props) => {
                   ? paginationStudentShelf
                   : paginationAllShelf
               }
+              getAddShelfPerStudent={getAddShelfPerStudent}
+              getInventoryData={getInventoryData}
             />
           </>
         ) : currentActive === 5 ? (
