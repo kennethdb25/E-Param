@@ -8,7 +8,9 @@ const useStyles = makeStyles(() => ({
     backgroundPosition: "center",
     backgroundSize: "cover",
     minHeight: "100vh",
+    margin: "0",
     display: "flex",
+    flexDirection: "column",
     alignItems: "center",
 
     [theme.breakpoints.up("md")]: {

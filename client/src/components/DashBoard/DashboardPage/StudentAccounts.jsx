@@ -21,6 +21,7 @@ import {
   CheckCircleOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
@@ -283,7 +284,18 @@ const StudentAccounts = (props) => {
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Student Accounts</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              Student Accounts
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">

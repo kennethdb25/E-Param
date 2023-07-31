@@ -16,6 +16,7 @@ import {
 } from "antd";
 import { BarChartOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { ReportData } from "../../../Data/Data";
@@ -106,7 +107,18 @@ const Reports = () => {
       <header className="attendance-header">
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Reports</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              Reports
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">

@@ -147,7 +147,7 @@ BorrowBookRouter.get("/book/student-recently-borrowed", async (req, res) => {
   try {
     const borrowedBooks = await BorrowBookModel.find({ email: all })
       .sort({ dateBorrowed: -1 })
-      .limit(10);
+      .limit(14);
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -160,7 +160,7 @@ BorrowBookRouter.get("/book/all-recently-borrowed", async (req, res) => {
   try {
     const borrowedBooks = await BorrowBookModel.find()
       .sort({ dateBorrowed: -1 })
-      .limit(10);
+      .limit(14);
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);

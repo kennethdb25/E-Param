@@ -175,6 +175,8 @@ main {
   background: #fff;
   padding: 2rem;
   border-radius: 20px !important;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 10px;
 }
 
 .card-single div:last-child span {
@@ -208,6 +210,8 @@ main {
 .card {
   background: #fff;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 10px;
 }
 .card-header,
 .card-body {
@@ -421,6 +425,9 @@ td .status {
 .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
 .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
   border-radius: 15px 15px 0 0 !important;
+  gap: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
 }
 
 /* active tabs color */
@@ -478,6 +485,10 @@ td .status {
   color: rgb(255 255 255) !important;
 }
 
+.ant-empty-normal {
+  width: 100% !important;
+}
+
 .ant-table-filter-dropdown-btns {
   gap: 10px;
 }
@@ -495,6 +506,11 @@ td .status {
   font-weight: 500 !important;
   background: #fff !important;
   border-color: #efb300 !important;
+}
+
+.ant-table {
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .custom-modal {

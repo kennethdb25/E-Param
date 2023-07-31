@@ -3,8 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { ReadFilled } from "@ant-design/icons";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { LoginContext } from "../../../Context/Context";
-import { Button, Modal, Table, Divider } from "antd";
+import { Button, Modal, Table, Divider, Badge } from "antd";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
@@ -17,6 +19,7 @@ const Dashboard = (props) => {
     bookRatingsData,
     borrowedRatingsData,
     getBorrowedData,
+    getAddShelfPerStudent,
   } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -279,10 +282,40 @@ const Dashboard = (props) => {
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Dashboard</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              Dashboard
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">
+          <div
+            style={{
+              marginRight: "20px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <Badge
+              count={shelfCount}
+              onClick={() => (setCurrentActive(4), getAddShelfPerStudent())}
+            >
+              <h1 style={{ marginBottom: "0" }}>
+                <ReadFilled />
+              </h1>
+              <small>Shelf</small>
+            </Badge>
+          </div>
           <img src={img} width="40px" height="40px" alt="" />
           <div>
             <h4>{`${loginData?.validUser?.firstName} ${loginData?.validUser?.lastName}`}</h4>
@@ -477,8 +510,12 @@ const Dashboard = (props) => {
               open={isOpen}
               onCancel={() => setIsOpen(false)}
               footer={[
-                <Button key="cancel" onClick={() => setIsOpen(false)}>
-                  Cancel
+                <Button
+                  type="primary"
+                  key="cancel"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close
                 </Button>,
               ]}
             >

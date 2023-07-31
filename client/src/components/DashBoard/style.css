@@ -20,7 +20,7 @@
   position: fixed;
   left: 0;
   top: 0;
-  height: 100%;
+  max-height: 100%;
   background: var(--main-color);
   z-index: 100;
   transition: width 300ms;
@@ -31,7 +31,7 @@
   color: #fff;
 }
 .sidebar-menu {
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .sidebar-brand span {
@@ -44,6 +44,36 @@
   margin-bottom: 1.7rem;
   padding-left: 1rem;
 }
+
+.logout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  color: white;
+  padding-left: 1rem;
+  height: 24vh;
+}
+
+.logout-student {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  color: white;
+  padding-left: 1rem;
+  height: 55vh;
+}
+
+#nav-toggle:checked + .sidebar .logout span:last-child,
+#nav-toggle:checked + .sidebar .logout-student span:last-child {
+  display: none;
+}
+
+#nav-toggle:checked + .sidebar .logout a,
+#nav-toggle:checked + .sidebar .logout-student a {
+  padding-left: 0.1rem;
+  text-align: center;
+}
+
 .sidebar-menu a {
   padding-left: 1rem;
   display: block;
@@ -59,12 +89,12 @@
   background: #fffdd0;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  color: var(--main-color);
+  color: black;
   border-radius: 30px 0px 0px 30px;
 }
 .sidebar-menu a span:first-child {
   font-size: 1.5rem;
-  padding-right: 1rem;
+  padding-right: 0.5rem;
 }
 #nav-toggle:checked + .sidebar {
   width: 70px;
@@ -352,6 +382,10 @@ tr td:last-child {
 }
 
 @media only screen and (max-width: 960px) {
+  .sidebar-menu {
+    margin-top: 1rem;
+  }
+
   .cards {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -364,6 +398,48 @@ tr td:last-child {
 }
 
 @media only screen and (max-width: 768px) {
+  header {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .ant-table-pagination-right {
+    justify-content: flex-start;
+  }
+
+  #nav-toggle:checked + .sidebar {
+    width: 230px !important;
+  }
+
+  #nav-toggle:checked + .sidebar .sidebar-brand,
+  #nav-toggle:checked + .sidebar li {
+    padding-left: 0rem;
+  }
+
+  #nav-toggle:checked + .sidebar .sidebar-brand,
+  #nav-toggle:checked + .sidebar li {
+    padding-left: 0rem !important;
+  }
+
+  #nav-toggle:checked + .sidebar .logout-student {
+    display: flex;
+    flex-direction: row;
+    padding-left: 1rem;
+    height: 27vh;
+  }
+
+  #nav-toggle:checked + .sidebar .logout span:last-child,
+  #nav-toggle:checked + .sidebar .logout-student span:last-child {
+    display: inline;
+  }
+
+  #nav-toggle:checked + .sidebar .sidebar-brand {
+    margin-top: 6rem;
+  }
+  #nav-toggle:checked + .sidebar .sidebar-brand h2 span {
+    display: none;
+  }
+
   .cards {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -426,11 +502,6 @@ tr td:last-child {
     padding-left: 1rem;
   }
 
-  .ant-upload-list-picture-card .ant-upload-list-item-error,
-  .ant-upload-list-picture .ant-upload-list-item-error {
-    border-color: #53ff4d;
-  }
-
   #nav-toggle:checked + .sidebar .sidebar-brand h2 span:last-child,
   #nav-toggle:checked + .sidebar li a span:last-child {
     display: inline;
@@ -438,6 +509,11 @@ tr td:last-child {
   #nav-toggle:checked ~ .main-content {
     margin-left: 0rem !important;
   }
+}
+
+.ant-upload-list-picture-card .ant-upload-list-item-error,
+.ant-upload-list-picture .ant-upload-list-item-error {
+  border-color: #53ff4d;
 }
 
 .ant-divider-horizontal.ant-divider-with-text-left::before,

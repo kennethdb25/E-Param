@@ -11,6 +11,7 @@ const ROUTE = {
   ADMINFORGOTPASS: "/admin-forgot-password",
 
   ATTENDANCEDASHBOARD: "/attendance/dashboard",
+  PAGENOTFOUND: "/*",
 };
 
 export default ROUTE;

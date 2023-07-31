@@ -1,9 +1,8 @@
 /* eslint-disable no-sequences */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { LoginContext } from "../../Context/Context";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../Context/Context';
 import {
   HomeOutlined,
   BookOutlined,
@@ -15,23 +14,23 @@ import {
   LogoutOutlined,
   UserOutlined,
   ScheduleOutlined,
-} from "@ant-design/icons";
-import Dashboard from "./DashboardPage/Dashboard";
-import AvailableBooks from "./DashboardPage/AvailableBooks";
-import BorrowedBooks from "./DashboardPage/BorrowedBooks";
-import Shelf from "./DashboardPage/Shelf";
-import Inventory from "./DashboardPage/Inventory";
-import Reports from "./DashboardPage/Reports";
-import StudentAccounts from "./DashboardPage/StudentAccounts";
-import Settings from "./DashboardPage/Settings";
-import "./style.css";
-import "antd/dist/antd.min.css";
-import { Drawer, Space } from "antd";
-import AttendanceDashboard from "../Attendance/AttendanceDashboard";
+} from '@ant-design/icons';
+import Dashboard from './DashboardPage/Dashboard';
+import AvailableBooks from './DashboardPage/AvailableBooks';
+import BorrowedBooks from './DashboardPage/BorrowedBooks';
+import Shelf from './DashboardPage/Shelf';
+import Inventory from './DashboardPage/Inventory';
+import Reports from './DashboardPage/Reports';
+import StudentAccounts from './DashboardPage/StudentAccounts';
+import Settings from './DashboardPage/Settings';
+import './style.css';
+import 'antd/dist/antd.min.css';
+import { Drawer, Space, message } from 'antd';
+import AttendanceDashboard from '../Attendance/AttendanceDashboard';
 
 const HomeDashboard = (props) => {
   const history = useNavigate();
-  const { loginData } = useContext(LoginContext);
+  const { loginData, setLoginData } = useContext(LoginContext);
   const [currentActive, setCurrentActive] = useState(1);
   const [studentAccount, setStudentAccount] = useState();
   const [adminAccount, setAdminAccount] = useState();
@@ -155,14 +154,16 @@ const HomeDashboard = (props) => {
     bookRatingsData,
     borrowedRatingsChart,
     borrowedRatingsData,
+    LoginValid,
+    setData,
   } = props;
 
   // Genre Tab
   const getGenre = async () => {
-    const data = await fetch("/book/get-genre", {
-      method: "GET",
+    const data = await fetch('/book/get-genre', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const res = await data.json();
@@ -175,15 +176,12 @@ const HomeDashboard = (props) => {
   // Get reserved book per student
   const getAddShelfPerStudent = async () => {
     if (loginData) {
-      const data = await fetch(
-        `/book/student-shelf?email=${loginData?.validUser?.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const data = await fetch(`/book/student-shelf?email=${loginData?.validUser?.email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const res = await data.json();
       if (res.status === 200) {
         setGetAddToShelf(res.body);
@@ -195,15 +193,12 @@ const HomeDashboard = (props) => {
   // Ger borrowed book per student
   const getBorrowedPerStudent = async () => {
     if (loginData) {
-      const data = await fetch(
-        `/book/student-borrowed?email=${loginData?.validUser?.email}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const data = await fetch(`/book/student-borrowed?email=${loginData?.validUser?.email}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
       const res = await data.json();
       if (res.status === 200) {
         setGetBorrowedStudent(res.body);
@@ -213,10 +208,10 @@ const HomeDashboard = (props) => {
   };
 
   const getBorrowedData = async () => {
-    const allBorrowedData = await fetch("/book/get-borrowed", {
-      method: "GET",
+    const allBorrowedData = await fetch('/book/get-borrowed', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const allBorrowedRes = await allBorrowedData.json();
@@ -229,10 +224,10 @@ const HomeDashboard = (props) => {
   // Get Inventory Data
 
   const getInventoryData = async () => {
-    const data = await fetch("/book/get-available", {
-      method: "GET",
+    const data = await fetch('/book/get-available', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const res = await data.json();
@@ -240,10 +235,10 @@ const HomeDashboard = (props) => {
       setGetAvailable(res.body);
     }
 
-    const allReservedData = await fetch("/book/get-reserved", {
-      method: "GET",
+    const allReservedData = await fetch('/book/get-reserved', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const allReservedRes = await allReservedData.json();
@@ -251,10 +246,10 @@ const HomeDashboard = (props) => {
       setGetAllShelf(allReservedRes.body);
     }
 
-    const lostBooksData = await fetch("/book/get-all-lost", {
-      method: "GET",
+    const lostBooksData = await fetch('/book/get-all-lost', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const resLostBook = await lostBooksData.json();
@@ -262,10 +257,10 @@ const HomeDashboard = (props) => {
       setLostBookCount(resLostBook.body);
     }
 
-    const reviewBooksData = await fetch("/book/get-all-review", {
-      method: "GET",
+    const reviewBooksData = await fetch('/book/get-all-review', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const resReviewBook = await reviewBooksData.json();
@@ -273,10 +268,10 @@ const HomeDashboard = (props) => {
       setForReviewBook(resReviewBook.body);
     }
 
-    const adminData = await fetch("/admin/accounts", {
-      method: "GET",
+    const adminData = await fetch('/admin/accounts', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const resAdmin = await adminData.json();
@@ -284,10 +279,10 @@ const HomeDashboard = (props) => {
       setAdminAccount(resAdmin.body);
     }
 
-    const librarianData = await fetch("/librarian/accounts", {
-      method: "GET",
+    const librarianData = await fetch('/librarian/accounts', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const resLibrarian = await librarianData.json();
@@ -298,10 +293,10 @@ const HomeDashboard = (props) => {
 
   // Get Student Account
   const getStudentAccounts = async () => {
-    const res = await fetch("/student/pending", {
-      method: "GET",
+    const res = await fetch('/student/pending', {
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     const newData = await res.json();
@@ -310,256 +305,241 @@ const HomeDashboard = (props) => {
   };
 
   const handleLogout = async () => {
-    if (loginData?.validUser?.userType === "Student") {
-      let token = localStorage.getItem("studentToken");
-      const res = await fetch("/student/logout", {
-        method: "GET",
+    if (loginData?.validUser?.userType === 'Student') {
+      let token = localStorage.getItem('studentToken');
+      const res = await fetch('/student/logout', {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token,
-          Accept: "application/json",
+          Accept: 'application/json',
         },
-        credentials: "include",
+        credentials: 'include',
       });
 
       const data = await res.json();
 
       if (data.status === 201) {
-        toast.warn("Logging Out", {
-          position: toast.POSITION.TOP_CENTER,
-          autoClose: 1500,
-        });
+        setData(false);
+        message.warn('Logging Out');
         setTimeout(() => {
-          localStorage.removeItem("studentToken");
-          history("/");
+          localStorage.removeItem('studentToken');
+          history('/');
+          setLoginData(null);
+          setData(true);
         }, 3000);
       } else {
-        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+        message.error('Error Occured');
       }
-    } else if (loginData?.validUser?.userType === "Librarian") {
-      let token = localStorage.getItem("librarianToken");
-      const res = await fetch("/librarian/logout", {
-        method: "GET",
+    } else if (loginData?.validUser?.userType === 'Librarian') {
+      let token = localStorage.getItem('librarianToken');
+      const res = await fetch('/librarian/logout', {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token,
-          Accept: "application/json",
+          Accept: 'application/json',
         },
-        credentials: "include",
+        credentials: 'include',
       });
 
       const data = await res.json();
 
       if (data.status === 201) {
-        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        message.warn('Logging Out');
         setTimeout(() => {
-          localStorage.removeItem("librarianToken");
-          history("/librarian-login");
-        }, 4000);
+          localStorage.removeItem('librarianToken');
+          history('/librarian-login');
+          setLoginData(null);
+          setData(true);
+        }, 3000);
       } else {
-        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+        message.error('Error Occured');
       }
-    } else if (loginData?.validUser?.userType === "Super Admin") {
-      let token = localStorage.getItem("adminToken");
-      const res = await fetch("/admin/logout", {
-        method: "GET",
+    } else if (loginData?.validUser?.userType === 'Super Admin') {
+      let token = localStorage.getItem('adminToken');
+      const res = await fetch('/admin/logout', {
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: token,
-          Accept: "application/json",
+          Accept: 'application/json',
         },
-        credentials: "include",
+        credentials: 'include',
       });
 
       const data = await res.json();
 
       if (data.status === 201) {
-        toast.warn("Logging Out", { position: toast.POSITION.TOP_CENTER });
+        message.warn('Logging Out');
         setTimeout(() => {
-          localStorage.removeItem("adminToken");
-          history("/admin-login");
-        }, 4000);
+          localStorage.removeItem('adminToken');
+          history('/admin-login');
+          setLoginData(null);
+          setData(true);
+        }, 3000);
       } else {
-        toast.error("Error Occured", { position: toast.POSITION.TOP_CENTER });
+        message.error('Error Occured');
       }
     }
   };
 
+  useEffect(() => {
+    LoginValid();
+    if (!loginData) {
+      history('/error-not-found');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
-      <ToastContainer />
-      <input type="checkbox" id="nav-toggle" />
-      <div className="sidebar">
-        <div className="sidebar-brand">
+      <input type='checkbox' id='nav-toggle' />
+      <div className='sidebar'>
+        <div className='sidebar-brand'>
           <h2>
-            <span className="lab la-accusoft">
+            <span className='lab la-accusoft'>
               <img
                 // style={{ width: "70px", height: "70px", marginRight: "10px" }}
-                src={require("../../Assets/logo.png")}
-                alt="logo-dashboard"
+                src={require('../../Assets/logo.png')}
+                alt='logo-dashboard'
               />
             </span>
-            <span style={{ color: "white" }}>
+            <span style={{ color: 'white' }}>
               <img
-                style={{ width: "70px", height: "70px", marginRight: "10px" }}
-                src={require("../../Assets/logo.png")}
-                alt="logo-dashboard"
+                style={{ width: '70px', height: '70px', marginRight: '10px' }}
+                src={require('../../Assets/logo.png')}
+                alt='logo-dashboard'
               />
               PHS LIBRARY
             </span>
           </h2>
         </div>
-        <div className="sidebar-menu">
+        <div className='sidebar-menu'>
           <ul>
-            <li key="li1">
+            <li key='li1'>
               <a
                 key={1}
-                className={currentActive === 1 ? "active" : "none"}
-                onClick={() => (
-                  setCurrentActive(1),
-                  bookRatingsChart(),
-                  borrowedRatingsChart()
-                )}
+                className={currentActive === 1 ? 'active' : 'none'}
+                onClick={() => (setCurrentActive(1), bookRatingsChart(), borrowedRatingsChart())}
               >
                 <HomeOutlined />
-                <span className="las la-igloo"></span>
+                <span className='las la-igloo'></span>
                 <span>Dashboard</span>
               </a>
             </li>
-            <li key="li2">
-              <a
-                key={2}
-                className={currentActive === 2 ? "active" : "none"}
-                onClick={() => getGenre()}
-              >
+            <li key='li2'>
+              <a key={2} className={currentActive === 2 ? 'active' : 'none'} onClick={() => getGenre()}>
                 <FileProtectOutlined />
-                <span className="las la-users"></span>
+                <span className='las la-users'></span>
                 <span>Available Books</span>
               </a>
             </li>
-            <li key="li3">
+            <li key='li3'>
               <a
                 key={3}
-                className={currentActive === 3 ? "active" : "none"}
+                className={currentActive === 3 ? 'active' : 'none'}
                 onClick={() =>
-                  loginData?.validUser?.userType === "Student"
-                    ? getBorrowedPerStudent()
-                    : getBorrowedData()
+                  loginData?.validUser?.userType === 'Student' ? getBorrowedPerStudent() : getBorrowedData()
                 }
               >
                 <BookOutlined />
-                <span className="las la-clipboard-list"></span>
+                <span className='las la-clipboard-list'></span>
                 <span>Borrowed Books</span>
               </a>
             </li>
-            <li key="li4">
+            <li key='li4'>
               <a
                 key={4}
-                className={currentActive === 4 ? "active" : "none"}
+                className={currentActive === 4 ? 'active' : 'none'}
                 onClick={() =>
-                  loginData?.validUser?.userType === "Student"
+                  loginData?.validUser?.userType === 'Student'
                     ? getAddShelfPerStudent()
                     : (setCurrentActive(4), getInventoryData())
                 }
               >
                 <ReadOutlined />
-                <span className="las la-clipboard-list"></span>
+                <span className='las la-clipboard-list'></span>
                 <span>Shelf</span>
               </a>
             </li>
-            {loginData?.validUser?.userType === "Librarian" ||
-            loginData?.validUser?.userType === "Super Admin" ? (
+            {loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ? (
               <>
-                <li key="li5">
+                <li key='li5'>
                   <a
                     key={5}
-                    className={currentActive === 5 ? "active" : "none"}
+                    className={currentActive === 5 ? 'active' : 'none'}
                     onClick={() => (setCurrentActive(5), getInventoryData())}
                   >
                     <FileDoneOutlined />
-                    <span className="las la-clipboard-list"></span>
+                    <span className='las la-clipboard-list'></span>
                     <span>Inventory</span>
                   </a>
                 </li>
               </>
             ) : null}
-            {loginData?.validUser?.userType === "Librarian" ||
-            loginData?.validUser?.userType === "Super Admin" ? (
+            {loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ? (
               <>
-                <li key="li6">
-                  <a
-                    key={6}
-                    className={currentActive === 6 ? "active" : "none"}
-                    onClick={() => setCurrentActive(6)}
-                  >
+                <li key='li6'>
+                  <a key={6} className={currentActive === 6 ? 'active' : 'none'} onClick={() => setCurrentActive(6)}>
                     <BarChartOutlined />
-                    <span className="las la-clipboard-list"></span>
+                    <span className='las la-clipboard-list'></span>
                     <span>Reports</span>
                   </a>
                 </li>
               </>
             ) : null}
-            {loginData?.validUser?.userType === "Librarian" ||
-            loginData?.validUser?.userType === "Super Admin" ? (
+            {loginData?.validUser?.userType === 'Librarian' || loginData?.validUser?.userType === 'Super Admin' ? (
               <>
-                <li key="li7">
-                  <a
-                    key={7}
-                    className={currentActive === 7 ? "active" : "none"}
-                    onClick={() => getStudentAccounts()}
-                  >
+                <li key='li7'>
+                  <a key={7} className={currentActive === 7 ? 'active' : 'none'} onClick={() => getStudentAccounts()}>
                     <UserOutlined />
-                    <span className="las la-clipboard-list"></span>
+                    <span className='las la-clipboard-list'></span>
                     <span>Student Accounts</span>
                   </a>
                 </li>
               </>
             ) : null}
-            {loginData?.validUser?.userType !== "Student" ? (
+            {loginData?.validUser?.userType !== 'Student' ? (
               <>
-                <li key="li8">
+                <li key='li8'>
                   <a
                     key={8}
-                    className={currentActive === 8 ? "active" : "none"}
+                    className={currentActive === 8 ? 'active' : 'none'}
                     onClick={() => (setCurrentActive(8), getInventoryData())}
                   >
                     <SettingOutlined />
-                    <span className="las la-clipboard-list"></span>
+                    <span className='las la-clipboard-list'></span>
                     <span>Settings</span>
                   </a>
                 </li>
               </>
             ) : null}
-            {loginData.validUser?.userType !== "Student" ? (
-              <li key="li9">
-                <a
-                  key={9}
-                  onClick={() => (
-                    setCurrentActive(9), activeAnnouncementData()
-                  )}
-                >
+            {loginData.validUser?.userType !== 'Student' ? (
+              <li key='li9'>
+                <a key={9} onClick={() => (setCurrentActive(9), activeAnnouncementData())}>
                   <ScheduleOutlined />
-                  <span className="las la-clipboard-list"></span>
+                  <span className='las la-clipboard-list'></span>
                   <span>Attendance Dashboard</span>
                 </a>
               </li>
             ) : null}
-            <li key="li10">
-              <a
-                key={10}
-                onClick={() => {
-                  handleLogout();
-                }}
-              >
-                <LogoutOutlined />
-                <span className="las la-clipboard-list"></span>
-                <span>Logout</span>
-              </a>
-            </li>
           </ul>
+          <div className={loginData.validUser?.userType !== 'Student' ? 'logout' : 'logout-student'}>
+            <a
+              key={10}
+              onClick={() => {
+                handleLogout();
+              }}
+            >
+              <LogoutOutlined />
+              <span className='las la-clipboard-list'></span>
+              <span>Logout</span>
+            </a>
+          </div>
         </div>
       </div>
-      <div className="main-content">
+      <div className='main-content'>
         {currentActive === 1 ? (
           <>
             <Dashboard
@@ -568,6 +548,7 @@ const HomeDashboard = (props) => {
               bookRatingsData={bookRatingsData}
               borrowedRatingsData={borrowedRatingsData}
               getBorrowedData={getBorrowedData}
+              getAddShelfPerStudent={getAddShelfPerStudent}
             />
           </>
         ) : currentActive === 2 ? (
@@ -581,15 +562,9 @@ const HomeDashboard = (props) => {
         ) : currentActive === 3 ? (
           <>
             <BorrowedBooks
-              getBorrowedStudent={
-                loginData?.validUser?.userType === "Student"
-                  ? getBorrowedStudent
-                  : getAllBorrowed
-              }
+              getBorrowedStudent={loginData?.validUser?.userType === 'Student' ? getBorrowedStudent : getAllBorrowed}
               paginationStudentBorrowed={
-                loginData?.validUser?.userType === "Student"
-                  ? paginationStudentBorrowed
-                  : paginationAllBorrowed
+                loginData?.validUser?.userType === 'Student' ? paginationStudentBorrowed : paginationAllBorrowed
               }
               getBorrowedData={getBorrowedData}
               setCurrentActive={setCurrentActive}
@@ -598,15 +573,9 @@ const HomeDashboard = (props) => {
         ) : currentActive === 4 ? (
           <>
             <Shelf
-              getAddToShelf={
-                loginData?.validUser?.userType === "Student"
-                  ? getAddToShelf
-                  : getAllShelf
-              }
+              getAddToShelf={loginData?.validUser?.userType === 'Student' ? getAddToShelf : getAllShelf}
               paginationStudentShelf={
-                loginData?.validUser?.userType === "Student"
-                  ? paginationStudentShelf
-                  : paginationAllShelf
+                loginData?.validUser?.userType === 'Student' ? paginationStudentShelf : paginationAllShelf
               }
               getAddShelfPerStudent={getAddShelfPerStudent}
               getInventoryData={getInventoryData}
@@ -630,10 +599,7 @@ const HomeDashboard = (props) => {
           </>
         ) : currentActive === 7 ? (
           <>
-            <StudentAccounts
-              studentAccount={studentAccount}
-              getStudentAccounts={getStudentAccounts}
-            />
+            <StudentAccounts studentAccount={studentAccount} getStudentAccounts={getStudentAccounts} />
           </>
         ) : currentActive === 8 ? (
           <>
@@ -649,13 +615,13 @@ const HomeDashboard = (props) => {
         ) : null}
       </div>
       <Drawer
-        title="PAMPANGA HIGH SCHOOL LIBRARY"
-        placement="left"
+        title='PAMPANGA HIGH SCHOOL LIBRARY'
+        placement='left'
         onClose={() => setCurrentActive(1)}
         open={currentActive === 9 ? true : false}
-        height="100vh"
-        width="100%"
-        style={{ display: "flex", justifyContent: "center" }}
+        height='100vh'
+        width='100%'
+        style={{ display: 'flex', justifyContent: 'center' }}
         extra={<Space></Space>}
       >
         <AttendanceDashboard activeAnnouncement={activeAnnouncement} />

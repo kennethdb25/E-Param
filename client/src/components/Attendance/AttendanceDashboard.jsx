@@ -133,6 +133,23 @@ const AttendanceDashboard = (props) => {
     : "";
   return (
     <Box className={classes.attendanceContainer}>
+      <p class="marquee">
+        <span>
+          <p
+            style={{
+              display: "inline-flex",
+              marginBottom: "0",
+              fontWeight: "bold",
+              alignItems: "center",
+            }}
+          >
+            {`Announcement: `}
+            {activeAnnouncement
+              ? activeAnnouncement.content
+              : "NO ANNOUNCEMENT"}
+          </p>
+        </span>
+      </p>
       <PageHeader
         style={{
           display: "flex",
@@ -143,23 +160,6 @@ const AttendanceDashboard = (props) => {
         ghost={false}
         title="ATTENDANCE LIBRARY"
       >
-        <p class="marquee">
-          <span>
-            <p
-              style={{
-                display: "inline-flex",
-                marginBottom: "0",
-                fontWeight: "bold",
-                alignItems: "center",
-              }}
-            >
-              {`Announcement: `}
-              {activeAnnouncement
-                ? activeAnnouncement.content
-                : "NO ANNOUNCEMENT"}
-            </p>
-          </span>
-        </p>
         <Descriptions title={"ATTENDANCE ANALYSIS"} size="medium" column={3}>
           <Descriptions.Item label="Total Students(Today)">
             {totalStudents}

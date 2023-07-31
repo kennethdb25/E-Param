@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import { Space, Drawer, Button, Form } from "antd";
+import { Space, Drawer, Button, Form, message } from "antd";
 import useStyles from "./style";
 import LoginForm from "./LoginForm";
-import { toast } from "react-toastify";
 import SignUp from "./SignUp";
 
 const LoginContent = (props) => {
@@ -43,17 +42,11 @@ const LoginContent = (props) => {
       body: newdata,
     });
     if (res.status === 201) {
-      toast.success("Registered Successfully", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
+      message.success("Registered Successfully");
       onClose();
       form.resetFields();
     } else {
-      toast.error("ID already exists!", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
+      message.error("ID already exists!");
     }
   };
 

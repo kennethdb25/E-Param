@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { LoginContext } from "../../../Context/Context";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { AvailableBooksDetailsModal } from "../AntdComponents/Modal/modal";
@@ -300,12 +301,25 @@ const AvailableBooks = (props) => {
     }
   }, [loginData]);
 
+  const width = window.innerWidth;
+
   return (
     <>
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Available Books</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              {width >= 450 ? "Available Book" : "Available"}
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">

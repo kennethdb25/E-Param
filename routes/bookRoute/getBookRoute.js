@@ -277,7 +277,7 @@ GetBookRouter.get("/book-borrowed-ratings", async (req, res) => {
 
 GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
   const today = new Date();
-  const startPoint = today.getDay() !== 5 ? 2 : 4;
+  const startPoint = today.getDay() !== 5 ? 1 : 3;
   let initialDate = new Date(today);
   initialDate.setDate(today.getDate() + startPoint);
 
@@ -287,9 +287,11 @@ GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
   const endDate = new Date(
     initialDate.toISOString().split("T")[0] + "T23:59:59.999Z"
   );
+
   try {
     const users = await BorrowBookModel.find({
       returnDate: { $gte: startDate, $lte: endDate },
+      status: "Borrowed",
     });
     return res.status(200).json({
       status: 200,

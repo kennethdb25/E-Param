@@ -1,11 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Form, Input, Row, Col, Button, Typography } from "antd";
+import { Form, Input, Row, Col, Button, Typography, message } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Box, Link } from "@mui/material";
 import useStyles from "./style";
-import "react-toastify/dist/ReactToastify.css";
 import "antd/dist/antd.min.css";
 
 const { Title } = Typography;
@@ -26,10 +24,7 @@ const LibrarianLoginForm = (props) => {
     const res = await data.json();
     if (res.status === 201) {
       LoginValid();
-      toast.success("Logged In", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
+      message.success("Logged In");
       setTimeout(() => {
         let arry = res.result.userEmail.tokens;
         let lastElement = arry[arry.length - 1];
@@ -40,10 +35,7 @@ const LibrarianLoginForm = (props) => {
         }, 1000);
       }, 3000);
     } else {
-      toast.error(res.message, {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 1000,
-      });
+      message.error(res.message);
     }
   };
   const onFinishFailed = async (error) => {

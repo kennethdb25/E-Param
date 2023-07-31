@@ -342,8 +342,6 @@ export const InventoryUpdateBookDrawer = (props) => {
     form,
     onFinishUpdate,
     onFinishUpdateFailed,
-    imgprops,
-    onPreview,
     initialValues,
     onConfirmUpdate,
   } = props;

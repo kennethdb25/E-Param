@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
-import { Table, Button, Space, Input, message } from "antd";
+import { Table, Button, Space, Input, message, Badge } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
@@ -10,6 +10,7 @@ import {
   BellOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import {
@@ -37,6 +38,7 @@ const BorrowedBooks = (props) => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const [notifButton, setNotifButton] = useState(false);
+  const [notificiationCount, setNotificationCount] = useState();
 
   const onViewDetails = async (record, e) => {
     e.defaultPrevented = true;
@@ -306,19 +308,21 @@ const BorrowedBooks = (props) => {
         loginData.validUser.userType !== "Student" ? (
           <>
             <div>
-              <Button
-                disabled={notifButton}
-                type="primary"
-                shape="round"
-                icon={<BellOutlined />}
-                onClick={() => handlePushNotification()}
-                style={{
-                  backgroundColor: "#000080",
-                  border: "1px solid #d9d9d9",
-                }}
-              >
-                SEND NOTIFICATION
-              </Button>
+              <Badge count={notificiationCount}>
+                <Button
+                  disabled={notifButton}
+                  type="primary"
+                  shape="round"
+                  icon={<BellOutlined />}
+                  onClick={() => handlePushNotification()}
+                  style={{
+                    backgroundColor: "#000080",
+                    border: "1px solid #d9d9d9",
+                  }}
+                >
+                  SEND NOTIFICATION
+                </Button>
+              </Badge>
             </div>
           </>
         ) : (
@@ -379,12 +383,40 @@ const BorrowedBooks = (props) => {
         );
     }
   }, [loginData]);
+  const sendCount = async () => {
+    const data = await fetch("/book/borrowed/push-notification", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const res = await data.json();
+    setNotificationCount(res.body.length);
+  };
+
+  useEffect(() => {
+    sendCount();
+  }, []);
+
+  const width = window.innerWidth;
+
   return (
     <>
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Borrowed Books</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              {width >= 450 ? "Borrowed Books" : "Borrowed"}
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">

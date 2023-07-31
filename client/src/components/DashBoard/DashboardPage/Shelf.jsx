@@ -9,6 +9,7 @@ import {
   UndoOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import {
@@ -440,7 +441,18 @@ const Shelf = (props) => {
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Shelf Item(s)</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              Shelf Item
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">

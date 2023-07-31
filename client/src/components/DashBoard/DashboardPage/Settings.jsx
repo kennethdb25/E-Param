@@ -22,6 +22,7 @@ import {
   CheckOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { GradeData } from "../../../Data/Data";
@@ -528,7 +529,13 @@ const Settings = (props) => {
       render: (record) => (
         <>
           <div
-          // style={{ display: "flex", justifyContent: "center", gap: "10px", alignItems: "center", justifyContent: "center", alignContent: "center" }}
+            style={{
+              display: "flex",
+              gap: "10px",
+              alignItems: "center",
+              justifyContent: "center",
+              alignContent: "center",
+            }}
           >
             <Button
               type="primary"
@@ -642,7 +649,18 @@ const Settings = (props) => {
       <header>
         <h1>
           <label htmlFor="nav-toggle">
-            <span className="las la-bars">Settings</span>
+            <span
+              className="las la-bars"
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <GiHamburgerMenu style={{ cursor: "pointer" }} />
+              Settings
+            </span>
           </label>
         </h1>
         <div className="user-wrapper">
@@ -689,7 +707,7 @@ const Settings = (props) => {
         <Row gutter={20} style={{ marginTop: "30px" }}>
           <Col
             xs={24}
-            md={loginData.validUser.userType === "Super Admin" ? 16 : 24}
+            md={loginData.validUser.userType === "Super Admin" ? 14 : 24}
           >
             <div
               style={{
@@ -716,7 +734,7 @@ const Settings = (props) => {
           </Col>
           {loginData.validUser?.userType === "Super Admin" ? (
             <>
-              <Col xs={24} md={8}>
+              <Col xs={24} md={10}>
                 <div
                   style={{
                     display: "flex",
