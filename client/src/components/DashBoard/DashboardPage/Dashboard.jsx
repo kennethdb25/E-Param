@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { ReadFilled } from "@ant-design/icons";
+import { LogoutOutlined, ReadFilled } from "@ant-design/icons";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { LoginContext } from "../../../Context/Context";
 import { Button, Modal, Table, Divider, Badge } from "antd";
@@ -20,6 +20,7 @@ const Dashboard = (props) => {
     borrowedRatingsData,
     getBorrowedData,
     getAddShelfPerStudent,
+    handleLogout,
   } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -321,6 +322,25 @@ const Dashboard = (props) => {
             <h4>{`${loginData?.validUser?.firstName} ${loginData?.validUser?.lastName}`}</h4>
             <small>{`${loginData?.validUser?.userType}`}</small>
           </div>
+          {loginData.validUser?.userType !== "Student" ? (
+            <div
+              onClick={() => handleLogout()}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "5px",
+                marginLeft: "15px",
+                color: "red",
+              }}
+            >
+              <LogoutOutlined />
+              <h3 style={{ margin: "0", color: "red" }}>Logout</h3>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </header>
       <main>

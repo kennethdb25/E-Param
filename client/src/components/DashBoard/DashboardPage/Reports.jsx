@@ -14,7 +14,7 @@ import {
   Typography,
   message,
 } from "antd";
-import { BarChartOutlined } from "@ant-design/icons";
+import { BarChartOutlined, LogoutOutlined } from "@ant-design/icons";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
@@ -24,7 +24,8 @@ import { ReportData } from "../../../Data/Data";
 const { RangePicker } = DatePicker;
 const { Title } = Typography;
 
-const Reports = () => {
+const Reports = (props) => {
+  const { handleLogout } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -104,7 +105,7 @@ const Reports = () => {
   };
   return (
     <>
-      <header className="attendance-header">
+      <header>
         <h1>
           <label htmlFor="nav-toggle">
             <span
@@ -127,6 +128,25 @@ const Reports = () => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
+          {loginData.validUser?.userType !== "Student" ? (
+            <div
+              onClick={() => handleLogout()}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "5px",
+                marginLeft: "15px",
+                color: "red",
+              }}
+            >
+              <LogoutOutlined />
+              <h3 style={{ margin: "0", color: "red" }}>Logout</h3>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </header>
       <main>

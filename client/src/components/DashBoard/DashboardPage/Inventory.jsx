@@ -20,6 +20,7 @@ import {
   QrcodeOutlined,
   UndoOutlined,
   FileImageOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -47,6 +48,7 @@ const Inventory = (props) => {
     forReviewBook,
     paginationAllRevew,
     getInventoryData,
+    handleLogout,
   } = props;
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
@@ -645,6 +647,25 @@ const Inventory = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
+          {loginData.validUser?.userType !== "Student" ? (
+            <div
+              onClick={() => handleLogout()}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "5px",
+                marginLeft: "15px",
+                color: "red",
+              }}
+            >
+              <LogoutOutlined />
+              <h3 style={{ margin: "0", color: "red" }}>Logout</h3>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </header>
       <main>

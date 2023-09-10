@@ -19,6 +19,7 @@ import {
   RollbackOutlined,
   PrinterOutlined,
   CheckCircleOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -36,7 +37,7 @@ const StudentAccounts = (props) => {
   const [pedningImg, setPendingImg] = useState();
   const [viewData, setViewData] = useState();
   const [isView, setIsView] = useState(false);
-  const { studentAccount, getStudentAccounts } = props;
+  const { studentAccount, getStudentAccounts, handleLogout } = props;
 
   const ViewRecord = async (record) => {
     fetch(`/uploads/${record.imgpath}`)
@@ -304,6 +305,25 @@ const StudentAccounts = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
+          {loginData.validUser?.userType !== "Student" ? (
+            <div
+              onClick={() => handleLogout()}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "5px",
+                marginLeft: "15px",
+                color: "red",
+              }}
+            >
+              <LogoutOutlined />
+              <h3 style={{ margin: "0", color: "red" }}>Logout</h3>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </header>
       <main>
