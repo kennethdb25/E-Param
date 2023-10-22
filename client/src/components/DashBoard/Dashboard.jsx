@@ -674,6 +674,7 @@ const HomeDashboard = (props) => {
               announcement={announcement}
               announcementData={announcementData}
               handleLogout={handleLogout}
+              getInventoryData={getInventoryData}
             />
           </>
         ) : null}

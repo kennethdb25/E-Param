@@ -40,6 +40,7 @@ const Settings = (props) => {
     announcement,
     announcementData,
     handleLogout,
+    getInventoryData
   } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
@@ -189,6 +190,7 @@ const Settings = (props) => {
 
   const onConfirmSection = () => {
     form.submit();
+    getInventoryData();
     setOnOpenSection(false);
   };
 

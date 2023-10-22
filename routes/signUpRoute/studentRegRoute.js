@@ -173,7 +173,7 @@ StudentRegRouter.post('/add-section', async (req, res) => {
     const finalRecord = await new GradeSectionModel({
       sectionId: getSectionCount + 1,
       grade,
-      section,
+      section: section.toUpperCase(),
       status: 'Active',
     });
 
