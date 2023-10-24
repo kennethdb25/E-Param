@@ -19,7 +19,7 @@ const Dashboard = (props) => {
     bookRatingsData,
     borrowedRatingsData,
     getBorrowedData,
-    getAddShelfPerStudent,
+    // getAddShelfPerStudent,
     handleLogout,
   } = props;
   const { loginData } = useContext(LoginContext);
@@ -304,12 +304,12 @@ const Dashboard = (props) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              cursor: "pointer",
+              // cursor: "pointer",
             }}
           >
             <Badge
               count={shelfCount}
-              onClick={() => (setCurrentActive(4), getAddShelfPerStudent())}
+              // onClick={() => (setCurrentActive(4), getAddShelfPerStudent())}
             >
               <h1 style={{ marginBottom: "0" }}>
                 <ReadFilled />
