@@ -1083,13 +1083,16 @@ const Settings = (props) => {
         onClose={onCloseLibrarian}
         open={librarianVisible}
         height="100%"
-        width="81%"
+        width="100%"
         style={{ display: "flex", justifyContent: "center" }}
         extra={<Space></Space>}
         footer={[
-          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: "15px" }}>
             <Button type="primary" onClick={() => form.submit()}>
               Confirm Registration
+            </Button>
+            <Button type="primary" onClick={onCloseLibrarian}>
+              Cancel
             </Button>
           </div>,
         ]}
@@ -1335,13 +1338,16 @@ const Settings = (props) => {
         onClose={onCloseAdmin}
         open={adminVisible}
         height="100%"
-        width="81%"
+        width="100%"
         style={{ display: "flex", justifyContent: "center" }}
         extra={<Space></Space>}
         footer={[
-          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start", gap: "15px" }}>
             <Button type="primary" onClick={() => form.submit()}>
               Confirm Registration
+            </Button>
+            <Button type="primary" onClick={onCloseAdmin}>
+              Cancel
             </Button>
           </div>,
         ]}
