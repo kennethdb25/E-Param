@@ -12,6 +12,8 @@ import {
   Modal,
   Select,
   Divider,
+  Drawer,
+  Upload
 } from "antd";
 import {
   SearchOutlined,
@@ -21,6 +23,7 @@ import {
   RollbackOutlined,
   CheckOutlined,
   LogoutOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -49,6 +52,8 @@ const Settings = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [onOpenSection, setOnOpenSection] = useState(false);
   const [onOpenAnnouncement, setOnOpenAnnouncement] = useState(false);
+  const [librarianVisible, setLibrarianVisible] = useState(false);
+  const [adminVisible, setAdminVisible] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
   const [viewDetailsData, setViewDetailsData] = useState(null);
@@ -56,6 +61,107 @@ const Settings = (props) => {
   const onViewDetails = async (record, e) => {
     e.defaultPrevented = true;
     setViewDetailsData(record);
+  };
+
+  const handleOpenLibrarianModal = () => {
+    setLibrarianVisible(true)
+  };
+
+  const onCloseLibrarian = () => {
+    setLibrarianVisible(false);
+    form.resetFields()
+  }
+
+  const onFinishLibrarian = async (values) => {
+    const newdata = new FormData();
+    newdata.append("photo", values.photo.file.originFileObj);
+    newdata.append("confirmPassword", values.confirmPassword);
+    newdata.append("email", values.email);
+    newdata.append("firstName", values.firstName);
+    newdata.append("lastName", values.lastName);
+    newdata.append("middleName", values.middleName);
+    newdata.append("password", values.password);
+    newdata.append("employeeId", values.employeeId);
+
+    const res = await fetch("/librarian/register", {
+      method: "POST",
+      body: newdata,
+    });
+    if (res.status === 201) {
+      message.success("Registered Successfully");
+      getInventoryData();
+      onCloseLibrarian();
+      form.resetFields();
+    } else {
+      message.error("ID already exists!");
+    }
+  };
+
+  const handleOpenAdminModal = () => {
+    setAdminVisible(true)
+  };
+
+  const onCloseAdmin = () => {
+    setAdminVisible(false);
+    form.resetFields()
+  };
+
+  const onFinishAdmin = async (values) => {
+    const newdata = new FormData();
+    newdata.append("photo", values.photo.file.originFileObj);
+    newdata.append("confirmPassword", values.confirmPassword);
+    newdata.append("email", values.email);
+    newdata.append("firstName", values.firstName);
+    newdata.append("lastName", values.lastName);
+    newdata.append("middleName", values.middleName);
+    newdata.append("password", values.password);
+    newdata.append("employeeId", values.employeeId);
+
+    const res = await fetch("/admin/register", {
+      method: "POST",
+      body: newdata,
+    });
+    if (res.status === 201) {
+      message.success("Registered Successfully");
+      getInventoryData();
+      onCloseAdmin();
+      form.resetFields();
+    } else {
+      message.error("ID already exists!");
+    }
+  };
+
+  const imgprops = {
+    beforeUpload: (file) => {
+      const isIMG = file.type.startsWith("image");
+
+      if (!isIMG) {
+        message.error(`${file.name} is not an image`);
+      }
+
+      return isIMG || Upload.LIST_IGNORE;
+    },
+    onChange: (info) => {
+      console.log(info.fileList);
+    },
+  };
+
+  const onPreview = async (file) => {
+    let src = file.url;
+
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
   };
 
   const onSectionChangeStatus = async (record) => {
@@ -361,7 +467,7 @@ const Settings = (props) => {
                 type="primary"
                 shape="round"
                 icon={<PlusCircleOutlined />}
-                // onClick={() => handleOpenModal()}
+                onClick={() => handleOpenLibrarianModal()}
                 style={{
                   backgroundColor: "#000080",
                   border: "1px solid #d9d9d9",
@@ -459,7 +565,7 @@ const Settings = (props) => {
                 type="primary"
                 shape="round"
                 icon={<PlusCircleOutlined />}
-                // onClick={() => handleOpenModal()}
+                onClick={() => handleOpenAdminModal()}
                 style={{
                   backgroundColor: "#000080",
                   border: "1px solid #d9d9d9",
@@ -968,6 +1074,510 @@ const Settings = (props) => {
           </Row>
         </Form>
       </Modal>
+
+      {/* Adding Librarian Account */}
+
+      <Drawer
+        title="LIBRARIAN REGISTRATION"
+        placement="right"
+        onClose={onCloseLibrarian}
+        open={librarianVisible}
+        height="100%"
+        width="81%"
+        style={{ display: "flex", justifyContent: "center" }}
+        extra={<Space></Space>}
+        footer={[
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <Button type="primary" onClick={() => form.submit()}>
+              Confirm Registration
+            </Button>
+          </div>,
+        ]}
+      >
+        <Form
+        form={form}
+        labelCol={{
+          span: 8,
+        }}
+        layout="horizontal"
+        onFinish={onFinishLibrarian}
+        autoComplete="off"
+        style={{
+          width: "100%",
+        }}
+      >
+        <Row>
+          {/* <Col xs={{ span: 0 }} md={{ span: 4 }}></Col> */}
+          <Col xs={{ span: 24 }} md={{ span: 24 }}>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                <Form.Item
+                  label="First Name"
+                  name="firstName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your first name!",
+                    },
+                    {
+                      pattern: /^[a-zA-Z_ ]*$/,
+                      message: "First name should have no number.",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your first name" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Middle Name"
+                  name="middleName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      pattern: /^[a-zA-Z]*$/,
+                      message: "Middle name should have no number.",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your middle name" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Last Name"
+                  name="lastName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your last name!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your last name" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Employee ID"
+                  name="employeeId"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your student ID!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your student ID" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                <Form.Item
+                  label="Profile Picture"
+                  name="photo"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please upload an image",
+                    },
+                  ]}
+                >
+                  <Upload
+                    {...imgprops}
+                    listType="picture-card"
+                    maxCount={1}
+                    onPreview={onPreview}
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      type: "email",
+                      required: true,
+                      message: "Please enter a valid email",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your email" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                    { whitespace: true },
+                    { min: 8 },
+                    { max: 26 },
+                    {
+                      pattern:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,26}$/,
+                      message:
+                        "Must contain 1 uppercase, 1 lowercase, 1 number, and 1 special character.",
+                    },
+                  ]}
+                >
+                  <Input.Password placeholder="********" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  hasFeedback
+                  dependencies={["password"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Confirm Password is required!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject("Passwords does not matched.");
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password placeholder="********" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Col>
+          <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+        </Row>
+      </Form>
+      </Drawer>
+
+      {/* Adding Admin Account */}
+
+      <Drawer
+        title="ADMIN REGISTRATION"
+        placement="right"
+        onClose={onCloseAdmin}
+        open={adminVisible}
+        height="100%"
+        width="81%"
+        style={{ display: "flex", justifyContent: "center" }}
+        extra={<Space></Space>}
+        footer={[
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
+            <Button type="primary" onClick={() => form.submit()}>
+              Confirm Registration
+            </Button>
+          </div>,
+        ]}
+      >
+         <Form
+        form={form}
+        labelCol={{
+          span: 8,
+        }}
+        layout="horizontal"
+        onFinish={onFinishAdmin}
+        autoComplete="off"
+        style={{
+          width: "100%",
+        }}
+      >
+        <Row>
+          {/* <Col xs={{ span: 0 }} md={{ span: 4 }}></Col> */}
+          <Col xs={{ span: 24 }} md={{ span: 24 }}>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                <Form.Item
+                  label="First Name"
+                  name="firstName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your first name!",
+                    },
+                    {
+                      pattern: /^[a-zA-Z_ ]*$/,
+                      message: "First name should have no number.",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your first name" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Middle Name"
+                  name="middleName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      pattern: /^[a-zA-Z]*$/,
+                      message: "Middle name should have no number.",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your middle name" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Last Name"
+                  name="lastName"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your last name!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your last name" />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Employee ID"
+                  name="employeeId"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your student ID!",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your student ID" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 12 }}>
+                <Form.Item
+                  label="Profile Picture"
+                  name="photo"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please upload an image",
+                    },
+                  ]}
+                >
+                  <Upload
+                    {...imgprops}
+                    listType="picture-card"
+                    maxCount={1}
+                    onPreview={onPreview}
+                  >
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  </Upload>
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={12}>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      type: "email",
+                      required: true,
+                      message: "Please enter a valid email",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Enter your email" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Password"
+                  name="password"
+                  labelCol={{
+                    span: 24,
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                  }}
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                    { whitespace: true },
+                    { min: 8 },
+                    { max: 26 },
+                    {
+                      pattern:
+                        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,26}$/,
+                      message:
+                        "Must contain 1 uppercase, 1 lowercase, 1 number, and 1 special character.",
+                    },
+                  ]}
+                >
+                  <Input.Password placeholder="********" />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                <Form.Item
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  labelCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  wrapperCol={{
+                    span: 24,
+                    //offset: 2
+                  }}
+                  hasFeedback
+                  dependencies={["password"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Confirm Password is required!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue("password") === value) {
+                          return Promise.resolve();
+                        }
+
+                        return Promise.reject("Passwords does not matched.");
+                      },
+                    }),
+                  ]}
+                >
+                  <Input.Password placeholder="********" />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Col>
+          <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+        </Row>
+      </Form>
+      </Drawer>
     </>
   );
 };

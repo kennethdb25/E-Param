@@ -55,7 +55,7 @@ StudentRegRouter.post('/student/register', upload.single('photo'), async (req, r
   try {
     const qrCode = await QRCode.toDataURL(studentId);
     const finalUser = new StudentModel({
-      studentId: studentId.toUpperCase(),
+      studentId: studentId.toString().toUpperCase(),
       firstName: firstName.toUpperCase(),
       middleName: middleName.toUpperCase(),
       lastName: lastName.toUpperCase(),

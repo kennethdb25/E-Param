@@ -28,7 +28,8 @@ const upload = multer({
 // register admin
 AdminRegRouter.post('/admin/register', upload.single('photo'), async (req, res) => {
   const { filename } = req.file;
-  const { employeeId, firstName, middleName, lastName, email, password, confirmPassword } = req.body;
+  const { employeeId, firstName, middleName, lastName, email, password, confirmPassword } =
+    req.body;
 
   // validate if employee id exist
   const validate = await AdminModel.findOne({ employeeId: employeeId });
@@ -38,12 +39,13 @@ AdminRegRouter.post('/admin/register', upload.single('photo'), async (req, res) 
 
   try {
     const finalUser = new AdminModel({
-      employeeId: employeeId.toUpperCase(),
+      employeeId: employeeId.toString().toUpperCase(),
       firstName: firstName.toUpperCase(),
       middleName: middleName.toUpperCase(),
       lastName: lastName.toUpperCase(),
       imgpath: filename,
       userType: 'Super Admin',
+      acctStatus: 'Active',
       email,
       password,
       confirmPassword,
