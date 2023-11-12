@@ -30,6 +30,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { GradeData } from "../../../Data/Data";
+import { AdminAccountDetailsModal, LibrarianAccountDetailsModal } from "../AntdComponents/Modal/modal";
 
 const { TextArea } = Input;
 
@@ -54,15 +55,44 @@ const Settings = (props) => {
   const [onOpenAnnouncement, setOnOpenAnnouncement] = useState(false);
   const [librarianVisible, setLibrarianVisible] = useState(false);
   const [adminVisible, setAdminVisible] = useState(false);
+  const [viewLDeatailsImg, setViewLDeatailsImg] = useState();
+  const [viewADeatailsImg, setViewADeatailsImg] = useState();
+  const [viewLDetailsData, setViewLDetailsData] = useState(null);
+  const [viewADetailsData, setViewADetailsData] = useState(null);
+  const [viewADetailsModal, setViewADetailsModal] = useState(false);
+  const [viewLDetailsModal, setViewLDetailsModal] = useState(false);
 
-  // eslint-disable-next-line no-unused-vars
-  const [viewDetailsData, setViewDetailsData] = useState(null);
-
-  const onViewDetails = async (record, e) => {
+  const onViewLibrarianDetails = async (record, e) => {
     e.defaultPrevented = true;
-    setViewDetailsData(record);
+    setViewLDetailsData(record);
+    fetch(`/uploads/${record?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setViewLDeatailsImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      setViewLDetailsModal(true);
   };
 
+  const onViewAdminDetails = async (record, e) => {
+    e.defaultPrevented = true;
+    setViewADetailsData(record);
+    fetch(`/uploads/${record?.imgpath}`)
+      .then((res) => res.blob())
+      .then(
+        (result) => {
+          setViewADeatailsImg(URL.createObjectURL(result));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+      setViewADetailsModal(true);
+  };
   const handleOpenLibrarianModal = () => {
     setLibrarianVisible(true)
   };
@@ -491,7 +521,7 @@ const Settings = (props) => {
               icon={<ReadOutlined />}
               type="primary"
               onClick={(e) => {
-                onViewDetails(record, e);
+                onViewLibrarianDetails(record, e);
               }}
               style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
@@ -589,7 +619,7 @@ const Settings = (props) => {
               icon={<ReadOutlined />}
               type="primary"
               onClick={(e) => {
-                onViewDetails(record, e);
+                onViewAdminDetails(record, e);
               }}
               style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
             >
@@ -1584,6 +1614,28 @@ const Settings = (props) => {
         </Row>
       </Form>
       </Drawer>
+
+      {/* LIBRARIAN ACCOUNT DETAILS */}
+
+      <LibrarianAccountDetailsModal
+        viewLDetailsModal={viewLDetailsModal}
+        setViewLDetailsModal={setViewLDetailsModal}
+        setViewLDetailsData={setViewLDetailsData}
+        setViewLDeatailsImg={setViewLDeatailsImg}
+        viewLDetailsData={viewLDetailsData}
+        viewLDeatailsImg={viewLDeatailsImg}
+      />
+
+      {/* ADMIN ACCOUNT DETAILS */}
+
+      <AdminAccountDetailsModal
+       viewADetailsModal={viewADetailsModal}
+       setViewADetailsModal={setViewADetailsModal}
+       setViewADetailsData={setViewADetailsData}
+       setViewADeatailsImg={setViewADeatailsImg}
+       viewADetailsData={viewADetailsData}
+       viewADeatailsImg={viewADeatailsImg}
+      />
     </>
   );
 };

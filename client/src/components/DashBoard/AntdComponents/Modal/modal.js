@@ -1,16 +1,4 @@
-import {
-  Button,
-  Modal,
-  Upload,
-  Typography,
-  Row,
-  Col,
-  Input,
-  Image,
-  Popconfirm,
-  Rate,
-  Form,
-} from 'antd';
+import { Button, Modal, Upload, Typography, Row, Col, Input, Image, Popconfirm, Rate, Form } from 'antd';
 import {
   InboxOutlined,
   RollbackOutlined,
@@ -36,14 +24,7 @@ const { TextArea } = Input;
 
 /* AVAILABLEBOOKS PAGE */
 export const AvailableBooksDetailsModal = (props) => {
-  const {
-    viewDetailsModal,
-    setViewDetailsModal,
-    setViewDetailsData,
-    setViewDeatailsImg,
-    viewDetailsData,
-    viewDeatailsImg,
-  } = props;
+  const { viewDetailsModal, setViewDetailsModal, setViewDetailsData, setViewDeatailsImg, viewDetailsData, viewDeatailsImg } = props;
 
   return (
     <Modal
@@ -141,11 +122,7 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input
-                value={viewDetailsData?.publication}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={viewDetailsData?.publication} readOnly style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -158,14 +135,7 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Abstract
               </Title>
-              <TextArea
-                rows={10}
-                maxLength={3000}
-                showCount
-                placeholder='Enter abstract'
-                value={viewDetailsData?.abstract}
-                readOnly
-              />
+              <TextArea rows={10} maxLength={3000} showCount placeholder='Enter abstract' value={viewDetailsData?.abstract} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -213,14 +183,7 @@ export const AvailableBooksDetailsModal = (props) => {
               >
                 Notes
               </Title>
-              <TextArea
-                rows={3}
-                maxLength={500}
-                showCount
-                placeholder='Enter Notes'
-                value={viewDetailsData?.notes}
-                readOnly
-              />
+              <TextArea rows={3} maxLength={500} showCount placeholder='Enter Notes' value={viewDetailsData?.notes} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -374,11 +337,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Middle Name
               </Title>
-              <Input
-                value={viewDetailsData?.middleName}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={viewDetailsData?.middleName} readOnly style={{ borderRadius: '10px' }} />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
               <Title
@@ -455,11 +414,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Date Borrowed
               </Title>
-              <Input
-                value={new Date(viewDetailsData?.dateBorrowed).toLocaleString()}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={new Date(viewDetailsData?.dateBorrowed).toLocaleString()} readOnly style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
           <h1
@@ -536,11 +491,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input
-                value={viewDetailsData?.publication}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={viewDetailsData?.publication} readOnly style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -553,14 +504,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Abstract
               </Title>
-              <TextArea
-                rows={10}
-                maxLength={3000}
-                showCount
-                placeholder='Enter abstract'
-                value={viewDetailsData?.abstract}
-                readOnly
-              />
+              <TextArea rows={10} maxLength={3000} showCount placeholder='Enter abstract' value={viewDetailsData?.abstract} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -608,14 +552,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               >
                 Notes
               </Title>
-              <TextArea
-                rows={3}
-                maxLength={500}
-                showCount
-                placeholder='Enter Notes'
-                value={viewDetailsData?.notes}
-                readOnly
-              />
+              <TextArea rows={3} maxLength={500} showCount placeholder='Enter Notes' value={viewDetailsData?.notes} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -717,12 +654,7 @@ export const ShelfProcessingModal = (props) => {
       open={processModal}
       onCancel={onCancelProcess}
       footer={[
-        <Button
-          type='primary'
-          icon={<EditOutlined />}
-          hidden={processButton}
-          onClick={onProcessProceed}
-        >
+        <Button type='primary' icon={<EditOutlined />} hidden={processButton} onClick={onProcessProceed}>
           Process
         </Button>,
 
@@ -733,9 +665,7 @@ export const ShelfProcessingModal = (props) => {
               icon={<CheckOutlined />}
               htmlType='submit'
               hidden={validateButton}
-              onClick={() =>
-                fetchBookData(bookResult) && fetchStudentData(studentResult) && onFinish()
-              }
+              onClick={() => fetchBookData(bookResult) && fetchStudentData(studentResult) && onFinish()}
             >
               Validate
             </Button>
@@ -976,9 +906,7 @@ export const ShelfViewDetailsModal = (props) => {
         <Popconfirm
           placement='top'
           title={
-            loginData.validUser.userType === 'Student'
-              ? 'Are you sure want to remove this book?'
-              : 'Are you sure want to reject this book?'
+            loginData.validUser.userType === 'Student' ? 'Are you sure want to remove this book?' : 'Are you sure want to reject this book?'
           }
           onConfirm={onConfirmRemoveBook}
           okText='Confirm'
@@ -1030,11 +958,7 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Middle Name
               </Title>
-              <Input
-                value={viewDetailsData?.middleName}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={viewDetailsData?.middleName} readOnly style={{ borderRadius: '10px' }} />
             </Col>
             <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
               <Title
@@ -1111,11 +1035,7 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Date Reserved
               </Title>
-              <Input
-                value={new Date(viewDetailsData?.dateReserved).toLocaleString()}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={new Date(viewDetailsData?.dateReserved).toLocaleString()} readOnly style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
           <h1
@@ -1193,11 +1113,7 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Publication
               </Title>
-              <Input
-                value={viewDetailsData?.publication}
-                readOnly
-                style={{ borderRadius: '10px' }}
-              />
+              <Input value={viewDetailsData?.publication} readOnly style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1210,14 +1126,7 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Abstract
               </Title>
-              <TextArea
-                rows={10}
-                maxLength={3000}
-                showCount
-                placeholder='Enter abstract'
-                value={viewDetailsData?.abstract}
-                readOnly
-              />
+              <TextArea rows={10} maxLength={3000} showCount placeholder='Enter abstract' value={viewDetailsData?.abstract} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1265,14 +1174,7 @@ export const ShelfViewDetailsModal = (props) => {
               >
                 Notes
               </Title>
-              <TextArea
-                rows={3}
-                maxLength={500}
-                showCount
-                placeholder='Enter Notes'
-                value={viewDetailsData?.notes}
-                readOnly
-              />
+              <TextArea rows={3} maxLength={500} showCount placeholder='Enter Notes' value={viewDetailsData?.notes} readOnly />
             </Col>
           </Row>
         </Col>
@@ -1291,12 +1193,7 @@ export const InventoryAddBookModal = (props) => {
       open={isOpen}
       onCancel={() => setIsOpen(false)}
       footer={[
-        <Button
-          type='primary'
-          icon={<RollbackOutlined />}
-          key='cancel'
-          onClick={() => setIsOpen(false)}
-        >
+        <Button type='primary' icon={<RollbackOutlined />} key='cancel' onClick={() => setIsOpen(false)}>
           Cancel
         </Button>,
       ]}
@@ -1330,12 +1227,7 @@ export const InventoryBatchAddModal = (props) => {
       open={batchOpen}
       onCancel={() => setBatchOpen(false)}
       footer={[
-        <Button
-          type='primary'
-          icon={<RollbackOutlined />}
-          key='cancel'
-          onClick={() => setBatchOpen(false)}
-        >
+        <Button type='primary' icon={<RollbackOutlined />} key='cancel' onClick={() => setBatchOpen(false)}>
           Cancel
         </Button>,
       ]}
@@ -1355,8 +1247,7 @@ export const InventoryBatchAddModal = (props) => {
         </p>
         <p className='ant-upload-text'>Click or drag file to this area to upload</p>
         <p className='ant-upload-hint'>
-          Support for a single upload. Strictly prohibited from uploading file not supported by the
-          given format.
+          Support for a single upload. Strictly prohibited from uploading file not supported by the given format.
         </p>
       </Dragger>
     </Modal>
@@ -1364,14 +1255,7 @@ export const InventoryBatchAddModal = (props) => {
 };
 
 export const InventoryLostBooksModal = (props) => {
-  const {
-    viewDetailsLostModal,
-    setViewDetailsLostModal,
-    setViewDetailsData,
-    setViewDeatailsImg,
-    viewDetailsData,
-    viewDeatailsImg,
-  } = props;
+  const { viewDetailsLostModal, setViewDetailsLostModal, setViewDetailsData, setViewDeatailsImg, viewDetailsData, viewDeatailsImg } = props;
   return (
     <Modal
       key='LostBookDetails'
@@ -1590,14 +1474,7 @@ export const InventoryLostBooksModal = (props) => {
               >
                 Abstract
               </Title>
-              <TextArea
-                rows={10}
-                maxLength={3000}
-                showCount
-                placeholder='Enter abstract'
-                value={viewDetailsData?.abstract}
-                readOnly
-              />
+              <TextArea rows={10} maxLength={3000} showCount placeholder='Enter abstract' value={viewDetailsData?.abstract} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1645,14 +1522,7 @@ export const InventoryLostBooksModal = (props) => {
               >
                 Notes
               </Title>
-              <TextArea
-                rows={3}
-                maxLength={500}
-                showCount
-                placeholder='Enter Notes'
-                value={viewDetailsData?.notes}
-                readOnly
-              />
+              <TextArea rows={3} maxLength={500} showCount placeholder='Enter Notes' value={viewDetailsData?.notes} readOnly />
             </Col>
           </Row>
         </Col>
@@ -1804,14 +1674,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Abstract
               </Title>
-              <TextArea
-                rows={10}
-                maxLength={3000}
-                showCount
-                placeholder='Enter abstract'
-                value={updateData?.abstract}
-                readOnly
-              />
+              <TextArea rows={10} maxLength={3000} showCount placeholder='Enter abstract' value={updateData?.abstract} readOnly />
             </Col>
           </Row>
           <Row gutter={12}>
@@ -1859,14 +1722,7 @@ export const InventoryAvailableBooksModal = (props) => {
               >
                 Notes
               </Title>
-              <TextArea
-                rows={3}
-                maxLength={500}
-                showCount
-                placeholder='Enter Notes'
-                value={updateData?.notes}
-                readOnly
-              />
+              <TextArea rows={3} maxLength={500} showCount placeholder='Enter Notes' value={updateData?.notes} readOnly />
             </Col>
           </Row>
         </Col>
@@ -1876,15 +1732,7 @@ export const InventoryAvailableBooksModal = (props) => {
 };
 
 export const InventoryForReviewAddImageModal = (props) => {
-  const {
-    forReviewOpen,
-    setForReviewOpen,
-    handleFileUpdloadReview,
-    imgprops,
-    onPreview,
-    form,
-    onConfirmReview,
-  } = props;
+  const { forReviewOpen, setForReviewOpen, handleFileUpdloadReview, imgprops, onPreview, form, onConfirmReview } = props;
   return (
     <Modal
       title='ADD IMAGE FOR REVIEW'
@@ -1892,20 +1740,10 @@ export const InventoryForReviewAddImageModal = (props) => {
       open={forReviewOpen}
       onCancel={() => setForReviewOpen(false)}
       footer={[
-        <Button
-          type='primary'
-          icon={<CheckOutlined />}
-          key='cancel9'
-          onClick={() => onConfirmReview()}
-        >
+        <Button type='primary' icon={<CheckOutlined />} key='cancel9' onClick={() => onConfirmReview()}>
           Confirm
         </Button>,
-        <Button
-          type='primary'
-          icon={<RollbackOutlined />}
-          key='cancel9'
-          onClick={() => setForReviewOpen(false)}
-        >
+        <Button type='primary' icon={<RollbackOutlined />} key='cancel9' onClick={() => setForReviewOpen(false)}>
           Cancel
         </Button>,
       ]}
@@ -1956,6 +1794,248 @@ export const InventoryForReviewAddImageModal = (props) => {
           </Col>
         </Row>
       </Form>
+    </Modal>
+  );
+};
+
+export const LibrarianAccountDetailsModal = (props) => {
+  const { viewLDetailsModal, setViewLDetailsModal, setViewLDetailsData, setViewLDeatailsImg, viewLDetailsData, viewLDeatailsImg } = props;
+
+  return (
+    <Modal
+      key='LibrarianAccountDetails'
+      title='ACCOUNT DETAILS'
+      width={1200}
+      open={viewLDetailsModal}
+      onCancel={() => {
+        setViewLDetailsModal(false);
+        setViewLDetailsData();
+        setViewLDeatailsImg();
+      }}
+      footer={[
+        <Button
+          type='primary'
+          icon={<RollbackOutlined />}
+          key='cancel'
+          onClick={() => {
+            setViewLDetailsModal(false);
+            setViewLDetailsData();
+            setViewLDeatailsImg();
+          }}
+        >
+          Cancel
+        </Button>,
+      ]}
+    >
+      <Row>
+        <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+        <Col xs={{ span: 24 }} md={{ span: 16 }}>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Employee ID
+              </Title>
+              <Input value={viewLDetailsData?.employeeId} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                First Name
+              </Title>
+              <Input value={viewLDetailsData?.firstName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Middle Name
+              </Title>
+              <Input value={viewLDetailsData?.middleName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Last Name
+              </Title>
+              <Input value={viewLDetailsData?.lastName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                User Type
+              </Title>
+              <Input value={viewLDetailsData?.userType} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Email
+              </Title>
+              <Input value={viewLDetailsData?.email} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Profile Photo
+              </Title>
+              <Image src={viewLDeatailsImg} alt='Book Details' />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Modal>
+  );
+};
+
+export const AdminAccountDetailsModal = (props) => {
+  const { viewADetailsModal, setViewADetailsModal, setViewADetailsData, setViewADeatailsImg, viewADetailsData, viewADeatailsImg } = props;
+
+  return (
+    <Modal
+      key='LibrarianAccountDetails'
+      title='ACCOUNT DETAILS'
+      width={1200}
+      open={viewADetailsModal}
+      onCancel={() => {
+        setViewADetailsModal(false);
+        setViewADetailsData();
+        setViewADeatailsImg();
+      }}
+      footer={[
+        <Button
+          type='primary'
+          icon={<RollbackOutlined />}
+          key='cancel'
+          onClick={() => {
+            setViewADetailsModal(false);
+            setViewADetailsData();
+            setViewADeatailsImg();
+          }}
+        >
+          Cancel
+        </Button>,
+      ]}
+    >
+      <Row>
+        <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+        <Col xs={{ span: 24 }} md={{ span: 16 }}>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Employee ID
+              </Title>
+              <Input value={viewADetailsData?.employeeId} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                First Name
+              </Title>
+              <Input value={viewADetailsData?.firstName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Middle Name
+              </Title>
+              <Input value={viewADetailsData?.middleName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Last Name
+              </Title>
+              <Input value={viewADetailsData?.lastName} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                User Type
+              </Title>
+              <Input value={viewADetailsData?.userType} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col xs={{ span: 24 }} md={{ span: 8 }} layout='vertical'>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Email
+              </Title>
+              <Input value={viewADetailsData?.email} readOnly style={{ borderRadius: '10px' }} />
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col xs={{ span: 24 }} md={{ span: 8 }}>
+              <Title
+                level={5}
+                style={{
+                  marginTop: '20px',
+                }}
+              >
+                Profile Photo
+              </Title>
+              <Image src={viewADeatailsImg} alt='Book Details' />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
     </Modal>
   );
 };
