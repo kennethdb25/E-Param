@@ -30,19 +30,7 @@ const upload = multer({
 // register student
 StudentRegRouter.post('/student/register', upload.single('photo'), async (req, res) => {
   const { filename } = req.file;
-  const {
-    studentId,
-    firstName,
-    middleName,
-    lastName,
-    address,
-    grade,
-    section,
-    gender,
-    email,
-    password,
-    confirmPassword,
-  } = req.body;
+  const { studentId, firstName, middleName, lastName, address, grade, section, gender, email, password, confirmPassword } = req.body;
 
   // validate if student id exist
   const validate = await StudentModel.findOne({ studentId: studentId });
@@ -162,7 +150,7 @@ StudentRegRouter.post('/add-section', async (req, res) => {
   try {
     const getSectionExist = await GradeSectionModel.find({
       grade: grade,
-      section: section,
+      section: section.toUpperCase(),
     });
     const getSectionCount = await GradeSectionModel.find().count();
 

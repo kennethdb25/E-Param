@@ -321,6 +321,8 @@ const Settings = (props) => {
     if (res.status === 201) {
       message.success("Section Added Successfully");
       sectiionData();
+    }else {
+      message.error(res.error)
     }
   };
 
@@ -912,7 +914,7 @@ const Settings = (props) => {
                     }}
                     onClick={() => onAddSection()}
                   >
-                    ADD SECTIION
+                    ADD SECTION
                   </Button>
                 </div>
                 <Table
