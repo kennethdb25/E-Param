@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 require('./database/conn');
 require('dotenv').config();
@@ -44,6 +45,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is running at port: ${port}`);
 });
