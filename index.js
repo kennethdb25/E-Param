@@ -34,8 +34,8 @@ app.use(BorrowBookRouter);
 app.use(AddReportRouter);
 app.use(AttendanceRouter);
 
-app.use('/uploads', express.static('./uploads'));
-app.use('/file-uploads', express.static('./file-uploads'));
+app.use('/uploads', express.static(path.resolve('./uploads')));
+app.use('/file-uploads', express.static(path.resolve('./file-uploads')));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, 'client/build')));
