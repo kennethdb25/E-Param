@@ -26,6 +26,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 
+const { Text } = Typography;
+
 const StudentAccounts = (props) => {
   const [form] = Form.useForm();
   const { loginData } = useContext(LoginContext);
@@ -218,6 +220,12 @@ const StudentAccounts = (props) => {
       width: "5%",
     },
     {
+      title: "User Type",
+      dataIndex: "userType",
+      key: "userType",
+      width: "5%",
+    },
+    {
       title: "Status",
       dataIndex: "acctStatus",
       key: "acctStatus",
@@ -228,8 +236,8 @@ const StudentAccounts = (props) => {
           value: "Active",
         },
         {
-          text: "Disabled",
-          value: "Disabled",
+          text: "Pending",
+          value: "Pending",
         },
       ],
       onFilter: (value, record) => record.acctStatus.indexOf(value) === 0,
@@ -295,7 +303,7 @@ const StudentAccounts = (props) => {
               }}
             >
               <GiHamburgerMenu style={{ cursor: "pointer" }} />
-              Student Accounts
+              Accounts
             </span>
           </label>
         </h1>
@@ -305,7 +313,8 @@ const StudentAccounts = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -393,27 +402,39 @@ const StudentAccounts = (props) => {
                   maxHeight: "100vh",
                 }}
               >
-                <Row
+                <div
                   style={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
+                    justifyContent: "space-around",
                     alignItems: "center",
                     marginBottom: 40,
                   }}
                 >
-                  <Col xs={{ span: 24 }} md={{ span: 24 }}>
-                    <Typography.Title
-                      level={3}
-                      style={{
-                        margin: 0,
-                        width: "100%",
-                      }}
-                    >
-                      PAMPANGA HIGH SCHOOL LIBRARY
-                    </Typography.Title>
-                  </Col>
-                </Row>
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    {`Library Card #: ${viewData?.libraryCardNum}`}
+                  </Typography.Title>
+                  <Typography.Title
+                    level={3}
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    PAMPANGA HIGH SCHOOL LIBRARY
+                  </Typography.Title>
+                  <Typography.Title
+                    level={5}
+                    style={{
+                      margin: 0,
+                    }}
+                  >
+                    PHS Blvd. Brgy. Lourdes, CSFP 2000
+                  </Typography.Title>
+                </div>
                 <Row>
                   <Col
                     xs={{ span: 24 }}
@@ -540,7 +561,7 @@ const StudentAccounts = (props) => {
                         md={{ span: 24 }}
                         layout="horizontal"
                       >
-                        <Form.Item label="Gender" name="gender">
+                        <Form.Item label="Sex" name="gender">
                           <Typography.Title
                             level={5}
                             style={{
@@ -608,11 +629,63 @@ const StudentAccounts = (props) => {
                             }}
                           >
                             <br />
-                            <hr style={{ width: "70%" }} />
+                            <Text
+                              underline
+                            >{` ${loginData?.validUser.lastName}, ${loginData?.validUser.firstName} ${loginData?.validUser.middleName}`}</Text>
                           </Typography.Title>
                         </Form.Item>
                       </Col>
                     </Row>
+                  </Col>
+                  <Col xs={{ span: 24 }} md={{ span: 24 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <h3>INSTRUCTIONS</h3>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        paddingLeft: "25%",
+                      }}
+                    >
+                      <Typography.Text
+                        level={5}
+                        style={{
+                          marginTop: 20,
+                          width: "100%",
+                        }}
+                      >
+                        1. This Library is non-transferable and must be
+                        presented with ID card when borrowing or returning
+                        books.
+                      </Typography.Text>
+                      <Typography.Text
+                        level={5}
+                        style={{
+                          marginTop: 20,
+                          width: "100%",
+                        }}
+                      >
+                        2. Replacement for filled-up card is free. A fine of
+                        P5.00 is charged for a lost card.
+                      </Typography.Text>
+                      <Typography.Text
+                        level={5}
+                        style={{
+                          marginTop: 20,
+                          width: "100%",
+                        }}
+                      >
+                        3. Lost card should be reported to the librarian and a
+                        replacement is issued a week after the report of loss.
+                      </Typography.Text>
+                    </div>
                   </Col>
                 </Row>
               </Form>

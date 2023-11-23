@@ -248,7 +248,7 @@ main {
 .inventory-grid {
   display: grid;
   grid-gap: 2rem;
-  grid-template-columns: 70% auto;
+  grid-template-columns: 100%;
 }
 
 .card {
@@ -393,7 +393,7 @@ tr td:last-child {
     grid-template-columns: 60% 40%;
   }
   .inventory-grid {
-    grid-template-columns: 60% 40%;
+    grid-template-columns: 100%;
   }
 }
 

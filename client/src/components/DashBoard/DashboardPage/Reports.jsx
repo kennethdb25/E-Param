@@ -128,7 +128,8 @@ const Reports = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{

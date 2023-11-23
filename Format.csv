@@ -1,1 +1,3 @@
-Title,Author,ISBN,Genre,Location,Publication,Description,Abstract,Notes,Assession
+Title,Author,ISBN,Quantity,Genre,Location,Publication,Description,Abstract,Notes,Assession,Building,Penalty
+asdas,asdasd,12312,5,Third,asdasd,werwer,qweq,asdasd,asdasd,asdasd,Library 1,900
+fghjfgh,gdfgfd,123213,5,Fourth,fgjfhfgh,fgjghdfg,asdasd,fgdfgdf,fdgdfgdf,gffgdfg,Library 2,2500

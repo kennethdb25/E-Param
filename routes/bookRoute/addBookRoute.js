@@ -58,6 +58,7 @@ const parseFile = (file) => {
       "Title",
       "Author",
       "ISBN",
+      "Quantity",
       "Genre",
       "Location",
       "Publication",
@@ -65,6 +66,8 @@ const parseFile = (file) => {
       "Abstract",
       "Notes",
       "Assession",
+      "Building",
+      "Penalty",
     ],
   }).fromFile(path.resolve(__dirname, `../../uploads/${file}`));
   return fileDetails;
@@ -79,6 +82,7 @@ AddBookRouter.post(
       title,
       author,
       isbn,
+      quantity,
       location,
       publication,
       abstract,
@@ -86,6 +90,8 @@ AddBookRouter.post(
       notes,
       desc,
       assession,
+      building,
+      penalty,
     } = req.body;
 
     // validate if book isbn is exist
@@ -100,6 +106,7 @@ AddBookRouter.post(
         title,
         author,
         isbn,
+        qty: quantity,
         location,
         publication,
         desc,
@@ -113,6 +120,8 @@ AddBookRouter.post(
         bookRatingsCount: 0,
         totalRatings: 0,
         created: new Date().toISOString(),
+        lostPenalty: penalty,
+        bldgStock: building,
       });
 
       const storeRecord = await finalRecord.save();
@@ -139,6 +148,7 @@ AddBookRouter.post(
           Title,
           Author,
           ISBN,
+          Quantity,
           Genre,
           Location,
           Publication,
@@ -146,6 +156,8 @@ AddBookRouter.post(
           Abstract,
           Notes,
           Assession,
+          Building,
+          Penalty,
         }) => {
           const validate = await BookModel.findOne({ isbn: ISBN });
           if (validate) {
@@ -157,6 +169,7 @@ AddBookRouter.post(
             const finalRecord = new BookModel({
               title: Title,
               author: Author,
+              qty: Quantity,
               isbn: ISBN,
               genre: Genre,
               location: Location,
@@ -170,6 +183,8 @@ AddBookRouter.post(
               totalRatings: 0,
               QRCode: qrCode,
               created: new Date().toISOString(),
+              lostPenalty: Penalty,
+              bldgStock: Building,
             });
             await finalRecord.save();
           } catch (error) {
@@ -250,6 +265,9 @@ AddBookRouter.patch("/book-update-available/:_id", async (req, res) => {
       isbn,
       location,
       publication,
+      bldgStock,
+      quantity,
+      lostPenalty,
       abstract,
       genre,
       notes,
@@ -278,6 +296,9 @@ AddBookRouter.patch("/book-update-available/:_id", async (req, res) => {
     }
     if (location) getBookToUpdate.location = location;
     if (publication) getBookToUpdate.publication = publication;
+    if (bldgStock) getBookToUpdate.bldgStock = bldgStock;
+    if (quantity) getBookToUpdate.qty = quantity;
+    if (lostPenalty) getBookToUpdate.lostPenalty = lostPenalty;
     if (abstract) getBookToUpdate.abstract = abstract;
     if (genre) getBookToUpdate.genre = genre;
     if (notes) getBookToUpdate.notes = notes;

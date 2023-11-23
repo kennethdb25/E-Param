@@ -41,12 +41,14 @@ const LoginContent = (props) => {
       method: "POST",
       body: newdata,
     });
-    if (res.status === 201) {
+    const data = await res.json();
+    if (data.status === 201) {
       message.success("Registered Successfully");
       onClose();
       form.resetFields();
     } else {
-      message.error("ID already exists!");
+      console.log(data);
+      message.error(data.error);
     }
   };
 

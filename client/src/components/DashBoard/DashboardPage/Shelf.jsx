@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { LoginContext } from "../../../Context/Context";
-import { Table, Button, Space, message, Input } from "antd";
+import { Table, Button, Space, message, Input, Empty } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
@@ -32,18 +32,15 @@ const Shelf = (props) => {
   const [studentInfo, setStudentInfo] = useState("");
   const [bookInfo, setBookInfo] = useState("");
   const [studentResult, setStudentResult] = useState("");
-  const [bookResult, setBookResult] = useState("");
   const [recordedData, setRecordedData] = useState();
   const [libraryButton, setLibraryButton] = useState(false);
   const [bookButton, setBookButton] = useState(false);
   const [validateButton, setValidateButton] = useState(false);
   const [processButton, setProcessButton] = useState(true);
   const [scannerOpen, setScannerOpen] = useState(false);
-  const [scannerBook, setScannerBook] = useState(false);
   const [viewDeatailsImg, setViewDeatailsImg] = useState();
   const [viewDetailsData, setViewDetailsData] = useState(null);
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
-  const [enableBookScanBtn, setEnableBookScanBtn] = useState(true);
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -51,15 +48,6 @@ const Shelf = (props) => {
   const handleLibraryScan = () => {
     setScannerOpen(true);
     setLibraryButton(true);
-  };
-
-  const handleBookScan = () => {
-    if (enableBookScanBtn === true) {
-      return message.warn("Please scan library card first");
-    } else {
-      setScannerBook(true);
-      setBookButton(true);
-    }
   };
 
   useEffect(() => {
@@ -78,7 +66,6 @@ const Shelf = (props) => {
         setStudentResult(result);
         scanner.clear();
         setScannerOpen(false);
-        setEnableBookScanBtn(false);
         fetchStudentData(result);
       }
 
@@ -100,32 +87,6 @@ const Shelf = (props) => {
     setStudentInfo(res.body);
   };
 
-  useEffect(() => {
-    if (scannerBook) {
-      const scanner = new Html5QrcodeScanner("reader-book", {
-        qrbox: {
-          width: 250,
-          height: 250,
-        },
-        fps: 5,
-      });
-
-      scanner.render(successReadLibraryCard, errorReadLibraryCard);
-
-      function successReadLibraryCard(result) {
-        setBookResult(result);
-        scanner.clear();
-        setScannerBook(false);
-        fetchBookData(result);
-      }
-
-      function errorReadLibraryCard(error) {
-        // scanner.clear();
-        console.error(error);
-      }
-    }
-  }, [scannerBook]);
-
   const fetchBookData = async (isbn) => {
     const data = await fetch(`/book/get-info?isbn=${isbn}`, {
       method: "GET",
@@ -144,10 +105,7 @@ const Shelf = (props) => {
   };
 
   const onFinish = () => {
-    if (
-      studentInfo.studentId === recordedData.studentId &&
-      bookInfo.isbn === recordedData.isbn
-    ) {
+    if (studentInfo.studentId === recordedData.studentId) {
       message.success("Data Matched");
       setValidateButton(true);
       setProcessButton(false);
@@ -176,9 +134,8 @@ const Shelf = (props) => {
       setBookButton(false);
       setValidateButton(false);
       setScannerOpen(false);
-      setScannerBook(false);
       setProcessButton(true);
-      setEnableBookScanBtn(true);
+      getInventoryData();
     }
   };
 
@@ -192,13 +149,10 @@ const Shelf = (props) => {
     setBookButton(false);
     setValidateButton(false);
     setScannerOpen(false);
-    setScannerBook(false);
     setProcessButton(true);
-    setEnableBookScanBtn(true);
   };
 
   const onConfirmRemoveBook = async () => {
-    console.log(viewDetailsData);
     const data = await fetch(
       `/book/reserved/delete?_id=${viewDetailsData._id}&isbn=${viewDetailsData.isbn}`,
       {
@@ -392,7 +346,8 @@ const Shelf = (props) => {
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            {loginData.validUser.userType !== "Student" ? (
+            {loginData.validUser?.userType === "Super Admin" ||
+            loginData.validUser?.userType === "Librarian" ? (
               <>
                 <Button
                   type="primary"
@@ -463,7 +418,8 @@ const Shelf = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -487,19 +443,20 @@ const Shelf = (props) => {
       <main>
         <div className="card-body">
           <div className="table-responsive">
-            <Table
-              key="ShelfBook"
-              columns={columns}
-              dataSource={getAddToShelf}
-              pagination={paginationStudentShelf}
-            />
+            <>
+              <Table
+                key="ShelfBook"
+                columns={columns}
+                dataSource={getAddToShelf}
+                pagination={paginationStudentShelf}
+              />
+            </>
             {/* Process Modal */}
             <ShelfProcessingModal
               processModal={processModal}
               onCancelProcess={onCancelProcess}
               processButton={processButton}
               onProcessProceed={onProcessProceed}
-              bookResult={bookResult}
               studentResult={studentResult}
               validateButton={validateButton}
               libraryButton={libraryButton}
@@ -507,10 +464,10 @@ const Shelf = (props) => {
               bookButton={bookButton}
               bookInfo={bookInfo}
               handleLibraryScan={handleLibraryScan}
-              handleBookScan={handleBookScan}
               fetchBookData={fetchBookData}
               fetchStudentData={fetchStudentData}
               onFinish={onFinish}
+              recordedData={recordedData}
             />
             {/* ViewDetails Modal */}
             <ShelfViewDetailsModal

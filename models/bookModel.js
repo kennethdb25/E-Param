@@ -13,6 +13,10 @@ const BookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  qty: {
+    type: Number,
+    required: true,
+  },
   location: {
     type: String,
     required: true,
@@ -67,6 +71,14 @@ const BookSchema = new mongoose.Schema({
     required: true,
   },
   QRCode: {
+    type: String,
+    required: true,
+  },
+  lostPenalty: {
+    type: String,
+    required: true,
+  },
+  bldgStock: {
     type: String,
     required: true,
   },

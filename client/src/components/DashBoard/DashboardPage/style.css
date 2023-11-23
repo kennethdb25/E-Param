@@ -14,7 +14,11 @@
   text-decoration: none;
   font-family: "Poppins", sans-serif;
 }
-
+.privacy-data {
+  background-color: #ffc000 !important;
+  margin-top: 50px;
+  padding: 20px;
+}
 .sidebar {
   width: 342px;
   position: fixed;
@@ -517,7 +521,7 @@ td .status {
   background-image: url("../../../../public/modal.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 700px 700px;
+  background-size: 600px 600px;
 }
 
 .custom-form {
@@ -525,6 +529,10 @@ td .status {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 900px 900px;
+}
+
+.ant-rate-text {
+  border: 1px solid black;
 }
 
 @media print {

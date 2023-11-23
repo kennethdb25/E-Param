@@ -83,7 +83,10 @@ const Dashboard = (props) => {
   useEffect(() => {
     const getAddShelfPerStudent = async () => {
       if (loginData) {
-        if (loginData.validUser.userType === "Student") {
+        if (
+          loginData?.validUser?.userType !== "Super Admin" &&
+          loginData?.validUser?.userType !== "Librarian"
+        ) {
           const data = await fetch(
             `/book/student-shelf?email=${loginData.validUser.email}`,
             {
@@ -322,7 +325,8 @@ const Dashboard = (props) => {
             <h4>{`${loginData?.validUser?.firstName} ${loginData?.validUser?.lastName}`}</h4>
             <small>{`${loginData?.validUser?.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -382,7 +386,8 @@ const Dashboard = (props) => {
             </div>
           </div>
         </div>
-        {loginData?.validUser?.userType !== "Student" ? (
+        {loginData.validUser?.userType === "Super Admin" &&
+        loginData.validUser?.userType === "Librarian" ? (
           <div className="recents-grid">
             <div className="customers">
               <div className="card-header">

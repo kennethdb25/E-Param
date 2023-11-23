@@ -34,6 +34,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "firstName", title: "First Name" },
           { id: "middleName", title: "Middle Name" },
           { id: "lastName", title: "Last Name" },
+          { id: "userType", title: "User Type" },
           { id: "address", title: "Address" },
           { id: "grade", title: "Grade" },
           { id: "section", title: "Section" },
@@ -69,6 +70,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "assession", title: "Accession Number" },
           { id: "publication", title: "Grade" },
           { id: "status", title: "Status" },
+          { id: "bldgStock", title: "Building Stock" },
         ],
         path: `${pathFile}/${fileName}`,
       });
@@ -98,6 +100,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "assession", title: "Accession Number" },
           { id: "publication", title: "Grade" },
           { id: "status", title: "Status" },
+          { id: "bldgStock", title: "Building Stock" },
         ],
         path: `${pathFile}/${fileName}`,
       });
@@ -127,6 +130,8 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "assession", title: "Accession Number" },
           { id: "publication", title: "Grade" },
           { id: "status", title: "Status" },
+          { id: "bldgStock", title: "Building Stock" },
+          { id: "lostPenalty", title: "Penalty (Lost)" },
         ],
         path: `${pathFile}/${fileName}`,
       });
@@ -155,13 +160,14 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "assession", title: "Accession Number" },
           { id: "publication", title: "Publication" },
           { id: "status", title: "Status" },
+          { id: "bldgStock", title: "Building Stock" },
         ],
         path: `${pathFile}/${fileName}`,
       });
       break;
     case "reviewBooks":
       dataReport = await BookModel.find({
-        dateReserved: {
+        created: {
           $gt: startDate,
           $lt: endDate,
         },
@@ -179,6 +185,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
           { id: "genre", title: "Genre" },
           { id: "status", title: "Status" },
           { id: "created", title: "Date Added" },
+          { id: "bldgStock", title: "Building Stock" },
         ],
         path: `${pathFile}/${fileName}`,
       });
@@ -215,6 +222,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             firstName: details.firstName,
             middleName: details.middleName,
             lastName: details.lastName,
+            userType: details.userType,
             address: details.address,
             grade: details.grade,
             section: details.section,
@@ -238,6 +246,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             assession: details.assession,
             publication: details.publication,
             status: details.status,
+            bldgStock: details.bldgStock,
           };
         case "returnedBooks":
           return {
@@ -255,6 +264,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             assession: details.assession,
             publication: details.publication,
             status: details.status,
+            bldgStock: details.bldgStock,
           };
         case "lostBooks":
           return {
@@ -272,6 +282,8 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             assession: details.assession,
             publication: details.publication,
             status: details.status,
+            bldgStock: details.bldgStock,
+            lostPenalty: details.lostPenalty,
           };
         case "reservedBooks":
           return {
@@ -289,6 +301,7 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             assession: details.assession,
             publication: details.publication,
             status: details.status,
+            bldgStock: details.bldgStock,
           };
         case "newBooks":
           return {
@@ -300,6 +313,20 @@ AddReportRouter.post("/report/generate", async (req, res) => {
             desc: details.desc,
             genre: details.genre,
             created: details.created,
+            bldgStock: details.bldgStock,
+          };
+        case "reviewBooks":
+          return {
+            title: details.title,
+            isbn: details.isbn,
+            author: details.author,
+            assession: details.assession,
+            publication: details.publication,
+            desc: details.desc,
+            genre: details.genre,
+            status: details.status,
+            created: details.created,
+            bldgStock: details.bldgStock,
           };
         case "attendanceStudents":
           return {

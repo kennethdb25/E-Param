@@ -35,6 +35,7 @@ const HomeDashboard = (props) => {
   const [studentAccount, setStudentAccount] = useState();
   const [adminAccount, setAdminAccount] = useState();
   const [librarianAccount, setLibrarianAccount] = useState();
+  const [otherAccount, setOtherAccount] = useState();
   const [genre, setGenre] = useState();
   // Table Data
   // get all available table config
@@ -187,7 +188,7 @@ const HomeDashboard = (props) => {
       );
       const res = await data.json();
       if (res.status === 200) {
-        setGetAddToShelf(res.body);
+        setGetAddToShelf(res.body || []);
       }
       setCurrentActive(4);
     }
@@ -248,6 +249,7 @@ const HomeDashboard = (props) => {
       },
     });
     const allReservedRes = await allReservedData.json();
+
     if (res.status === 200) {
       setGetAllShelf(allReservedRes.body);
     }
@@ -285,6 +287,17 @@ const HomeDashboard = (props) => {
       setAdminAccount(resAdmin.body);
     }
 
+    const otherData = await fetch("/other/accounts", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const resOther = await otherData.json();
+    if (resOther.status === 200) {
+      setOtherAccount(resOther.body);
+    }
+
     const librarianData = await fetch("/librarian/accounts", {
       method: "GET",
       headers: {
@@ -311,7 +324,10 @@ const HomeDashboard = (props) => {
   };
 
   const handleLogout = async () => {
-    if (loginData?.validUser?.userType === "Student") {
+    if (
+      loginData?.validUser?.userType !== "Super Admin" &&
+      loginData?.validUser?.userType !== "Librarian"
+    ) {
       let token = localStorage.getItem("studentToken");
       const res = await fetch("/student/logout", {
         method: "GET",
@@ -454,7 +470,8 @@ const HomeDashboard = (props) => {
                 key={3}
                 className={currentActive === 3 ? "active" : "none"}
                 onClick={() =>
-                  loginData?.validUser?.userType === "Student"
+                  loginData?.validUser?.userType !== "Librarian" &&
+                  loginData?.validUser?.userType !== "Super Admin"
                     ? getBorrowedPerStudent()
                     : getBorrowedData()
                 }
@@ -469,7 +486,8 @@ const HomeDashboard = (props) => {
                 key={4}
                 className={currentActive === 4 ? "active" : "none"}
                 onClick={() =>
-                  loginData?.validUser?.userType === "Student"
+                  loginData?.validUser?.userType !== "Librarian" ||
+                  loginData?.validUser?.userType !== "Super Admin"
                     ? getAddShelfPerStudent()
                     : (setCurrentActive(4), getInventoryData())
                 }
@@ -522,12 +540,13 @@ const HomeDashboard = (props) => {
                   >
                     <UserOutlined />
                     <span className="las la-clipboard-list"></span>
-                    <span>Student Accounts</span>
+                    <span>Accounts</span>
                   </a>
                 </li>
               </>
             ) : null}
-            {loginData?.validUser?.userType !== "Student" ? (
+            {loginData.validUser?.userType === "Librarian" ||
+            loginData.validUser?.userType === "Super Admin" ? (
               <>
                 <li key="li8">
                   <a
@@ -542,7 +561,8 @@ const HomeDashboard = (props) => {
                 </li>
               </>
             ) : null}
-            {loginData.validUser?.userType !== "Student" ? (
+            {loginData.validUser?.userType === "Librarian" ||
+            loginData.validUser?.userType === "Super Admin" ? (
               <li key="li9">
                 <a
                   key={9}
@@ -557,12 +577,14 @@ const HomeDashboard = (props) => {
               </li>
             ) : null}
           </ul>
-          {loginData.validUser?.userType === "Student" ? (
+          {loginData.validUser?.userType !== "Librarian" ||
+          loginData.validUser?.userType !== "Super Admin" ? (
             <div
               className={
-                loginData.validUser?.userType !== "Student"
-                  ? "logout"
-                  : "logout-student"
+                loginData.validUser?.userType !== "Librarian" ||
+                loginData.validUser?.userType !== "Super Admin"
+                  ? "logout-student"
+                  : "logout"
               }
             >
               <a
@@ -607,12 +629,14 @@ const HomeDashboard = (props) => {
           <>
             <BorrowedBooks
               getBorrowedStudent={
-                loginData?.validUser?.userType === "Student"
+                loginData?.validUser?.userType !== "Super Admin" &&
+                loginData?.validUser?.userType !== "Librarian"
                   ? getBorrowedStudent
                   : getAllBorrowed
               }
               paginationStudentBorrowed={
-                loginData?.validUser?.userType === "Student"
+                loginData?.validUser?.userType !== "Super Admin" &&
+                loginData?.validUser?.userType !== "Librarian"
                   ? paginationStudentBorrowed
                   : paginationAllBorrowed
               }
@@ -625,12 +649,14 @@ const HomeDashboard = (props) => {
           <>
             <Shelf
               getAddToShelf={
-                loginData?.validUser?.userType === "Student"
+                loginData?.validUser?.userType !== "Super Admin" &&
+                loginData?.validUser?.userType !== "Librarian"
                   ? getAddToShelf
                   : getAllShelf
               }
               paginationStudentShelf={
-                loginData?.validUser?.userType === "Student"
+                loginData?.validUser?.userType !== "Super Admin" ||
+                loginData?.validUser?.userType !== "Librarian"
                   ? paginationStudentShelf
                   : paginationAllShelf
               }
@@ -669,6 +695,7 @@ const HomeDashboard = (props) => {
             <Settings
               adminAccount={adminAccount}
               librarianAccount={librarianAccount}
+              otherAccount={otherAccount}
               section={section}
               sectiionData={sectiionData}
               announcement={announcement}

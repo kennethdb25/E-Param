@@ -26,6 +26,10 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
     section,
     studentId,
     title,
+    bldgStock,
+    lostPenalty,
+    userType,
+    qty,
     _id,
   } = req.body;
 
@@ -36,13 +40,6 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
   });
 
   if (availableBook) {
-    const validate = await ReserveBookModel.findOne({
-      bookId: _id,
-      status: "Reserved",
-    });
-    if (validate) {
-      return res.status(404).json({ error: "Book is already reserved" });
-    }
     const finalRecord = new ReserveBookModel({
       QRCode,
       abstract,
@@ -63,12 +60,21 @@ BorrowBookRouter.post("/book/add-shelf", async (req, res) => {
       section,
       studentId,
       title,
+      bldgStock,
+      lostPenalty,
+      userType,
       bookId: _id,
       status: "Reserved",
       dateReserved: new Date().toISOString(),
     });
-    availableBook.status = "Reserved";
-    await availableBook.save();
+    if (qty === 1) {
+      availableBook.status = "Reserved";
+      availableBook.qty = 0;
+      await availableBook.save();
+    } else {
+      availableBook.qty = qty - 1;
+      await availableBook.save();
+    }
 
     const storeRecord = await finalRecord.save();
     return res.status(201).json({ status: 201, body: storeRecord });
@@ -97,47 +103,56 @@ BorrowBookRouter.post("/book/add-borrowed", async (req, res) => {
     publication,
     section,
     studentId,
+    bldgStock,
+    lostPenalty,
     title,
     _id,
   } = req.body;
-
   // validate book if already processed
-
-  const validate = await ReserveBookModel.findOne({ _id, status: "Reserved" });
-  if (validate) {
-    const finalRecord = new BorrowBookModel({
-      QRCode,
-      abstract,
-      assession,
-      author,
-      desc,
-      email,
-      firstName,
-      genre,
-      grade,
-      imgpath,
-      isbn,
-      lastName,
-      location,
-      middleName,
-      notes,
-      publication,
-      section,
-      studentId,
-      title,
-      status: "Borrowed",
-      reservationId: _id,
-      dateBorrowed: new Date().toISOString(),
-      returnDate: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+  try {
+    const validate = await ReserveBookModel.findOne({
+      _id,
+      status: "Reserved",
     });
+    if (validate) {
+      const finalRecord = new BorrowBookModel({
+        QRCode,
+        abstract,
+        assession,
+        author,
+        desc,
+        email,
+        firstName,
+        genre,
+        grade,
+        imgpath,
+        isbn,
+        lastName,
+        location,
+        middleName,
+        notes,
+        publication,
+        section,
+        studentId,
+        bldgStock,
+        lostPenalty,
+        title,
+        status: "Borrowed",
+        reservationId: _id,
+        dateBorrowed: new Date().toISOString(),
+        returnDate: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+      });
 
-    validate.status = "Processed";
-    await validate.save();
+      validate.status = "Processed";
+      await validate.save();
 
-    const storeRecord = await finalRecord.save();
-    return res.status(201).json({ status: 201, body: storeRecord });
-  } else {
-    return res.status(500).json({ error: "Book is already processed" });
+      const storeRecord = await finalRecord.save();
+      return res.status(201).json({ status: 201, body: storeRecord });
+    } else {
+      return res.status(500).json({ error: "Book is already processed" });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

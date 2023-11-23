@@ -15,7 +15,9 @@ const StudentSchema = new mongoose.Schema({
   },
   middleName: {
     type: String,
-    required: true,
+  },
+  libraryCardNum: {
+    type: String,
   },
   lastName: {
     type: String,

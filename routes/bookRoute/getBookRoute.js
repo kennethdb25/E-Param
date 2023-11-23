@@ -149,6 +149,11 @@ GetBookRouter.get("/book/get-genre", async (req, res) => {
     let data = [];
     const getGenre = await BookModel.aggregate([
       {
+        $match: {
+          status: "Available",
+        },
+      },
+      {
         $group: {
           _id: "$genre",
           uniqueValues: {
@@ -323,16 +328,31 @@ GetBookRouter.delete("/book/reserved/delete", async (req, res) => {
       status: "Reserved",
     });
 
-    if (toChangeStatus) {
-      toChangeStatus.status = "Available";
+    if (toChangeStatus.qty === 0) {
+      if (toChangeStatus) {
+        toChangeStatus.status = "Available";
+        toChangeStatus.qty = toChangeStatus.qty + 1;
 
-      const proccessBook = await toChangeStatus.save();
+        const proccessBook = await toChangeStatus.save();
 
-      return res
-        .status(200)
-        .json({ status: 200, body: { deleteBook, proccessBook } });
+        return res
+          .status(200)
+          .json({ status: 200, body: { deleteBook, proccessBook } });
+      } else {
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
     } else {
-      return res.status(500).json({ error: "Internal Server Error" });
+      if (toChangeStatus) {
+        toChangeStatus.qty = toChangeStatus.qty + 1;
+
+        const proccessBook = await toChangeStatus.save();
+
+        return res
+          .status(200)
+          .json({ status: 200, body: { deleteBook, proccessBook } });
+      } else {
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
     }
   } catch (error) {
     console.log(error);

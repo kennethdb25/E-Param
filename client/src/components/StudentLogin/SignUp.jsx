@@ -1,10 +1,21 @@
 import React from "react";
-import { Form, Input, Radio, Row, Col, message, Upload, Select } from "antd";
+import {
+  Form,
+  Input,
+  Radio,
+  Row,
+  Col,
+  message,
+  Upload,
+  Select,
+  Typography,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { GradeData } from "../../Data/Data";
 
+const { Text } = Typography;
 const SignUp = (props) => {
   const { form, onFinish, section, setSection } = props;
 
@@ -88,7 +99,7 @@ const SignUp = (props) => {
                     },
                     {
                       pattern: /^[a-zA-Z_ ]*$/,
-                      message: "First name should have no number.",
+                      message: "Numbers or special character are not allowed",
                     },
                   ]}
                 >
@@ -97,7 +108,7 @@ const SignUp = (props) => {
               </Col>
               <Col xs={{ span: 24 }} md={{ span: 8 }}>
                 <Form.Item
-                  label="Middle Name"
+                  label="Middle Initial"
                   name="middleName"
                   labelCol={{
                     span: 24,
@@ -109,7 +120,11 @@ const SignUp = (props) => {
                   rules={[
                     {
                       pattern: /^[a-zA-Z]*$/,
-                      message: "Middle name should have no number.",
+                      message: "Numbers or special character are not allowed",
+                    },
+                    {
+                      max: 2,
+                      message: "Middle Initial cannot be more than 2 character",
                     },
                   ]}
                 >
@@ -131,6 +146,10 @@ const SignUp = (props) => {
                     {
                       required: true,
                       message: "Please input your last name!",
+                    },
+                    {
+                      pattern: /^[a-zA-Z]*$/,
+                      message: "Numbers or special character are not allowed",
                     },
                   ]}
                 >
@@ -226,7 +245,7 @@ const SignUp = (props) => {
             <Row gutter={0}>
               <Col xs={{ span: 24 }} md={{ span: 12 }}>
                 <Form.Item
-                  label="Gender"
+                  label="Sex"
                   name="gender"
                   labelCol={{
                     span: 24,
@@ -393,6 +412,17 @@ const SignUp = (props) => {
                 >
                   <Input.Password placeholder="********" />
                 </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} md={{ span: 24 }}>
+                <div className="privacy-data">
+                  <Text strong>Note: </Text>
+                  <Text>
+                    Thank you for choosing to sign up for our library system. We
+                    value your privacy and want to assure you that we are
+                    committed to protecting the personal information you
+                    provide.
+                  </Text>
+                </div>
               </Col>
             </Row>
           </Col>

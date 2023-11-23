@@ -133,7 +133,7 @@ const AttendanceDashboard = (props) => {
     : "";
   return (
     <Box className={classes.attendanceContainer}>
-      <p class="marquee">
+      <p className="marquee">
         <span>
           <p
             style={{
@@ -180,7 +180,7 @@ const AttendanceDashboard = (props) => {
           size="medium"
           column={2}
         >
-          <Descriptions.Item label="STUDENT INFO" style={{ margin: 20 }}>
+          <Descriptions.Item label="ACCOUNT INFO" style={{ margin: 20 }}>
             <Col xs={{ span: 24 }} md={{ span: 24 }}>
               <Row gutter={12}>
                 <Col xs={{ span: 24 }} md={{ span: 24 }} layout="vertical">

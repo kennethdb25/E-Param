@@ -1,4 +1,14 @@
-import { Button, Upload, Space, Drawer, Form, Row, Col, Input } from "antd";
+import {
+  Button,
+  Upload,
+  Space,
+  Drawer,
+  Form,
+  Row,
+  Col,
+  Input,
+  Select,
+} from "antd";
 import {
   PlusOutlined,
   FormOutlined,
@@ -21,6 +31,7 @@ export const InventorySingleAddDrawer = (props) => {
   return (
     <Drawer
       title="ADD SINGLE BOOK"
+      key="addSingleBook"
       placement="right"
       onClose={onClose}
       open={singleOpen}
@@ -177,6 +188,86 @@ export const InventorySingleAddDrawer = (props) => {
                     ]}
                   >
                     <Input placeholder="Enter publication" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={12}>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Building Stock"
+                    name="building"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input building to stock!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Building to Stock">
+                      <Select.Option key={1} value={"Library 1"}>
+                        Library 1
+                      </Select.Option>
+                      <Select.Option key={2} value={"Library 2"}>
+                        Library 2
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Number of Copies"
+                    name="quantity"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input number of copies!",
+                      },
+                      {
+                        pattern: /^[0-9]*$/,
+                        message: "Should be a number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter number of copies" />
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Penalty"
+                    name="penalty"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input penalty!",
+                      },
+                      {
+                        pattern: /^[0-9]*$/,
+                        message: "Should be a number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter Book Penalty" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -348,6 +439,7 @@ export const InventoryUpdateBookDrawer = (props) => {
   return (
     <Drawer
       title="UPDATE BOOK"
+      key="updateeBook"
       placement="right"
       onClose={onCloseUpdate}
       open={updateOpen}
@@ -524,6 +616,86 @@ export const InventoryUpdateBookDrawer = (props) => {
                     ]}
                   >
                     <Input placeholder="Enter publication" />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={12}>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Building Stock"
+                    name="bldgStock"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input building to stock!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Select Building to Stock">
+                      <Select.Option key={1} value={"Library 1"}>
+                        Library 1
+                      </Select.Option>
+                      <Select.Option key={2} value={"Library 2"}>
+                        Library 2
+                      </Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Number of Copies"
+                    name="quantity"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input number of copies!",
+                      },
+                      {
+                        pattern: /^[0-9]*$/,
+                        message: "Should be a number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter number of copies" />
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} md={{ span: 8 }} layout="vertical">
+                  <Form.Item
+                    label="Penalty"
+                    name="lostPenalty"
+                    labelCol={{
+                      span: 24,
+                    }}
+                    wrapperCol={{
+                      span: 24,
+                    }}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input penalty!",
+                      },
+                      {
+                        pattern: /^[0-9]*$/,
+                        message: "Should be a number",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="Enter Book Penalty" />
                   </Form.Item>
                 </Col>
               </Row>

@@ -41,6 +41,7 @@ const BorrowedBooks = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const [notifButton, setNotifButton] = useState(false);
   const [notificiationCount, setNotificationCount] = useState();
+  const [fee, setFee] = useState();
 
   const onViewDetails = async (record, e) => {
     e.defaultPrevented = true;
@@ -56,6 +57,21 @@ const BorrowedBooks = (props) => {
         }
       );
     setViewDetailsModal(true);
+
+    const currentDate = new Date().getDate();
+    const returnDate = new Date(record.returnDate).getDate();
+    const remaining = returnDate - currentDate;
+
+    if (remaining < 0) {
+      const late = 20;
+      let n = remaining;
+      n = n * -1;
+
+      const total = n * late;
+      setFee(`Php ${total}.00`);
+    } else {
+      setFee("Php 0.00");
+    }
   };
 
   const onViewBookRate = (record, e) => {
@@ -76,6 +92,7 @@ const BorrowedBooks = (props) => {
       message.success("Return Process Completed");
       setViewDetailsData(null);
       setViewDetailsModal(false);
+      setFee();
       getBorrowedData();
     }
   };
@@ -92,6 +109,7 @@ const BorrowedBooks = (props) => {
       message.success("Lost Process Completed");
       setViewDetailsData(null);
       setViewDetailsModal(false);
+      setFee();
       getBorrowedData();
     }
   };
@@ -248,6 +266,171 @@ const BorrowedBooks = (props) => {
       ),
   });
 
+  const remainingDays = (date, status) => {
+    const currentDate = new Date().getDate();
+    const returnDate = new Date(date).getDate();
+    const remaining = returnDate - currentDate;
+
+    switch (status) {
+      case "Borrowed":
+        if (remaining > 4) {
+          return (
+            <>
+              <div>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5px",
+                    color: "green",
+                  }}
+                >
+                  {remaining}
+                </p>
+              </div>
+            </>
+          );
+        }
+
+        if (remaining > 1 && remaining < 5) {
+          return (
+            <>
+              <div>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5px",
+                    color: "orange",
+                  }}
+                >
+                  {remaining}
+                </p>
+              </div>
+            </>
+          );
+        }
+
+        if (remaining === 1) {
+          return (
+            <>
+              <div>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5px",
+                    color: "red",
+                  }}
+                >
+                  {remaining}
+                </p>
+              </div>
+            </>
+          );
+        }
+
+        if (remaining === 0) {
+          return (
+            <>
+              <div>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5px",
+                    color: "red",
+                  }}
+                >
+                  Due Date
+                </p>
+              </div>
+            </>
+          );
+        }
+
+        if (remaining < 0) {
+          return (
+            <>
+              <div>
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "5px",
+                    color: "red",
+                  }}
+                >
+                  Passed Due
+                </p>
+              </div>
+            </>
+          );
+        }
+        break;
+      case "Lost":
+        return (
+          <>
+            <div>
+              <p
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "5px",
+                  color: "black",
+                }}
+              >
+                Lost
+              </p>
+            </div>
+          </>
+        );
+      default:
+        return (
+          <>
+            <div>
+              <p
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "5px",
+                  color: "black",
+                }}
+              >
+                Returned
+              </p>
+            </div>
+          </>
+        );
+    }
+
+    // default:
+    //   return (
+    //     <>
+    //       <div>
+    //         <p
+    //           style={{
+    //             display: "flex",
+    //             justifyContent: "center",
+    //             alignItems: "center",
+    //             marginTop: "5px",
+    //             color: "black",
+    //           }}
+    //         >
+    //           Processed
+    //         </p>
+    //       </div>
+    //     </>
+    //   )
+    // }
+  };
   const columns = [
     {
       title: "Student ID",
@@ -271,11 +454,20 @@ const BorrowedBooks = (props) => {
       ...getColumnSearchProps("author", "Author"),
     },
     {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
+      title: "Return Date",
+      dataIndex: "returnDate",
+      key: "returnDate",
       width: "20%",
-      ...getColumnSearchProps("location", "Location"),
+      render: (record) => <>{new Date(record).toLocaleString()}</>,
+    },
+    {
+      title: "Remaining Days",
+      dataIndex: ["returnDate", "status"],
+      key: "remaindingDays",
+      width: "20%",
+      render: (text, row) => (
+        <>{remainingDays(row["returnDate"], row["status"])}</>
+      ),
     },
     {
       title: "ISBN",
@@ -307,7 +499,8 @@ const BorrowedBooks = (props) => {
     },
     {
       title:
-        loginData.validUser.userType !== "Student" ? (
+        loginData.validUser?.userType === "Super Admin" ||
+        loginData.validUser?.userType === "Librarian" ? (
           <>
             <div>
               <Badge count={notificiationCount}>
@@ -348,7 +541,8 @@ const BorrowedBooks = (props) => {
             >
               Details
             </Button>
-            {loginData.validUser.userType === "Student" &&
+            {loginData.validUser.userType !== "Super Admin" &&
+            loginData.validUser.userType !== "Librarian" &&
             !record.isRated &&
             record.status === "Returned" ? (
               <Button
@@ -427,7 +621,8 @@ const BorrowedBooks = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -469,6 +664,8 @@ const BorrowedBooks = (props) => {
               handleProcessLost={handleProcessLost}
               viewDeatailsImg={viewDeatailsImg}
               setRateModal={setRateModal}
+              fee={fee}
+              setFee={setFee}
             />
             {/* RateBook Modal */}
             <BorrowedBookRateModal

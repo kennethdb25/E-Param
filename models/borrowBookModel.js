@@ -104,6 +104,14 @@ const BorrowookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  lostPenalty: {
+    type: String,
+    required: true,
+  },
+  bldgStock: {
+    type: String,
+    required: true,
+  },
 });
 
 const BorrowBookModel = new mongoose.model("BorrowBookInfo", BorrowookSchema);

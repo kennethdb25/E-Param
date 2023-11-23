@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { LoginContext } from "../../../Context/Context";
-import axios from "axios";
 import {
   Table,
   Button,
@@ -13,18 +12,15 @@ import {
   Divider,
 } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import { Card, CardContent, Container, Grid, TextField } from "@mui/material";
 import {
   PlusCircleOutlined,
   ReadOutlined,
-  QrcodeOutlined,
   UndoOutlined,
   FileImageOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { GiHamburgerMenu } from "react-icons/gi";
-import useStyles from "./styles";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import {
@@ -56,8 +52,6 @@ const Inventory = (props) => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [qrDetail, setQrDetail] = useState("");
-  const [qrImage, setQrImage] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [singleOpen, setSingleOpen] = useState(false);
   const [batchOpen, setBatchOpen] = useState(false);
@@ -72,11 +66,11 @@ const Inventory = (props) => {
   const [viewDetailsModal, setViewDetailsModal] = useState(false);
   const [viewDetailsLostModal, setViewDetailsLostModal] = useState(false);
 
-  const classes = useStyles();
   const initialValues = {
     title: updateData?.title,
     author: updateData?.author,
     isbn: updateData?.isbn,
+    quantity: updateData?.qty,
     assession: updateData?.assession,
     desc: updateData?.desc,
     publication: updateData?.publication,
@@ -84,11 +78,8 @@ const Inventory = (props) => {
     location: updateData?.location,
     genre: updateData?.genre,
     notes: updateData?.notes,
-  };
-
-  const handleDownload = () => {
-    setQrDetail("");
-    setQrImage();
+    bldgStock: updateData?.bldgStock,
+    lostPenalty: updateData?.lostPenalty,
   };
 
   const handleOpenModal = () => {
@@ -205,20 +196,6 @@ const Inventory = (props) => {
       ),
   });
 
-  // GENERATE QR
-  const generateQrCode = async (e) => {
-    e.preventDefault();
-    if (qrDetail) {
-      axios
-        .post("/librarian/scannerQrCode", { detail: qrDetail })
-        .then((response) => {
-          setQrImage(response.data);
-        });
-    } else {
-      message.warn("Please enter the ISBN");
-    }
-  };
-
   // FORM FUNCTIONS
   const onFinish = async (values) => {
     const newdata = new FormData();
@@ -233,6 +210,9 @@ const Inventory = (props) => {
     newdata.append("publication", values.publication);
     newdata.append("title", values.title);
     newdata.append("author", values.author);
+    newdata.append("penalty", values.penalty);
+    newdata.append("quantity", values.quantity);
+    newdata.append("building", values.building);
 
     const res = await fetch("/book/single-add", {
       method: "POST",
@@ -240,6 +220,7 @@ const Inventory = (props) => {
     });
     if (res.status === 201) {
       message.success("Book Added Successfully");
+      getInventoryData();
       onClose();
     }
   };
@@ -322,6 +303,7 @@ const Inventory = (props) => {
       });
       if (res.status === 201) {
         message.success("Batch Adding Completed");
+        getInventoryData();
         setBatchOpen(false);
       } else {
         message.error("Something went wrong. Please try again later");
@@ -443,6 +425,24 @@ const Inventory = (props) => {
       ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
+      title: "Quantity",
+      dataIndex: "qty",
+      key: "qty",
+      width: "10%",
+    },
+    {
+      title: "Building Stock",
+      dataIndex: "bldgStock",
+      key: "bldgStock",
+      width: "15%",
+    },
+    {
+      title: "Book Penalty",
+      dataIndex: "lostPenalty",
+      key: "lostPenalty",
+      width: "10%",
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -517,6 +517,24 @@ const Inventory = (props) => {
       ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
+      title: "Quantity",
+      dataIndex: "qty",
+      key: "qty",
+      width: "10%",
+    },
+    {
+      title: "Building Stock",
+      dataIndex: "bldgStock",
+      key: "bldgStock",
+      width: "15%",
+    },
+    {
+      title: "Book Penalty",
+      dataIndex: "lostPenalty",
+      key: "lostPenalty",
+      width: "10%",
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
@@ -569,6 +587,18 @@ const Inventory = (props) => {
       key: "isbn",
       width: "20%",
       ...getColumnSearchProps("isbn", "ISBN"),
+    },
+    {
+      title: "Building Stock",
+      dataIndex: "bldgStock",
+      key: "bldgStock",
+      width: "15%",
+    },
+    {
+      title: "Book Penalty",
+      dataIndex: "lostPenalty",
+      key: "lostPenalty",
+      width: "10%",
     },
     {
       title: "Status",
@@ -647,7 +677,8 @@ const Inventory = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -680,61 +711,6 @@ const Inventory = (props) => {
               dataSource={getAvailable}
               pagination={paginationAvailable}
             />
-          </div>
-          <div className="customers">
-            <Divider orientation="left" orientationMargin="0">
-              <h3>Generate and Download QR Code</h3>
-            </Divider>
-            <Container>
-              <Card>
-                <CardContent className={classes.cardContent}>
-                  <Grid
-                    item
-                    xl={4}
-                    lg={4}
-                    md={6}
-                    sm={12}
-                    xs={12}
-                    className={classes.gridContent}
-                  >
-                    <h3>Pampanga High School Library</h3>
-                    {qrDetail.length > 0 && qrImage ? (
-                      <>
-                        <a
-                          className={classes.gridContent}
-                          href={qrImage}
-                          download
-                          onClick={handleDownload}
-                        >
-                          <img src={qrImage} alt="qrImage" />
-                        </a>
-                      </>
-                    ) : null}
-                    <br />
-                    <br />
-                    <TextField
-                      label="Enter Book ISBN here"
-                      onChange={(e) => setQrDetail(e.target.value)}
-                      value={qrDetail}
-                    />
-                    <Button
-                      className={classes.btn}
-                      icon={<QrcodeOutlined />}
-                      shape="round"
-                      type="primary"
-                      onClick={generateQrCode}
-                      style={{
-                        backgroundColor: "#000080",
-                        border: "1px solid #d9d9d9",
-                      }}
-                    >
-                      Generate QR Code
-                    </Button>
-                    <br />
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Container>
           </div>
         </div>
         <Divider orientation="left" orientationMargin="0">

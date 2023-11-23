@@ -17,6 +17,10 @@ const ReserveBookSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  userType: {
+    type: String,
+    required: true,
+  },
   grade: {
     type: String,
     required: true,
@@ -86,6 +90,14 @@ const ReserveBookSchema = new mongoose.Schema({
     required: true,
   },
   QRCode: {
+    type: String,
+    required: true,
+  },
+  lostPenalty: {
+    type: String,
+    required: true,
+  },
+  bldgStock: {
     type: String,
     required: true,
   },

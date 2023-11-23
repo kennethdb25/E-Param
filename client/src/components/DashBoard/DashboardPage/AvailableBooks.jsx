@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Table,
-  Tabs,
+  Typography,
   Button,
   Popconfirm,
   message,
   Input,
   Space,
   Divider,
+  Select,
 } from "antd";
 import {
   SearchOutlined,
@@ -22,6 +23,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import "./style.css";
 import "antd/dist/antd.min.css";
 import { AvailableBooksDetailsModal } from "../AntdComponents/Modal/modal";
+
+const { Title } = Typography;
 
 const AvailableBooks = (props) => {
   const { genre, setCurrentActive, getAddShelfPerStudent, handleLogout } =
@@ -45,6 +48,7 @@ const AvailableBooks = (props) => {
     record.studentId = loginData.validUser.studentId;
     record.firstName = loginData.validUser.firstName;
     record.middleName = loginData.validUser.middleName;
+    record.userType = loginData.validUser.userType;
     record.lastName = loginData.validUser.lastName;
     record.grade = loginData.validUser.grade;
     record.section = loginData.validUser.section;
@@ -57,17 +61,12 @@ const AvailableBooks = (props) => {
       },
       body: JSON.stringify(record),
     });
-
     const res = await data.json();
     if (res.status === 201) {
       getAddShelfPerStudent();
       message.success("Reservation Added to Shelf");
       setCurrentActive(4);
     }
-  };
-
-  const onChange = (key) => {
-    setActiveTab(genre[key - 1]);
   };
 
   const onViewDetails = async (record, e) => {
@@ -208,6 +207,18 @@ const AvailableBooks = (props) => {
       ...getColumnSearchProps("isbn", "ISBN"),
     },
     {
+      title: "Quantity",
+      dataIndex: "qty",
+      key: "qty",
+      width: "10%",
+    },
+    {
+      title: "Bldg. Loc.",
+      dataIndex: "bldgStock",
+      key: "bldgStock",
+      width: "10%",
+    },
+    {
       title: "Genre",
       dataIndex: "genre",
       key: "genre",
@@ -230,7 +241,8 @@ const AvailableBooks = (props) => {
           <div
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
           >
-            {loginData.validUser.userType === "Student" ? (
+            {loginData.validUser.userType !== "Super Admin" &&
+            loginData.validUser.userType !== "Librarian" ? (
               <>
                 <Popconfirm
                   placement="top"
@@ -267,6 +279,22 @@ const AvailableBooks = (props) => {
       ),
     },
   ];
+
+  const onChange = (value) => {
+    console.log(`selected ${value}`);
+    setActiveTab(value);
+  };
+  const onSearch = (value) => {
+    console.log("search:", value);
+  };
+
+  // Filter `option.label` match the user type `input`
+  const filterOption = (input, option) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+  const options = genre.map((bookName) => ({
+    value: bookName,
+    label: bookName,
+  }));
 
   useEffect(() => {
     const fetchData = async () => {
@@ -330,7 +358,8 @@ const AvailableBooks = (props) => {
             <h4>{`${loginData?.validUser.firstName} ${loginData?.validUser.lastName}`}</h4>
             <small>{`${loginData?.validUser.userType}`}</small>
           </div>
-          {loginData.validUser?.userType !== "Student" ? (
+          {loginData.validUser?.userType === "Super Admin" ||
+          loginData.validUser?.userType === "Librarian" ? (
             <div
               onClick={() => handleLogout()}
               style={{
@@ -354,22 +383,36 @@ const AvailableBooks = (props) => {
       <main>
         <div className="card-body">
           <div className="table-responsive">
-            <Tabs
-              onChange={onChange}
-              type="card"
-              items={genre.map((bookName, index) => {
-                const id = String(index + 1);
-                return {
-                  label: `${bookName}`,
-                  key: id,
-                  children: (
-                    <Divider orientation="left" orientationMargin="0">
-                      <h1 key={id}>{`${bookName}`}</h1>
-                    </Divider>
-                  ),
-                };
-              })}
-            />
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Title
+                level={5}
+                style={{
+                  marginTop: "10px",
+                }}
+              >
+                Search Book Genre Here:
+              </Title>
+              <Select
+                style={{ width: "40%" }}
+                showSearch
+                placeholder="Search Book Genre"
+                optionFilterProp="children"
+                onChange={onChange}
+                onSearch={onSearch}
+                filterOption={filterOption}
+                options={options}
+              />
+            </div>
+            <Divider orientation="left" orientationMargin="0">
+              <h1 key={activeTab}>{`${activeTab}`}</h1>
+            </Divider>
             <Table
               key="AvailableBook"
               columns={columns}
