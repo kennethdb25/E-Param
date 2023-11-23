@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
 import { Html5QrcodeScanner } from "html5-qrcode";
 import { LoginContext } from "../../../Context/Context";
-import { Table, Button, Space, message, Input, Empty } from "antd";
+import { Table, Button, Space, message, Input } from "antd";
 import {
   SearchOutlined,
   ReadOutlined,
