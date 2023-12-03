@@ -14,39 +14,39 @@ const LoginForm = (props) => {
   const { showSignUpForm, LoginValid } = props;
 
   const onFinish = async (values) => {
-    const currentDate = new Date().getTime();
-    const currentDate1 = new Date().toISOString();
-    const split = currentDate1.split("T");
-    const startingPoint = new Date(`${split[0]}T00:00:00.000Z`).getTime();
-    const endingPoint = new Date(`${split[0]}T09:00:00.000Z`).getTime();
+    // const currentDate = new Date().getTime();
+    // const currentDate1 = new Date().toISOString();
+    // const split = currentDate1.split("T");
+    // const startingPoint = new Date(`${split[0]}T00:00:00.000Z`).getTime();
+    // const endingPoint = new Date(`${split[0]}T09:00:00.000Z`).getTime();
 
-    if (currentDate >= startingPoint && currentDate <= endingPoint) {
-      const data = await fetch("/student/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      const res = await data.json();
-      if (res.status === 201) {
-        LoginValid();
-        message.success("Logged In");
+    // if (currentDate >= startingPoint && currentDate <= endingPoint) {
+    const data = await fetch("/student/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const res = await data.json();
+    if (res.status === 201) {
+      LoginValid();
+      message.success("Logged In");
+      setTimeout(() => {
+        let arry = res.result.userEmail.tokens;
+        let lastElement = arry[arry.length - 1];
+        localStorage.setItem("studentToken", lastElement.token);
+        window.location.reload();
         setTimeout(() => {
-          let arry = res.result.userEmail.tokens;
-          let lastElement = arry[arry.length - 1];
-          localStorage.setItem("studentToken", lastElement.token);
-          window.location.reload();
-          setTimeout(() => {
-            history("/dashboard");
-          }, 1000);
-        }, 3000);
-      } else {
-        message.error(res.message);
-      }
+          history("/dashboard");
+        }, 1000);
+      }, 3000);
     } else {
-      message.error("Please login during working hours (08:00am to 05:00pm)");
+      message.error(res.message);
     }
+    // } else {
+    //   message.error("Please login during working hours (08:00am to 05:00pm)");
+    // }
   };
   const onFinishFailed = async (error) => {
     console.log("Failed:", error);

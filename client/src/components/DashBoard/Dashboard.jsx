@@ -486,7 +486,7 @@ const HomeDashboard = (props) => {
                 key={4}
                 className={currentActive === 4 ? "active" : "none"}
                 onClick={() =>
-                  loginData?.validUser?.userType !== "Librarian" ||
+                  loginData?.validUser?.userType !== "Librarian" &&
                   loginData?.validUser?.userType !== "Super Admin"
                     ? getAddShelfPerStudent()
                     : (setCurrentActive(4), getInventoryData())
