@@ -5,7 +5,7 @@ const LibrarianModel = require('../../models/librarianModel');
 
 const imgconfig = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, '../../uploads');
+    callback(null, './uploads');
   },
   filename: (req, file, callback) => {
     callback(null, `${Date.now()}-${file.originalname}`);

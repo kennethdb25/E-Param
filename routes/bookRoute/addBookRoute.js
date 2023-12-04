@@ -9,7 +9,7 @@ const PromisePool = require('@supercharge/promise-pool');
 
 const imgconfig = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, '../../uploads');
+    callback(null, './uploads');
   },
   filename: (req, file, callback) => {
     callback(null, `${Date.now()}-${file.originalname}`);
@@ -26,7 +26,7 @@ const isImage = (req, file, callback) => {
 
 const fileConfig = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, '../../uploads');
+    callback(null, './uploads');
   },
   filename: (req, file, callback) => {
     callback(null, `${Date.now()}-${file.originalname}`);
