@@ -14,13 +14,13 @@ const LibrarianLoginForm = (props) => {
   const { LoginValid } = props;
 
   const onFinish = async (values) => {
-    const currentDate = new Date().getTime();
-    const currentDate1 = new Date().toISOString();
-    const split = currentDate1.split("T");
-    const startingPoint = new Date(`${split[0]}T00:00:00.000Z`).getTime();
-    const endingPoint = new Date(`${split[0]}T10:00:00.000Z`).getTime();
+    // const currentDate = new Date().getTime();
+    // const currentDate1 = new Date().toISOString();
+    // const split = currentDate1.split("T");
+    // const startingPoint = new Date(`${split[0]}T00:00:00.000Z`).getTime();
+    // const endingPoint = new Date(`${split[0]}T10:00:00.000Z`).getTime();
 
-    if (currentDate >= startingPoint && currentDate <= endingPoint) {
+    // if (currentDate >= startingPoint && currentDate <= endingPoint) {
       const data = await fetch("/librarian/login", {
         method: "POST",
         headers: {
@@ -44,9 +44,9 @@ const LibrarianLoginForm = (props) => {
       } else {
         message.error(res.message);
       }
-    } else {
-      message.error("Please login during working hours (08:00am to 05:00pm)");
-    }
+    // } else {
+    //   message.error("Please login during working hours (08:00am to 05:00pm)");
+    // }
   };
   const onFinishFailed = async (error) => {
     console.log(error);
