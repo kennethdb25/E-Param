@@ -95,7 +95,7 @@ function App() {
 
       const data = await res.json();
 
-      if (data.status === 401 || !data) {
+      if (data.status === 401 || !data || data.status === 404) {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
@@ -115,7 +115,7 @@ function App() {
 
       const data = await res.json();
 
-      if (data.status === 401 || !data) {
+      if (data.status === 401 || !data || data.status === 404) {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
@@ -135,7 +135,7 @@ function App() {
 
       const data = await res.json();
 
-      if (data.status === 401 || !data) {
+      if (data.status === 401 || !data || data.status === 404) {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
