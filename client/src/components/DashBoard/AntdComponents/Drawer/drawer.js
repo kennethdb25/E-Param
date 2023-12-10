@@ -211,11 +211,11 @@ export const InventorySingleAddDrawer = (props) => {
                     ]}
                   >
                     <Select placeholder="Select Building to Stock">
-                      <Select.Option key={1} value={"Library 1"}>
-                        Library 1
+                      <Select.Option key={1} value={"Gabaldon"}>
+                        Gabaldon
                       </Select.Option>
-                      <Select.Option key={2} value={"Library 2"}>
-                        Library 2
+                      <Select.Option key={2} value={"Calixto"}>
+                        Calixto
                       </Select.Option>
                     </Select>
                   </Form.Item>

@@ -506,44 +506,6 @@ const StudentAccounts = (props) => {
                         md={{ span: 24 }}
                         layout="horizontal"
                       >
-                        <Form.Item label="Email" name="email">
-                          <Typography.Title
-                            level={5}
-                            style={{
-                              margin: 0,
-                              width: "100%",
-                            }}
-                          >
-                            {viewData.email}
-                          </Typography.Title>
-                        </Form.Item>
-                      </Col>
-                      <Col
-                        xs={{ span: 24 }}
-                        md={{ span: 24 }}
-                        layout="horizontal"
-                      >
-                        <Form.Item label="Address" name="address">
-                          <Typography.Title
-                            level={5}
-                            style={{
-                              margin: 0,
-                              width: "100%",
-                            }}
-                          >
-                            {viewData.address}
-                          </Typography.Title>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Col>
-                  <Col xs={{ span: 24 }} md={{ span: 8 }}>
-                    <Row gutter={6}>
-                      <Col
-                        xs={{ span: 24 }}
-                        md={{ span: 24 }}
-                        layout="horizontal"
-                      >
                         <Form.Item label="Grade and Section" name="grade&sec">
                           <Typography.Title
                             level={5}
@@ -553,23 +515,6 @@ const StudentAccounts = (props) => {
                             }}
                           >
                             {`${viewData.grade} - ${viewData.section}`}
-                          </Typography.Title>
-                        </Form.Item>
-                      </Col>
-                      <Col
-                        xs={{ span: 24 }}
-                        md={{ span: 24 }}
-                        layout="horizontal"
-                      >
-                        <Form.Item label="Sex" name="gender">
-                          <Typography.Title
-                            level={5}
-                            style={{
-                              margin: 0,
-                              width: "100%",
-                            }}
-                          >
-                            {viewData.gender}
                           </Typography.Title>
                         </Form.Item>
                       </Col>
@@ -592,28 +537,143 @@ const StudentAccounts = (props) => {
                           </Typography.Title>
                         </Form.Item>
                       </Col>
+                    </Row>
+                  </Col>
+                  <Col xs={{ span: 24 }} md={{ span: 8 }}>
+                    <Row gutter={6}>
                       <Col
                         xs={{ span: 24 }}
                         md={{ span: 24 }}
                         layout="horizontal"
                       >
-                        <Form.Item>
-                          <Input hidden />
-                        </Form.Item>
-                      </Col>
-                      <Col
-                        xs={{ span: 24 }}
-                        md={{ span: 24 }}
-                        layout="horizontal"
-                      ></Col>
-                      <Col
-                        xs={{ span: 24 }}
-                        md={{ span: 24 }}
-                        layout="horizontal"
-                      >
-                        <Form.Item>
-                          <Input hidden />
-                        </Form.Item>
+                        <table border="1">
+                          <tr>
+                            <th style={{ width: "100px" }}>Call. No</th>
+                            <th style={{ width: "100px" }}>Acc. No.</th>
+                            <th style={{ width: "120px" }}>Due Date</th>
+                            <th style={{ width: "140px" }}>Returned Date</th>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                          <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                          </tr>
+                        </table>
                       </Col>
                       <Col
                         xs={{ span: 24 }}
@@ -628,7 +688,6 @@ const StudentAccounts = (props) => {
                               width: "100%",
                             }}
                           >
-                            <br />
                             <Text
                               underline
                             >{` ${loginData?.validUser.lastName}, ${loginData?.validUser.firstName} ${loginData?.validUser.middleName}`}</Text>

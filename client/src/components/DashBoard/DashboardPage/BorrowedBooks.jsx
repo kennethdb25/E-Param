@@ -267,10 +267,10 @@ const BorrowedBooks = (props) => {
   });
 
   const remainingDays = (date, status) => {
-    const currentDate = new Date()
+    const currentDate = new Date();
     const returnDate = new Date(date);
 
-    const Difference_In_Days =currentDate.getTime() - returnDate.getTime();
+    const Difference_In_Days = returnDate.getTime() - currentDate.getTime();
     const remainings = Difference_In_Days / (1000 * 3600 * 24);
     const remaining = Math.round(remainings);
 

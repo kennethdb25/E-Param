@@ -196,21 +196,26 @@ BorrowBookRouter.patch("/book/process-return/:_id", async (req, res) => {
     const bookToChangeInAvailable = await BookModel.findOne({
       isbn: checkIfBookIsNotProcessed.isbn,
     });
-
     if (checkIfBookIsNotProcessed) {
       checkIfBookIsNotProcessed.status = "Returned";
       checkIfBookIsNotProcessed.dateReturned = new Date().toISOString();
       checkIfBookIsNotProcessed.isRated = false;
 
-      bookToChangeInAvailable.status = "Available";
+      if (
+        bookToChangeInAvailable.status === "Available" &&
+        bookToChangeInAvailable.qty > 0
+      ) {
+        bookToChangeInAvailable.qty = bookToChangeInAvailable.qty + 1;
+        await bookToChangeInAvailable.save();
+      } else {
+        bookToChangeInAvailable.qty = bookToChangeInAvailable.qty + 1;
+        bookToChangeInAvailable.status = "Available";
+        await bookToChangeInAvailable.save();
+      }
 
       const proccessBook = await checkIfBookIsNotProcessed.save();
 
-      const changeBookToAvailable = await bookToChangeInAvailable.save();
-
-      return res
-        .status(200)
-        .json({ status: 200, body: { proccessBook, changeBookToAvailable } });
+      return res.status(200).json({ status: 200, body: { proccessBook } });
     } else {
       return res.status(500).json({ error: "Internal Server Error" });
     }

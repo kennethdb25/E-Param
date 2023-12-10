@@ -47,7 +47,6 @@ const LoginContent = (props) => {
       onClose();
       form.resetFields();
     } else {
-      console.log(data);
       message.error(data.error);
     }
   };

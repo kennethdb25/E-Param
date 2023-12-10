@@ -364,10 +364,11 @@ export const BorrowedBooksViewDetailsModal = (props) => {
               </Popconfirm>,
               <Popconfirm
                 placement="top"
-                title={`Are you sure want to complete the process lost? Borrower needs to pay Php ${viewDetailsData.lostPenalty}.00 first`}
+                title={`Borrower needs to pay security deposit of Php ${viewDetailsData.lostPenalty}.00 first.`}
                 onConfirm={handleProcessLost}
                 okText="Confirm"
                 cancelText="Cancel"
+                style={{ width: "100px" }}
               >
                 <Button key="lost" type="primary" icon={<QuestionOutlined />}>
                   Lost
@@ -791,7 +792,7 @@ export const BorrowedBooksViewDetailsModal = (props) => {
                       marginTop: "20px",
                     }}
                   >
-                    Lost Fee: {`Php ${viewDetailsData.lostPenalty}.00`}
+                    Security Deposit: {`Php ${viewDetailsData.lostPenalty}.00`}
                   </Title>
                 </>
               )}

@@ -201,7 +201,6 @@ const Settings = (props) => {
   };
 
   const onFinishOther = async (values) => {
-    console.log(values);
     const newdata = new FormData();
     newdata.append("photo", values.photo.file.originFileObj);
     newdata.append("address", values.address);

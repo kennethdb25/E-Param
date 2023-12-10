@@ -275,7 +275,6 @@ const Inventory = (props) => {
   };
 
   const handleFileUpdloadReview = async (values) => {
-    // console.log(file);
     const newdata = new FormData();
     newdata.append("photo", values.photo.file.originFileObj);
 
