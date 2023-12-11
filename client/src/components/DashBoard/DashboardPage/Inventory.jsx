@@ -666,7 +666,7 @@ const Inventory = (props) => {
               }}
             >
               <GiHamburgerMenu style={{ cursor: "pointer" }} />
-              Inventory
+              Catalog
             </span>
           </label>
         </h1>

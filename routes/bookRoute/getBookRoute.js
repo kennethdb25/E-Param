@@ -1,15 +1,13 @@
-const express = require("express");
+const express = require('express');
 const GetBookRouter = new express.Router();
-const BookModel = require("../../models/bookModel");
-const ReserveBookModel = require("../../models/reserveBookModel.js");
-const BorrowBookModel = require("../../models/borrowBookModel");
+const BookModel = require('../../models/bookModel');
+const ReserveBookModel = require('../../models/reserveBookModel.js');
+const BorrowBookModel = require('../../models/borrowBookModel');
 
 // get new books
-GetBookRouter.get("/book/get-new", async (req, res) => {
+GetBookRouter.get('/book/get-new', async (req, res) => {
   try {
-    const newBooks = await BookModel.find({ status: "Available" })
-      .sort({ created: -1 })
-      .limit(10);
+    const newBooks = await BookModel.find({ status: 'Available' }).sort({ created: -1 }).limit(10);
     return res.status(200).json({ status: 200, body: newBooks });
   } catch (error) {
     console.log(error);
@@ -18,9 +16,9 @@ GetBookRouter.get("/book/get-new", async (req, res) => {
 });
 
 // Get all available books
-GetBookRouter.get("/book/get-available", async (req, res) => {
+GetBookRouter.get('/book/get-available', async (req, res) => {
   try {
-    const newBooks = await BookModel.find({ status: "Available" });
+    const newBooks = await BookModel.find({ status: 'Available' });
     return res.status(200).json({ status: 200, body: newBooks });
   } catch (error) {
     console.log(error);
@@ -28,9 +26,9 @@ GetBookRouter.get("/book/get-available", async (req, res) => {
   }
 });
 
-GetBookRouter.get("/book/get-all-review", async (req, res) => {
+GetBookRouter.get('/book/get-all-review', async (req, res) => {
   try {
-    const reviewBooks = await BookModel.find({ status: "Review" });
+    const reviewBooks = await BookModel.find({ status: 'Review' });
     return res.status(200).json({ status: 200, body: reviewBooks });
   } catch (error) {
     console.log(error);
@@ -39,9 +37,9 @@ GetBookRouter.get("/book/get-all-review", async (req, res) => {
 });
 
 // Get all reserve books
-GetBookRouter.get("/book/get-reserved", async (req, res) => {
+GetBookRouter.get('/book/get-reserved', async (req, res) => {
   try {
-    const borrowedBooks = await ReserveBookModel.find({ status: "Reserved" });
+    const borrowedBooks = await ReserveBookModel.find({ status: 'Reserved' });
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
     console.log(error);
@@ -50,7 +48,7 @@ GetBookRouter.get("/book/get-reserved", async (req, res) => {
 });
 
 // get all borrowed books for admin and librarian
-GetBookRouter.get("/book/get-borrowed", async (req, res) => {
+GetBookRouter.get('/book/get-borrowed', async (req, res) => {
   try {
     const borrowedBooks = await BorrowBookModel.find().sort({
       dateBorrowed: -1,
@@ -63,8 +61,8 @@ GetBookRouter.get("/book/get-borrowed", async (req, res) => {
 });
 
 // get borrowed books per student
-GetBookRouter.get("/book/student-borrowed", async (req, res) => {
-  const all = req.query.email || "";
+GetBookRouter.get('/book/student-borrowed', async (req, res) => {
+  const all = req.query.email || '';
   try {
     const borrowedBooks = await BorrowBookModel.find({ email: all });
     return res.status(200).json({ status: 200, body: borrowedBooks });
@@ -74,9 +72,9 @@ GetBookRouter.get("/book/student-borrowed", async (req, res) => {
   }
 });
 
-GetBookRouter.get("/book/get-all-lost", async (req, res) => {
+GetBookRouter.get('/book/get-all-lost', async (req, res) => {
   try {
-    const lostBooks = await BorrowBookModel.find({ status: "Lost" }).sort({
+    const lostBooks = await BorrowBookModel.find({ status: 'Lost' }).sort({
       dateLost: -1,
     });
     return res.status(200).json({ status: 200, body: lostBooks });
@@ -87,12 +85,12 @@ GetBookRouter.get("/book/get-all-lost", async (req, res) => {
 });
 
 // get borrowed books per student
-GetBookRouter.get("/book/get-lost", async (req, res) => {
-  const all = req.query.email || "";
+GetBookRouter.get('/book/get-lost', async (req, res) => {
+  const all = req.query.email || '';
   try {
     const lostBooks = await BorrowBookModel.find({
       email: all,
-      status: "Lost",
+      status: 'Lost',
     });
     return res.status(200).json({ status: 200, body: lostBooks });
   } catch (error) {
@@ -102,12 +100,12 @@ GetBookRouter.get("/book/get-lost", async (req, res) => {
 });
 
 // get all currently borrowed books per student
-GetBookRouter.get("/book/student-currently-borrowed", async (req, res) => {
-  const all = req.query.email || "";
+GetBookRouter.get('/book/student-currently-borrowed', async (req, res) => {
+  const all = req.query.email || '';
   try {
     const borrowedBooks = await BorrowBookModel.find({
       email: all,
-      status: "Borrowed",
+      status: 'Borrowed',
     });
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
@@ -117,10 +115,10 @@ GetBookRouter.get("/book/student-currently-borrowed", async (req, res) => {
 });
 
 // get all currently borrowed books for student
-GetBookRouter.get("/book/all-currently-borrowed", async (req, res) => {
+GetBookRouter.get('/book/all-currently-borrowed', async (req, res) => {
   try {
     const currentlyBorrowedBooks = await BorrowBookModel.find({
-      status: "Borrowed",
+      status: 'Borrowed',
     });
     return res.status(200).json({ status: 200, body: currentlyBorrowedBooks });
   } catch (error) {
@@ -130,12 +128,12 @@ GetBookRouter.get("/book/all-currently-borrowed", async (req, res) => {
 });
 
 // get reserved books per student
-GetBookRouter.get("/book/student-shelf", async (req, res) => {
-  const all = req.query.email || "";
+GetBookRouter.get('/book/student-shelf', async (req, res) => {
+  const all = req.query.email || '';
   try {
     const borrowedBooks = await ReserveBookModel.find({
       email: all,
-      status: "Reserved",
+      status: 'Reserved',
     });
     return res.status(200).json({ status: 200, body: borrowedBooks });
   } catch (error) {
@@ -144,20 +142,20 @@ GetBookRouter.get("/book/student-shelf", async (req, res) => {
   }
 });
 // get availble books per genre
-GetBookRouter.get("/book/get-genre", async (req, res) => {
+GetBookRouter.get('/book/get-genre', async (req, res) => {
   try {
     let data = [];
     const getGenre = await BookModel.aggregate([
       {
         $match: {
-          status: "Available",
+          status: 'Available',
         },
       },
       {
         $group: {
-          _id: "$genre",
+          _id: '$genre',
           uniqueValues: {
-            $addToSet: "$genre",
+            $addToSet: '$genre',
           },
         },
       },
@@ -173,21 +171,19 @@ GetBookRouter.get("/book/get-genre", async (req, res) => {
 });
 
 // get Book per genre
-GetBookRouter.get("/book/get-all-book-per-genre", async (req, res) => {
+GetBookRouter.get('/book/get-all-book-per-genre', async (req, res) => {
   const cache = {};
   try {
-    const search = req.query.genre || "";
+    const search = req.query.genre || '';
 
     if (cache[search]) {
       return res.json(cache[search]);
     }
 
-    await BookModel.find({ genre: search, status: "Available" }).then(
-      (data) => {
-        cache[search] = data;
-        return res.json(data);
-      }
-    );
+    await BookModel.find({ genre: search, status: 'Available' }).then((data) => {
+      cache[search] = data;
+      return res.json(data);
+    });
   } catch (error) {
     console.log(error);
     return res.status(422).json(error);
@@ -195,8 +191,8 @@ GetBookRouter.get("/book/get-all-book-per-genre", async (req, res) => {
 });
 
 //GET BOOK INFO FOR PROCESSING RESERVED BOOK
-GetBookRouter.get("/book/get-info", async (req, res) => {
-  const info = req.query.isbn || "";
+GetBookRouter.get('/book/get-info', async (req, res) => {
+  const info = req.query.isbn || '';
   try {
     const getBookInfo = await BookModel.findOne({ isbn: info });
     return res.status(200).json({ status: 200, body: getBookInfo });
@@ -206,13 +202,13 @@ GetBookRouter.get("/book/get-info", async (req, res) => {
   }
 });
 
-GetBookRouter.get("/book-graph-ratings", async (req, res) => {
+GetBookRouter.get('/book-graph-ratings', async (req, res) => {
   try {
     const ratings = await BookModel.aggregate([
       {
         $match: {
           status: {
-            $ne: "Deleted",
+            $ne: 'Deleted',
           },
           ratings: {
             $exists: true,
@@ -221,9 +217,9 @@ GetBookRouter.get("/book-graph-ratings", async (req, res) => {
       },
       {
         $group: {
-          _id: "$title",
+          _id: '$title',
           ratings: {
-            $addToSet: "$ratings",
+            $addToSet: '$ratings',
           },
         },
       },
@@ -246,21 +242,24 @@ GetBookRouter.get("/book-graph-ratings", async (req, res) => {
   }
 });
 
-GetBookRouter.get("/book-borrowed-ratings", async (req, res) => {
+GetBookRouter.get('/book-borrowed-ratings', async (req, res) => {
   try {
     const ratings = await BorrowBookModel.aggregate([
       {
         $match: {
           status: {
-            $ne: "Lost",
+            $ne: 'Lost',
+          },
+          grade: {
+            $ne: 'N/A',
           },
         },
       },
       {
         $group: {
-          _id: "$grade",
+          _id: '$grade',
           gradeNumber: {
-            $addToSet: "$_id",
+            $addToSet: '$_id',
           },
         },
       },
@@ -280,23 +279,19 @@ GetBookRouter.get("/book-borrowed-ratings", async (req, res) => {
   }
 });
 
-GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
+GetBookRouter.get('/book/borrowed/push-notification', async (req, res) => {
   const today = new Date();
   const startPoint = today.getDay() !== 5 ? 1 : 3;
   let initialDate = new Date(today);
   initialDate.setDate(today.getDate() + startPoint);
 
-  const startDate = new Date(
-    initialDate.toISOString().split("T")[0] + "T00:00:00.000Z"
-  );
-  const endDate = new Date(
-    initialDate.toISOString().split("T")[0] + "T23:59:59.999Z"
-  );
+  const startDate = new Date(initialDate.toISOString().split('T')[0] + 'T00:00:00.000Z');
+  const endDate = new Date(initialDate.toISOString().split('T')[0] + 'T23:59:59.999Z');
 
   try {
     const users = await BorrowBookModel.find({
       returnDate: { $gte: startDate, $lte: endDate },
-      status: "Borrowed",
+      status: 'Borrowed',
     });
     return res.status(200).json({
       status: 200,
@@ -308,38 +303,36 @@ GetBookRouter.get("/book/borrowed/push-notification", async (req, res) => {
   }
 });
 
-GetBookRouter.delete("/book/reserved/delete", async (req, res) => {
-  const id = req.query._id || "";
-  const isbn = req.query.isbn || "";
+GetBookRouter.delete('/book/reserved/delete', async (req, res) => {
+  const id = req.query._id || '';
+  const isbn = req.query.isbn || '';
 
   try {
     const checkBook = await ReserveBookModel.findOne({
       _id: id,
-      status: "Reserved",
+      status: 'Reserved',
     });
 
     const toChangeStatus = await BookModel.findOne({ isbn: isbn });
 
     if (!checkBook || !toChangeStatus) {
-      return res.status(404).json({ error: "Book Not Found" });
+      return res.status(404).json({ error: 'Book Not Found' });
     }
     const deleteBook = await ReserveBookModel.deleteOne({
       _id: id,
-      status: "Reserved",
+      status: 'Reserved',
     });
 
     if (toChangeStatus.qty === 0) {
       if (toChangeStatus) {
-        toChangeStatus.status = "Available";
+        toChangeStatus.status = 'Available';
         toChangeStatus.qty = toChangeStatus.qty + 1;
 
         const proccessBook = await toChangeStatus.save();
 
-        return res
-          .status(200)
-          .json({ status: 200, body: { deleteBook, proccessBook } });
+        return res.status(200).json({ status: 200, body: { deleteBook, proccessBook } });
       } else {
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
     } else {
       if (toChangeStatus) {
@@ -347,11 +340,9 @@ GetBookRouter.delete("/book/reserved/delete", async (req, res) => {
 
         const proccessBook = await toChangeStatus.save();
 
-        return res
-          .status(200)
-          .json({ status: 200, body: { deleteBook, proccessBook } });
+        return res.status(200).json({ status: 200, body: { deleteBook, proccessBook } });
       } else {
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: 'Internal Server Error' });
       }
     }
   } catch (error) {

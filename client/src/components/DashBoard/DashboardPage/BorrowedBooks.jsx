@@ -58,9 +58,12 @@ const BorrowedBooks = (props) => {
       );
     setViewDetailsModal(true);
 
-    const currentDate = new Date().getDate();
-    const returnDate = new Date(record.returnDate).getDate();
-    const remaining = returnDate - currentDate;
+    const currentDate = new Date();
+    const returnDate = new Date(record.returnDate);
+
+    const Difference_In_Days = returnDate.getTime() - currentDate.getTime();
+    const remainings = Difference_In_Days / (1000 * 3600 * 24);
+    const remaining = Math.round(remainings);
 
     if (remaining < 0) {
       const late = 20;

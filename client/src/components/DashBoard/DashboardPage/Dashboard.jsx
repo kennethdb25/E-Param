@@ -386,7 +386,7 @@ const Dashboard = (props) => {
             </div>
           </div>
         </div>
-        {loginData.validUser?.userType === "Super Admin" &&
+        {loginData.validUser?.userType === "Super Admin" ||
         loginData.validUser?.userType === "Librarian" ? (
           <div className="recents-grid">
             <div className="customers">

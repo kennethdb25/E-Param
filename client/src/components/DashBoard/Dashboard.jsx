@@ -508,7 +508,7 @@ const HomeDashboard = (props) => {
                   >
                     <FileDoneOutlined />
                     <span className="las la-clipboard-list"></span>
-                    <span>Inventory</span>
+                    <span>Catalog</span>
                   </a>
                 </li>
               </>
