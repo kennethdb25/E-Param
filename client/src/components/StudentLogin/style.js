@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme();
 const useStyles = makeStyles(() => ({
   loginContainer: {
-    backgroundImage: 'url(/bg.png)',
+    backgroundImage: 'url(/bg-2.png)',
     backgroundPosition: 'center',
     backgroundSize: 'cover',
     minHeight: '100vh',
