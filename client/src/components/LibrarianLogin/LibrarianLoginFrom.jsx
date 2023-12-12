@@ -18,36 +18,40 @@ const LibrarianLoginForm = (props) => {
     const currentDate1 = new Date().toISOString();
     const split = currentDate1.split("T");
     const startingPoint = new Date(`${split[0]}T00:00:00.000Z`).getTime();
-    const endingPoint = new Date(`${split[0]}T01:00:00.000Z`).getTime();
+    const endingPoint = new Date(`${split[0]}T09:00:00.000Z`).getTime();
     const currentDay = new Date().getDay();
-    console.log(currentDay)
-
-    if (currentDate >= startingPoint && currentDate <= endingPoint && currentDay < 6) {
-    const data = await fetch("/librarian/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const res = await data.json();
-    if (res.status === 201) {
-      LoginValid();
-      message.success("Logged In");
-      setTimeout(() => {
-        let arry = res.result.userEmail.tokens;
-        let lastElement = arry[arry.length - 1];
-        localStorage.setItem("librarianToken", lastElement.token);
-        window.location.reload();
+    if (
+      currentDate >= startingPoint &&
+      currentDate <= endingPoint &&
+      currentDay < 6
+    ) {
+      const data = await fetch("/librarian/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const res = await data.json();
+      if (res.status === 201) {
+        LoginValid();
+        message.success("Logged In");
         setTimeout(() => {
-          history("/dashboard");
-        }, 1000);
-      }, 3000);
+          let arry = res.result.userEmail.tokens;
+          let lastElement = arry[arry.length - 1];
+          localStorage.setItem("librarianToken", lastElement.token);
+          window.location.reload();
+          setTimeout(() => {
+            history("/dashboard");
+          }, 1000);
+        }, 3000);
+      } else {
+        message.error(res.message);
+      }
     } else {
-      message.error(res.message);
-    }
-    } else {
-      message.error("Please login during working days and hours( Mon to Fri, 08:00am to 05:00pm)");
+      message.error(
+        "Please login during working days and hours( Mon to Fri, 08:00am to 05:00pm)"
+      );
     }
   };
   const onFinishFailed = async (error) => {

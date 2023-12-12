@@ -1,22 +1,22 @@
-import { useContext, useEffect, useState } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
-import { LoginContext } from './Context/Context';
-import { ToastContainer } from 'react-toastify';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import './App.css';
-import ROUTE from './Routes/Route';
-import HomeDashboard from './components/DashBoard/Dashboard';
-import LoginContent from './components/StudentLogin/LoginContent';
-import ForgotPassword from './components/ForgotPassword/ForgotPassword';
-import AdminLoginContent from './components/AdminLogin/AdminLoginContent';
-import LibrarianLoginContent from './components/LibrarianLogin/LibrarianLoginContent';
-import LibrarianForgotPassword from './components/ForgotPassword/LibrarianForgotPassword';
-import AdminForgotPassword from './components/ForgotPassword/AdminForgotPassword';
-import PageNotFound from './components/PageNotFound/PageNotFound';
+import { useContext, useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { LoginContext } from "./Context/Context";
+import { ToastContainer } from "react-toastify";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import "./App.css";
+import ROUTE from "./Routes/Route";
+import HomeDashboard from "./components/DashBoard/Dashboard";
+import LoginContent from "./components/StudentLogin/LoginContent";
+import ForgotPassword from "./components/ForgotPassword/ForgotPassword";
+import AdminLoginContent from "./components/AdminLogin/AdminLoginContent";
+import LibrarianLoginContent from "./components/LibrarianLogin/LibrarianLoginContent";
+import LibrarianForgotPassword from "./components/ForgotPassword/LibrarianForgotPassword";
+import AdminForgotPassword from "./components/ForgotPassword/AdminForgotPassword";
+import PageNotFound from "./components/PageNotFound/PageNotFound";
 
 function App() {
-  const [data, setData] = useState('');
+  const [data, setData] = useState("");
   const [newBooks, setNewBooks] = useState();
   const [section, setSection] = useState();
   const [announcement, setAnnouncement] = useState();
@@ -28,10 +28,10 @@ function App() {
   const history = useNavigate();
 
   const sectiionData = async () => {
-    const data = await fetch('/get-all-section', {
-      method: 'GET',
+    const data = await fetch("/get-all-section", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const res = await data.json();
@@ -39,10 +39,10 @@ function App() {
   };
 
   const announcementData = async () => {
-    const data = await fetch('/get-announcement', {
-      method: 'GET',
+    const data = await fetch("/get-announcement", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const res = await data.json();
@@ -50,10 +50,10 @@ function App() {
   };
 
   const activeAnnouncementData = async () => {
-    const data = await fetch('/get-active-announcement', {
-      method: 'GET',
+    const data = await fetch("/get-active-announcement", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const res = await data.json();
@@ -61,10 +61,10 @@ function App() {
   };
 
   const bookRatingsChart = async () => {
-    const data = await fetch('/book-graph-ratings', {
-      method: 'GET',
+    const data = await fetch("/book-graph-ratings", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const res = await data.json();
@@ -72,10 +72,10 @@ function App() {
   };
 
   const borrowedRatingsChart = async () => {
-    const data = await fetch('/book-borrowed-ratings', {
-      method: 'GET',
+    const data = await fetch("/book-borrowed-ratings", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const res = await data.json();
@@ -83,12 +83,12 @@ function App() {
   };
 
   const LoginValid = async () => {
-    if (localStorage.getItem('studentToken')) {
-      let validToken = localStorage.getItem('studentToken');
-      const res = await fetch('/student/valid', {
-        method: 'GET',
+    if (localStorage.getItem("studentToken")) {
+      let validToken = localStorage.getItem("studentToken");
+      const res = await fetch("/student/valid", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: validToken,
         },
       });
@@ -99,16 +99,16 @@ function App() {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
-        console.log('Verified User');
+        console.log("Verified User");
         setLoginData(data);
-        history('/dashboard');
+        history("/dashboard");
       }
-    } else if (localStorage.getItem('librarianToken')) {
-      let validToken = localStorage.getItem('librarianToken');
-      const res = await fetch('/librarian/valid', {
-        method: 'GET',
+    } else if (localStorage.getItem("librarianToken")) {
+      let validToken = localStorage.getItem("librarianToken");
+      const res = await fetch("/librarian/valid", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: validToken,
         },
       });
@@ -119,16 +119,16 @@ function App() {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
-        console.log('Verified User');
+        console.log("Verified User");
         setLoginData(data);
-        history('/dashboard');
+        history("/dashboard");
       }
-    } else if (localStorage.getItem('adminToken')) {
-      let validToken = localStorage.getItem('adminToken');
-      const res = await fetch('/admin/valid', {
-        method: 'GET',
+    } else if (localStorage.getItem("adminToken")) {
+      let validToken = localStorage.getItem("adminToken");
+      const res = await fetch("/admin/valid", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: validToken,
         },
       });
@@ -139,9 +139,9 @@ function App() {
         console.log(data.error);
         history(ROUTE.PAGENOTFOUND);
       } else {
-        console.log('Verified User');
+        console.log("Verified User");
         setLoginData(data);
-        history('/dashboard');
+        history("/dashboard");
       }
     } else {
       setData(true);
@@ -149,10 +149,10 @@ function App() {
   };
 
   const getNewBooks = async () => {
-    const res = await fetch('/book/get-new', {
-      method: 'GET',
+    const res = await fetch("/book/get-new", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     const newData = await res.json();
@@ -183,7 +183,10 @@ function App() {
       {data ? (
         <>
           <Routes>
-            <Route path={ROUTE.HOMEPAGE} element={<LoginContent LoginValid={LoginValid} />} />
+            <Route
+              path={ROUTE.HOMEPAGE}
+              element={<LoginContent LoginValid={LoginValid} />}
+            />
             <Route
               path={ROUTE.DASHBOARD}
               element={
@@ -205,20 +208,32 @@ function App() {
               }
             />
             <Route path={ROUTE.FORGOTPASSWORD} element={<ForgotPassword />} />
-            <Route path={ROUTE.LIBRARIANLOGINPAGE} element={<LibrarianLoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.LIBRARIANFORGOTPASS} element={<LibrarianForgotPassword />} />
-            <Route path={ROUTE.ADMINLOGINPAGE} element={<AdminLoginContent LoginValid={LoginValid} />} />
-            <Route path={ROUTE.ADMINFORGOTPASS} element={<AdminForgotPassword />} />
+            <Route
+              path={ROUTE.LIBRARIANLOGINPAGE}
+              element={<LibrarianLoginContent LoginValid={LoginValid} />}
+            />
+            <Route
+              path={ROUTE.LIBRARIANFORGOTPASS}
+              element={<LibrarianForgotPassword />}
+            />
+            <Route
+              path={ROUTE.ADMINLOGINPAGE}
+              element={<AdminLoginContent LoginValid={LoginValid} />}
+            />
+            <Route
+              path={ROUTE.ADMINFORGOTPASS}
+              element={<AdminForgotPassword />}
+            />
             <Route path={ROUTE.PAGENOTFOUND} element={<PageNotFound />} />
           </Routes>
         </>
       ) : (
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
           }}
         >
           Loading Portal &nbsp;
