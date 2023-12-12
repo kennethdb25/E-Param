@@ -410,7 +410,7 @@ const AvailableBooks = (props) => {
               />
             </div>
             <Divider orientation="left" orientationMargin="0">
-              <h1 key={activeTab}>{`${activeTab.toUpperCase()}`}</h1>
+              <h1 key={activeTab}>{`${activeTab}`}</h1>
             </Divider>
             <Table
               key="AvailableBook"
