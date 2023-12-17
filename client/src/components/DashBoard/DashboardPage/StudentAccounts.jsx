@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useEffect, useState } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 import { LoginContext } from "../../../Context/Context";
 import {
   Button,
@@ -12,6 +13,7 @@ import {
   Input,
   Space,
   message,
+  Divider,
 } from "antd";
 import {
   SearchOutlined,
@@ -39,6 +41,10 @@ const StudentAccounts = (props) => {
   const [pedningImg, setPendingImg] = useState();
   const [viewData, setViewData] = useState();
   const [isView, setIsView] = useState(false);
+  const [studentBookHistory, setStudentBookHistory] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [historyModal, setHistoryModal] = useState(false);
+
   const { studentAccount, getStudentAccounts, handleLogout } = props;
 
   const ViewRecord = async (record) => {
@@ -180,11 +186,11 @@ const StudentAccounts = (props) => {
 
   const columns = [
     {
-      title: "Student ID",
-      dataIndex: "studentId",
-      key: "studentId",
+      title: "Library Card No.",
+      dataIndex: "libraryCardNum",
+      key: "libraryCardNum",
       width: "10%",
-      ...getColumnSearchProps("studentId"),
+      ...getColumnSearchProps("libraryCardNum"),
     },
     {
       title: "First Name",
@@ -243,7 +249,7 @@ const StudentAccounts = (props) => {
       onFilter: (value, record) => record.acctStatus.indexOf(value) === 0,
     },
     {
-      title: "",
+      title:"",
       dataIndex: "",
       key: "",
       width: "10%",
@@ -287,6 +293,178 @@ const StudentAccounts = (props) => {
         );
     }
   }, [loginData]);
+
+  const historyColumns = [
+    {
+      title: "Library Card No.",
+      dataIndex: "libraryCardNum",
+      key: "libraryCardNum",
+      width: "10%",
+      ...getColumnSearchProps("libraryCardNum"),
+    },
+    {
+      title: "Borrower's First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+      width: "15%",
+    },
+    {
+      title: "Borrower's Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      width: "15%",
+    },
+    {
+      title: "Book Name",
+      dataIndex: "title",
+      key: "title",
+      width: "20%",
+    },
+    {
+      title: "ISBN",
+      dataIndex: "isbn",
+      key: "isbn",
+      width: "10%",
+    },
+    {
+      title: "Return Date",
+      dataIndex: "returnDate",
+      key: "returnDate",
+      width: "15%",
+      render: (record) => new Date(record).toLocaleString(),
+    },
+    {
+      title: "Penalty",
+      dataIndex: ["lostPenalty", "status"],
+      key: "lostPenalty",
+      width: "20%",
+      render: (text, row) => (
+        // (record) => <>{new Date(record).toLocaleString()}</>,
+        <>
+          {row["status"] === "Lost"
+            ? `Php ${row["lostPenalty"]}.00`
+            : ""}
+        </>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: "10%",
+      filters: [
+        {
+          text: "Borrowed",
+          value: "Borrowed",
+        },
+        {
+          text: "Returned",
+          value: "Returned",
+        },
+        {
+          text: "Lost",
+          value: "Lost",
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+    },
+    {
+      title:
+        loginData.validUser?.userType === "Super Admin" ||
+        loginData.validUser?.userType === "Librarian" ? (
+          <>
+            <div>
+              <Button
+                // disabled={notifButton}
+                type="primary"
+                shape="round"
+                onClick={() => handleLibraryScan()}
+                style={{
+                  backgroundColor: "#000080",
+                  border: "1px solid #d9d9d9",
+                }}
+              >
+                VALIDATE USER RECORD
+              </Button>
+            </div>
+          </>
+        ) : (
+          ""
+        ),
+      dataIndex: "",
+      key: "",
+      width: "10%",
+      render: (record) => (
+        <>
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+          >
+            <Button
+              key="view"
+              icon={<ReadOutlined />}
+              type="primary"
+              // onClick={() => {
+              //   ViewRecord(record);
+              // }}
+              style={{ backgroundColor: "purple", border: "1px solid #d9d9d9" }}
+            >
+              View Details
+            </Button>
+          </div>
+        </>
+      ),
+    },
+  ];
+
+  const handleLibraryScan = () => {
+    setScannerOpen(true);
+    setHistoryModal(true);
+  };
+  const onCancelProcess = () => {
+    setScannerOpen(false);
+    setHistoryModal(false);
+    setStudentBookHistory("");
+  };
+
+  useEffect(() => {
+    if (scannerOpen) {
+      const scanner = new Html5QrcodeScanner("reader-library", {
+        qrbox: {
+          width: 250,
+          height: 250,
+        },
+        fps: 5,
+      });
+
+      scanner.render(successReadLibraryCard, errorReadLibraryCard);
+
+      function successReadLibraryCard(result) {
+        scanner.clear();
+        setScannerOpen(false);
+        setHistoryModal(false);
+        bookHistory(result);
+      }
+
+      function errorReadLibraryCard(error) {
+        // scanner.clear();
+        console.error(error);
+      }
+    }
+  }, [scannerOpen]);
+
+  const bookHistory = async (studentId) => {
+    const data = await fetch(
+      `/book/student-borrow-history?studentId=${studentId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const res = await data.json();
+    setStudentBookHistory(res.body);
+  };
 
   return (
     <>
@@ -341,7 +519,46 @@ const StudentAccounts = (props) => {
           columns={columns}
           dataSource={studentAccount.body}
         />
+        <Divider orientation="left" orientationMargin="0">
+          <h3>BORROWED HISTORY</h3>
+        </Divider>
+        <Table
+          key="bookHistory"
+          columns={historyColumns}
+          dataSource={studentBookHistory}
+        />
       </main>
+
+      {/* BOOK HISTORY MODAL */}
+      <Modal
+        title="Scan Library Card"
+        width={420}
+        open={historyModal}
+        onCancel={onCancelProcess}
+        footer={[
+          <Button
+            icon={<RollbackOutlined />}
+            type="primary"
+            onClick={onCancelProcess}
+          >
+            Cancel
+          </Button>,
+        ]}
+      >
+        <Row>
+          <Col xs={{ span: 0 }} md={{ span: 4 }}></Col>
+          <Col xs={{ span: 24 }} md={{ span: 24 }}>
+            <Row gutter={12} style={{ gap: "20px" }}>
+              <div
+                id="reader-library"
+                style={{ height: 400, width: 400 }}
+              ></div>
+            </Row>
+          </Col>
+        </Row>
+      </Modal>
+
+      {/* LIBRARY CARD AND ACCOUNT DETAILS MODAL */}
       <Modal
         title={printId ? "Library Card" : "Account Details"}
         width={1600}

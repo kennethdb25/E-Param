@@ -439,11 +439,25 @@ const BorrowedBooks = (props) => {
   };
   const columns = [
     {
-      title: "Student ID",
-      dataIndex: "studentId",
-      key: "studentId",
+      title: "Library Card No.",
+      dataIndex: "libraryCardNum",
+      key: "libraryCardNum",
       width: "15%",
-      ...getColumnSearchProps("studentId", "Student ID"),
+      ...getColumnSearchProps("libraryCardNum", "Student ID"),
+    },
+    {
+      title: "Borrower's First Name",
+      dataIndex: "firstName",
+      key: "firstName",
+      width: "15%",
+      ...getColumnSearchProps("firstName", "First Name"),
+    },
+    {
+      title: "Borrower's Last Name",
+      dataIndex: "lastName",
+      key: "lastName",
+      width: "15%",
+      ...getColumnSearchProps("lastName", "Last Name"),
     },
     {
       title: "Book Name",
@@ -453,26 +467,43 @@ const BorrowedBooks = (props) => {
       ...getColumnSearchProps("title", "Book Name"),
     },
     {
-      title: "Author",
-      dataIndex: "author",
-      key: "author",
+      title: "User Type",
+      dataIndex: "grade",
+      key: "grade",
       width: "15%",
-      ...getColumnSearchProps("author", "Author"),
+      render: (text, row) => (
+        <>
+          {row["grade"] !== "N/A"
+            ? "Student"
+            : "Staff"}
+        </>
+      ),
     },
     {
       title: "Return Date",
-      dataIndex: "returnDate",
+      dataIndex: ["returnDate", "grade"],
       key: "returnDate",
       width: "20%",
-      render: (record) => <>{new Date(record).toLocaleString()}</>,
+      render: (text, row) => (
+        // (record) => <>{new Date(record).toLocaleString()}</>,
+        <>
+          {row["grade"] !== "N/A"
+            ? new Date(row["returnDate"]).toLocaleString()
+            : "Not Applicable"}
+        </>
+      ),
     },
     {
       title: "Remaining Days",
-      dataIndex: ["returnDate", "status"],
+      dataIndex: ["returnDate", "status", "grade"],
       key: "remaindingDays",
       width: "20%",
       render: (text, row) => (
-        <>{remainingDays(row["returnDate"], row["status"])}</>
+        <>
+          {row["grade"] !== "N/A"
+            ? remainingDays(row["returnDate"], row["status"], row["grade"])
+            : "Not Applicable"}
+        </>
       ),
     },
     {

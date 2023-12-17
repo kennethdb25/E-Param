@@ -296,11 +296,11 @@ const Shelf = (props) => {
 
   const columns = [
     {
-      title: "Student ID",
-      dataIndex: "studentId",
-      key: "studentId",
+      title: "Library Card No.",
+      dataIndex: "libraryCardNum",
+      key: "libraryCardNum",
       width: "15%",
-      ...getColumnSearchProps("studentId", "Student ID"),
+      ...getColumnSearchProps("libraryCardNum", "Student ID"),
     },
     {
       title: "Book Name",

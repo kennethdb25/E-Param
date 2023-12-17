@@ -46,6 +46,7 @@ module.exports = function (app) {
       "/book/get-all-review",
       "/book-graph-ratings",
       "/book-borrowed-ratings",
+      "/book/student-borrow-history",
       "/report/generate",
       "/report/get-generated",
       "/report/download-csv",

@@ -31,6 +31,7 @@ BorrowBookRouter.post('/book/add-shelf', async (req, res) => {
     userType,
     qty,
     _id,
+    libraryCardNum,
   } = req.body;
 
   // validate if book is existing
@@ -64,6 +65,7 @@ BorrowBookRouter.post('/book/add-shelf', async (req, res) => {
       lostPenalty,
       userType,
       bookId: _id,
+      libraryCardNum,
       status: 'Reserved',
       dateReserved: new Date().toISOString(),
     });
@@ -96,6 +98,7 @@ BorrowBookRouter.post('/book/add-borrowed', async (req, res) => {
     grade,
     imgpath,
     isbn,
+    libraryCardNum,
     lastName,
     location,
     middleName,
@@ -124,6 +127,7 @@ BorrowBookRouter.post('/book/add-borrowed', async (req, res) => {
         email,
         firstName,
         genre,
+        libraryCardNum,
         grade,
         imgpath,
         isbn,

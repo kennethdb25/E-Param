@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const BorrowookSchema = new mongoose.Schema({
   studentId: {
@@ -16,6 +16,9 @@ const BorrowookSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: true,
+  },
+  libraryCardNum: {
+    type: String,
   },
   grade: {
     type: String,
@@ -114,6 +117,6 @@ const BorrowookSchema = new mongoose.Schema({
   },
 });
 
-const BorrowBookModel = new mongoose.model("BorrowBookInfo", BorrowookSchema);
+const BorrowBookModel = new mongoose.model('BorrowBookInfo', BorrowookSchema);
 
 module.exports = BorrowBookModel;

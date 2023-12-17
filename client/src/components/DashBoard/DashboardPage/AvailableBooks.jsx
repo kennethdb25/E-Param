@@ -27,8 +27,13 @@ import { AvailableBooksDetailsModal } from "../AntdComponents/Modal/modal";
 const { Title } = Typography;
 
 const AvailableBooks = (props) => {
-  const { genre, setCurrentActive, getAddShelfPerStudent, handleLogout } =
-    props;
+  const {
+    genre,
+    setCurrentActive,
+    getAddShelfPerStudent,
+    getAddToShelf,
+    handleLogout,
+  } = props;
   const { loginData } = useContext(LoginContext);
   const [img, setImg] = useState();
   const [viewDeatailsImg, setViewDeatailsImg] = useState();
@@ -42,7 +47,7 @@ const AvailableBooks = (props) => {
   const [searchedColumn, setSearchedColumn] = useState("");
 
   const addToShelfText = "Are you sure to reserve this Book?";
-
+  // console.log(getAddToShelf.length)
   const onConfirmReserve = async (e, record) => {
     e.defaultPrevented = true;
     record.studentId = loginData.validUser.studentId;
@@ -53,19 +58,44 @@ const AvailableBooks = (props) => {
     record.grade = loginData.validUser.grade;
     record.section = loginData.validUser.section;
     record.email = loginData.validUser.email;
+    record.libraryCardNum = loginData.validUser.libraryCardNum;
 
-    const data = await fetch("/book/add-shelf", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(record),
-    });
-    const res = await data.json();
-    if (res.status === 201) {
-      getAddShelfPerStudent();
-      message.success("Reservation Added to Shelf");
-      setCurrentActive(4);
+    if (
+      getAddToShelf &&
+      getAddToShelf.length <= 4 &&
+      loginData.validUser.userType === "Student"
+    ) {
+      const data = await fetch("/book/add-shelf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(record),
+      });
+      const res = await data.json();
+      if (res.status === 201) {
+        getAddShelfPerStudent();
+        message.success("Reservation Added to Shelf");
+        setCurrentActive(4);
+      }
+    } else if (loginData.validUser.userType !== "Student") {
+      const data = await fetch("/book/add-shelf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(record),
+      });
+      const res = await data.json();
+      if (res.status === 201) {
+        getAddShelfPerStudent();
+        message.success("Reservation Added to Shelf");
+        setCurrentActive(4);
+      }
+    } else {
+      message.warn(
+        "You've reached the maximum reservation count, please remove other books from reservation or proceed to Library to complete the process"
+      );
     }
   };
 
@@ -189,7 +219,7 @@ const AvailableBooks = (props) => {
       title: "Book Name",
       dataIndex: "title",
       key: "title",
-      width: "30%",
+      width: "25%",
       ...getColumnSearchProps("title", "Book Name"),
     },
     {
@@ -210,7 +240,7 @@ const AvailableBooks = (props) => {
       title: "Quantity",
       dataIndex: "qty",
       key: "qty",
-      width: "10%",
+      width: "5%",
     },
     {
       title: "Bldg. Loc.",
@@ -228,7 +258,8 @@ const AvailableBooks = (props) => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: "10%",
+      width: "20%",
+      render: (record) => record === 'Reserved' ? 'Out of Stock' : record
     },
     {
       title: "",
@@ -243,24 +274,26 @@ const AvailableBooks = (props) => {
             {loginData.validUser.userType !== "Super Admin" &&
             loginData.validUser.userType !== "Librarian" ? (
               <>
+              {record.qty > 0 ? (
                 <Popconfirm
-                  placement="top"
-                  title={addToShelfText}
-                  onConfirm={(e) => onConfirmReserve(e, record)}
-                  okText="Yes"
-                  cancelText="No"
+                placement="top"
+                title={addToShelfText}
+                onConfirm={(e) => onConfirmReserve(e, record)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  icon={<PlusSquareOutlined />}
+                  style={{
+                    backgroundColor: "#000080",
+                    border: "1px solid #d9d9d9",
+                  }}
+                  type="primary"
                 >
-                  <Button
-                    icon={<PlusSquareOutlined />}
-                    style={{
-                      backgroundColor: "#000080",
-                      border: "1px solid #d9d9d9",
-                    }}
-                    type="primary"
-                  >
-                    Add to Shelf
-                  </Button>
-                </Popconfirm>
+                  Add to Shelf
+                </Button>
+              </Popconfirm>
+              ) : null}
               </>
             ) : null}
             <Button

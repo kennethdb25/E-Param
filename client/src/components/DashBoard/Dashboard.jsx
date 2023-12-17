@@ -109,7 +109,7 @@ const HomeDashboard = (props) => {
   // eslint-disable-next-line no-unused-vars
   const [paginationAllBorrowed, setPaginationAllBorrowed] = useState({
     defaultCurrent: 1,
-    pageSize: 5,
+    pageSize: 10,
     total: allBorrowedCount,
   });
 
@@ -622,6 +622,7 @@ const HomeDashboard = (props) => {
               genre={genre}
               setCurrentActive={setCurrentActive}
               getAddShelfPerStudent={getAddShelfPerStudent}
+              getAddToShelf={getAddToShelf}
               handleLogout={handleLogout}
             />
           </>

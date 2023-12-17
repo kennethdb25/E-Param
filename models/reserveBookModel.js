@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const ReserveBookSchema = new mongoose.Schema({
   studentId: {
@@ -16,6 +16,9 @@ const ReserveBookSchema = new mongoose.Schema({
   lastName: {
     type: String,
     required: true,
+  },
+  libraryCardNum: {
+    type: String,
   },
   userType: {
     type: String,
@@ -103,9 +106,6 @@ const ReserveBookSchema = new mongoose.Schema({
   },
 });
 
-const ReserveBookModel = new mongoose.model(
-  "ReserveBookInfo",
-  ReserveBookSchema
-);
+const ReserveBookModel = new mongoose.model('ReserveBookInfo', ReserveBookSchema);
 
 module.exports = ReserveBookModel;
